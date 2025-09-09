@@ -6,15 +6,15 @@
 <!--        <property name="hibernate.hbm2ddl.auto">create</property> -->
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.username">cinema</property>
-        <property name="hibernate.connection.password">iu-cinema</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/102204056?allowPublicKeyRetrieval=true&amp;useSSL=false</property>
+        <property name="hibernate.connection.username">concert</property>
+        <property name="hibernate.connection.password">iu-concert</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/102204139?allowPublicKeyRetrieval=true&amp;useSSL=false</property>
         <property name="show_sql">true</property>
         <property name="format_sql">false</property>
 
-         <mapping class="com.shweit.cinema.model.Movie" />
+         <mapping class="com.shweit.cinema.model.Concert" />
          <mapping class="com.shweit.cinema.model.Ticket" />
-         <mapping class="com.shweit.cinema.model.Hall" />
+         <mapping class="com.shweit.cinema.model.Venue" />
          <mapping class="com.shweit.cinema.model.Billing" />
     </session-factory>
 </hibernate-configuration>

@@ -18,7 +18,7 @@ public class ConfirmationBean {
 
     @PostConstruct
     public void init() {
-        // Get movieId from request parameter if available
+        // Get billingId from request parameter if available
         String billingIdParam = FacesContext.getCurrentInstance()
                 .getExternalContext()
                 .getRequestParameterMap()

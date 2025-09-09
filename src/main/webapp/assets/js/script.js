@@ -1,13 +1,14 @@
-function showMovieDetails(cardElement) {
+function showConcertDetails(cardElement) {
     const title = cardElement.querySelector('.card-title').textContent;
     const image = cardElement.querySelector('.card-img-top').src;
     const genre = cardElement.querySelector('.badge').textContent;
     const duration = cardElement.querySelector('.duration').textContent;
-    const director = cardElement.dataset.director;
-    const cast = cardElement.dataset.cast;
-    const plot = cardElement.dataset.plot;
+    const tour = cardElement.dataset.tour;
+    const support = cardElement.dataset.support;
+    const venue = cardElement.dataset.venue;
+    const description = cardElement.dataset.description;
     const rating = cardElement.dataset.rating || '0';
-    const trailer = cardElement.dataset.trailer || '#';
+    const video = cardElement.dataset.video || '#';
 
     const modalContent = `
         <div class="modal-header">
@@ -20,12 +21,14 @@ function showMovieDetails(cardElement) {
                     <img src="${image}" class="img-fluid rounded" alt="${title}">
                 </div>
                 <div class="col-md-8">
-                    <h6>Regie</h6>
-                    <p>${director}</p>
-                    <h6>Besetzung</h6>
-                    <p>${cast}</p>
-                    <h6>Handlung</h6>
-                    <p>${plot}</p>
+                    <h6>Tour</h6>
+                    <p>${tour || 'N/A'}</p>
+                    <h6>Support Acts</h6>
+                    <p>${support || 'Keine Vorbands'}</p>
+                    <h6>Venue</h6>
+                    <p>${venue}</p>
+                    <h6>Beschreibung</h6>
+                    <p>${description}</p>
                     <div class="movie-meta mb-4">
                         <span class="badge bg-info me-2">${genre}</span>
                         <span class="duration">${duration}</span>
@@ -36,14 +39,14 @@ function showMovieDetails(cardElement) {
                         </div>
                     </div>
                     <div class="text-center mt-4">
-                        <button class="btn btn-secondary me-2" onclick="playTrailer('${trailer}')"><i class="bi bi-play-circle"></i> Trailer</button>
+                        <button class="btn btn-secondary me-2" onclick="playVideo('${video}')"><i class="bi bi-play-circle"></i> Video</button>
                     </div>
                 </div>
             </div>
         </div>
     `;
 
-    const modalElement = document.getElementById('movieDetailModal');
+    const modalElement = document.getElementById('concertDetailModal');
     modalElement.querySelector('.modal-content').innerHTML = modalContent;
     const modal = new bootstrap.Modal(modalElement);
     modal.show();
@@ -64,12 +67,12 @@ function generateStars(rating) {
     return stars.join(' ');
 }
 
-function playTrailer(trailerUrl) {
+function playVideo(videoUrl) {
     try {
-        if (!trailerUrl || trailerUrl === '#') {
+        if (!videoUrl || videoUrl === '#') {
             const errorMessage = document.createElement('div');
             errorMessage.className = 'alert alert-warning';
-            errorMessage.textContent = 'Trailer ist momentan nicht verfügbar.';
+            errorMessage.textContent = 'Video ist momentan nicht verfügbar.';
             
             const modalBody = document.querySelector('.modal-body');
             const existingAlert = modalBody.querySelector('.alert');
@@ -81,9 +84,9 @@ function playTrailer(trailerUrl) {
             setTimeout(() => errorMessage.remove(), 3000);
             return;
         }
-        window.open(trailerUrl, '_blank');
+        window.open(videoUrl, '_blank');
     } catch (error) {
-        console.error('Error playing trailer:', error);
+        console.error('Error playing video:', error);
     }
 }
 
@@ -94,16 +97,16 @@ function bookTickets(element) {
             return;
         }
 
-        const movieId = element.dataset.movieId;
+        const concertId = element.dataset.concertId;
         const title = element.querySelector('.modal-title')?.textContent || 
                      element.querySelector('.card-title')?.textContent;
         const image = element.querySelector('.card-img-top')?.src;
         const genre = element.querySelector('.badge')?.textContent;
         const duration = element.querySelector('.duration')?.textContent;
 
-        // Store movie details in localStorage
-        const movieDetails = {
-            movieId: movieId,
+        // Store concert details in localStorage
+        const concertDetails = {
+            concertId: concertId,
             title: title,
             image: image,
             genre: genre,
@@ -111,11 +114,11 @@ function bookTickets(element) {
         };
         
         try {
-            localStorage.setItem('selectedMovie', JSON.stringify(movieDetails));
-            window.location.href = `booking.xhtml?movieId=${movieId}`;
+            localStorage.setItem('selectedConcert', JSON.stringify(concertDetails));
+            window.location.href = `booking.xhtml?concertId=${concertId}`;
         } catch (storageError) {
-            console.error('Failed to store movie details:', storageError);
-            window.location.href = `booking.xhtml?movieId=${movieId}`;
+            console.error('Failed to store concert details:', storageError);
+            window.location.href = `booking.xhtml?concertId=${concertId}`;
         }
     } catch (error) {
         console.error('Error during booking:', error);
@@ -123,7 +126,7 @@ function bookTickets(element) {
 }
     
 // Close the modal if it's open
-const modalElement = document.getElementById('movieDetailModal');
+const modalElement = document.getElementById('concertDetailModal');
 const modal = bootstrap.Modal.getInstance(modalElement);
 if (modal) {
     modal.hide();

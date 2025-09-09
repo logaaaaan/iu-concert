@@ -30,7 +30,8 @@ function initializeTicketQuantity() {
 function generateSeats() {
     try {
         const container = document.getElementById('seatsContainer');
-        const seatPlacementElement = document.getElementById('hall:seatPlacement');
+        const seatPlacementElement = document.getElementById('venue:seatPlacement');
+        const hasStandingElement = document.getElementById('venue:hasStanding');
 
         if (!container || !seatPlacementElement) {
             throw new Error('Required seat container elements not found');
@@ -197,40 +198,47 @@ function updateSelectedSeats() {
 }
 
 function fillAlreadyBookedSeats() {
-    const bookedSeatsSelect = document.getElementById('showtime');
+    const ticketTypeSelect = document.getElementById('ticketType');
+    
+    // Handle ticket type changes instead of showtime
 
-    bookedSeatsSelect.addEventListener('change', () => {
-        // 1. Deselect all booked seats
-        const elems = document.getElementsByClassName('seat occupied');
-        [...elems].forEach(elem => {
-            elem.classList.remove('occupied');
-            elem.classList.add('available')
+    if (ticketTypeSelect) {
+        ticketTypeSelect.addEventListener('change', () => {
+            const selectedType = ticketTypeSelect.value;
+            const seatsContainer = document.getElementById('seatsContainer');
+            
+            // Show/hide seat selection based on ticket type
+            if (selectedType === 'standing') {
+                seatsContainer.style.display = 'none';
+            } else {
+                seatsContainer.style.display = 'block';
+            }
+            
+            // Update price per ticket
+            const selectedOption = ticketTypeSelect.options[ticketTypeSelect.selectedIndex];
+            const price = selectedOption.getAttribute('data-price');
+            document.getElementById('pricePerTicket').textContent = price + ' €';
+            updateSelectedSeats();
         });
+    }
 
-        // 2. Set all bookedSeats as occupied
-        // Retrieve the selected option and pull the data-booked-seats attribute
-        const selectedOption = bookedSeatsSelect.options[bookedSeatsSelect.selectedIndex]
-        const bookedSeatsString = selectedOption.getAttribute('data-booked-seats');
-        const bookedSeats = bookedSeatsString.substring(1, bookedSeatsString.length-1).split(", ");
-
-        if (bookedSeats.length !== 0) {
+    // Load already booked seats from database
+    const bookedSeatsData = document.querySelector('[data-booked-seats]');
+    if (bookedSeatsData) {
+        const bookedSeatsString = bookedSeatsData.getAttribute('data-booked-seats');
+        if (bookedSeatsString && bookedSeatsString !== '[]') {
+            const bookedSeats = bookedSeatsString.substring(1, bookedSeatsString.length-1).split(", ");
             bookedSeats.forEach(seat => {
                 const [row, seatNumber] = seat.split(":");
-                const formattedSeatNumber = parseInt(row) * 10 + parseInt(seatNumber) - 10; // Example: 03:05 => 25
-
-                const seatElem = document.querySelector(`[data-seat-number="${formattedSeatNumber}"]`)
-
+                const formattedSeatNumber = parseInt(row) * 10 + parseInt(seatNumber) - 10;
+                const seatElem = document.querySelector(`[data-seat-number="${formattedSeatNumber}"]`);
                 if (seatElem) {
-                    seatElem.classList.remove('available')
-                    seatElem.classList.add('occupied')
+                    seatElem.classList.remove('available');
+                    seatElem.classList.add('occupied');
                 }
-            })
+            });
         }
-    })
-
-    // Manually Trigger Event
-    const initialEvent = new Event("change")
-    bookedSeatsSelect.dispatchEvent(initialEvent);
+    }
 }
 
 // Initialize everything when the page loads
@@ -244,9 +252,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('bookButton').addEventListener('click', handleBooking);
 });
 
-// Update handleBooking function to include showtime
+// Update handleBooking function for concerts
 function handleBooking() {
-    const showtime = document.getElementById('showtime').value;
+    const ticketType = document.getElementById('ticketType').value;
     const selectedSeats = Array.from(document.querySelectorAll('.seat.selected')).map(seat => {
         const seatNumber = parseInt(seat.dataset.seatNumber);
         const row = Math.floor((seatNumber - 1) / 10) + 1;
@@ -255,7 +263,7 @@ function handleBooking() {
     });
 
     const bookingData = {
-        showtime: showtime,
+        ticketType: ticketType,
         seats: selectedSeats,
         totalPrice: parseFloat(document.getElementById('totalPrice').textContent.replace('€', ''))
     };
@@ -263,8 +271,8 @@ function handleBooking() {
     // Store booking data in localStorage
     localStorage.setItem('bookingData', JSON.stringify(bookingData));
 
-    // Retrieve the movieId from the URL
-    const movieId = new URLSearchParams(window.location.search).get('movieId');
+    // Retrieve the concertId from the URL
+    const concertId = new URLSearchParams(window.location.search).get('concertId');
 
-    window.location.href = 'payment.xhtml?movieId=' + movieId;
+    window.location.href = 'payment.xhtml?concertId=' + concertId;
 }

@@ -1,11 +1,8 @@
 package com.shweit.cinema.model;
 
 import lombok.Data;
-
-import java.sql.Date;
-import java.sql.Timestamp;
-
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Data
 @Entity
@@ -21,11 +18,12 @@ public class Ticket {
     @Column(nullable = false, length = 100)
     private String lastName;
 
-    @Column(nullable = false)
-    private String showtime;
+    private String concertTime;
 
-    @Column(nullable = false)
     private String seatNumber;
+
+    @Column(nullable = false, length = 50)
+    private String ticketType;
 
     @Column(nullable = false)
     private String ticketNumber;
@@ -37,12 +35,8 @@ public class Ticket {
     private Timestamp purchaseDate;
 
     @ManyToOne
-    @JoinColumn(name = "movieId", nullable = false)
-    private Movie movie;
-
-    @ManyToOne
-    @JoinColumn(name = "hallId", nullable = false)
-    private Hall hall;
+    @JoinColumn(name = "concertId", nullable = false)
+    private Concert concert;
 
     @ManyToOne
     @JoinColumn(name = "billingId", nullable = false)

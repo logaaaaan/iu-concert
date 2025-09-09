@@ -1,15 +1,5 @@
-/* 
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Other/SQLTemplate.sql to edit this template
- */
-/**
- * Author:  dennis
- * Created: 26.01.2025
- */
+CREATE DATABASE `102204139`;
 
-
-CREATE DATABASE `102204056`;
-
-CREATE USER 'cinema'@'localhost' IDENTIFIED BY 'iu-cinema';
-GRANT ALL PRIVILEGES ON `102204056`.* TO 'cinema'@'localhost';
+CREATE USER 'concert'@'localhost' IDENTIFIED BY 'iu-concert';
+GRANT ALL PRIVILEGES ON `102204139`.* TO 'concert'@'localhost';
 FLUSH PRIVILEGES;

@@ -1,7 +1,7 @@
 package com.shweit.cinema.beans;
 
 import com.shweit.cinema.HibernateUtil;
-import com.shweit.cinema.model.Movie;
+import com.shweit.cinema.model.Concert;
 import java.io.IOException;
 import org.hibernate.Session;
 import javax.faces.bean.ManagedBean;
@@ -14,49 +14,49 @@ import java.util.ArrayList;
 
 @ManagedBean
 @RequestScoped
-public class MovieBean {
+public class ConcertBean {
 
-    public List<Movie> getAllMovies() {
+    public List<Concert> getAllConcerts() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
 
-        List<Movie> movies = session.createCriteria(Movie.class).list();
+        List<Concert> concerts = session.createCriteria(Concert.class).list();
 
         session.getTransaction().commit();
         session.close();
 
-        return movies;
+        return concerts;
     }
     
-    public List<String> getGenres(Movie movie) {
-        // Null-Prüfung für das `movie`-Objekt und `movie.getGenre()`
-        if (movie == null || movie.getGenre() == null || movie.getGenre().isEmpty()) {
+    public List<String> getGenres(Concert concert) {
+        // Null-Prüfung für das `concert`-Objekt und `concert.getGenre()`
+        if (concert == null || concert.getGenre() == null || concert.getGenre().isEmpty()) {
             return new ArrayList<>(); // Leere Liste zurückgeben
         }
 
         ObjectMapper mapper = new ObjectMapper();
         try {
             // JSON-String in eine Liste von Strings konvertieren
-            return mapper.readValue(movie.getGenre(), new TypeReference<List<String>>() {});
+            return mapper.readValue(concert.getGenre(), new TypeReference<List<String>>() {});
         } catch (IOException e) {
             e.printStackTrace();
             return new ArrayList<>(); // Leere Liste bei Fehler zurückgeben
         }
     }
     
-    // Return an comma seperated String with all top Casts
-    public String getTopCast(Movie movie) {
-        // Check if movie object or topCast is null or empty
-        if (movie == null || movie.getTopCast() == null || movie.getTopCast().isEmpty()) {
+    // Return a comma separated String with all support acts
+    public String getSupportActs(Concert concert) {
+        // Check if concert object or supportActs is null or empty
+        if (concert == null || concert.getSupportActs() == null || concert.getSupportActs().isEmpty()) {
             return "";
         }
 
         ObjectMapper mapper = new ObjectMapper();
         try {
             // Convert JSON string to List of Strings
-            List<String> castList = mapper.readValue(movie.getTopCast(), new TypeReference<List<String>>() {});
-            // Join the cast list with commas
-            return String.join(", ", castList);
+            List<String> actsList = mapper.readValue(concert.getSupportActs(), new TypeReference<List<String>>() {});
+            // Join the support acts list with commas
+            return String.join(", ", actsList);
         } catch (IOException e) {
             e.printStackTrace();
             return ""; // Return empty string in case of error

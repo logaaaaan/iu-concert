@@ -1,6 +1,7 @@
 body {
-    background-color: #1a1a1a;
+    background: linear-gradient(135deg, #1e0033 0%, #110011 50%, #220022 100%);
     color: #ffffff;
+    min-height: 100vh;
 }
 
 .container h1 {
@@ -21,12 +22,12 @@ body {
     transform: translateX(-50%);
     width: 60px;
     height: 3px;
-    background: #e50914;
+    background: linear-gradient(90deg, #ff006e, #8338ec);
 }
 
 .card {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    background: linear-gradient(145deg, #2a2a2a, #252525);
+    background: linear-gradient(145deg, #2a1a3e, #1a0e2e);
     border: none;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05);
     overflow: hidden;
@@ -41,7 +42,7 @@ body {
     right: 0;
     bottom: 0;
     border-radius: inherit;
-    background: linear-gradient(45deg, rgba(229, 9, 20, 0.1), transparent);
+    background: linear-gradient(45deg, rgba(131, 56, 236, 0.1), transparent);
     opacity: 0;
     transition: opacity 0.4s ease;
     pointer-events: none;
@@ -50,7 +51,7 @@ body {
 
 .card:hover {
     transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 12px 24px rgba(229, 9, 20, 0.2), 0 0 40px rgba(229, 9, 20, 0.1);
+    box-shadow: 0 12px 24px rgba(131, 56, 236, 0.3), 0 0 40px rgba(255, 0, 110, 0.2);
 }
 
 .card:hover::before {
@@ -67,7 +68,20 @@ body {
     transform: scale(1.05);
 }
 
-.movie-info {
+.concert-card .card-img-top {
+    filter: contrast(1.1) saturate(1.2);
+}
+
+.concert-details {
+    font-size: 0.9rem;
+}
+
+.concert-details i {
+    color: #ff006e;
+    margin-right: 0.3rem;
+}
+
+.movie-info, .concert-info {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -79,7 +93,7 @@ body {
 }
 
 .duration {
-    color: #e50914;
+    color: #ff006e;
     font-size: 0.9rem;
     font-weight: 500;
     margin-left: auto;
@@ -89,10 +103,18 @@ body {
     padding: 0.4rem 0.8rem;
     font-size: 0.85rem;
     font-weight: 500;
-    background-color: #e50914 !important;
     margin: 0;
     white-space: nowrap;
 }
+
+.badge.bg-danger {
+    background: linear-gradient(90deg, #ff006e, #8338ec) !important;
+}
+
+.badge.bg-success {
+    background: linear-gradient(90deg, #00c896, #00d9ff) !important;
+}
+
 .card-footer {
     background-color: transparent;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -115,8 +137,8 @@ body {
 }
 
 .btn-primary {
-    background-color: #e50914;
-    border-color: #e50914;
+    background: linear-gradient(90deg, #ff006e, #8338ec);
+    border: none;
 }
 
 .btn-primary:hover,
@@ -124,25 +146,25 @@ body {
 .btn-primary:active,
 .btn-primary.active,
 .btn-primary:not(:disabled):not(.disabled):active {
-    background-color: #b2070f;
-    border-color: #b2070f;
-    box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.25);
+    background: linear-gradient(90deg, #d60059, #6929c4);
+    border: none;
+    box-shadow: 0 0 0 0.2rem rgba(131, 56, 236, 0.25);
 }
 
 .btn-primary:disabled,
 .btn-primary.disabled {
-    background-color: rgba(229, 9, 20, 0.65);
-    border-color: rgba(229, 9, 20, 0.65);
+    background: linear-gradient(90deg, rgba(255, 0, 110, 0.65), rgba(131, 56, 236, 0.65));
+    border: none;
 }
 
 .btn-primary:hover {
-    background-color: #f40612;
+    background: linear-gradient(90deg, #ff1a75, #9447ff);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(229, 9, 20, 0.3);
+    box-shadow: 0 4px 8px rgba(131, 56, 236, 0.3);
 }
 
 .navbar {
-    background: linear-gradient(to right, #1a1a1a, #2a2a2a) !important;
+    background: linear-gradient(to right, #1a0033, #2a0044) !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     position: sticky;
     top: 0;
@@ -154,22 +176,27 @@ body {
 .navbar-brand {
     font-size: 1.8rem;
     font-weight: bold;
-    color: #e50914 !important;
+    background: linear-gradient(90deg, #ff006e, #8338ec);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     text-transform: uppercase;
     letter-spacing: 1px;
-    text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
-    transition: text-shadow 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .navbar-brand:hover {
-    text-shadow: 0 0 20px rgba(229, 9, 20, 0.8);
+    transform: scale(1.05);
+}
+
+.navbar-brand i {
+    color: #ff006e;
 }
 
 .card-title {
     color: #ffffff;
     font-size: 1.4rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .card-text {
@@ -177,14 +204,8 @@ body {
     line-height: 1.6;
 }
 
-.badge {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    background-color: #e50914 !important;
-}
 .modal-content {
-    background-color: #2a2a2a;
+    background: linear-gradient(145deg, #2a1a3e, #1a0e2e);
     color: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
@@ -207,7 +228,7 @@ body {
 }
 
 .modal-body h6 {
-    color: #e50914;
+    color: #ff006e;
     text-transform: uppercase;
     font-size: 0.9rem;
     letter-spacing: 1px;
@@ -220,7 +241,7 @@ body {
     margin-bottom: 1.5rem;
 }
 
-.movie-meta {
+.movie-meta, .concert-meta {
     background: rgba(0, 0, 0, 0.2);
     padding: 1rem;
     border-radius: 8px;
@@ -238,8 +259,9 @@ body {
 .modal.show .modal-dialog {
     transform: scale(1);
 }
+
 .accordion-item {
-    background-color: #1a1a1a !important;
+    background-color: #1a0e2e !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     margin-bottom: 1rem;
     border-radius: 8px;
@@ -247,7 +269,7 @@ body {
 }
 
 .accordion-button {
-    background-color: #2a2a2a !important;
+    background-color: #2a1a3e !important;
     color: #ffffff !important;
     border: none !important;
     padding: 1.25rem 1.5rem;
@@ -257,7 +279,7 @@ body {
 }
 
 .accordion-button:not(.collapsed) {
-    background-color: #2a2a2a !important;
+    background-color: #2a1a3e !important;
     color: #ffffff !important;
     box-shadow: none !important;
 }
@@ -267,16 +289,16 @@ body {
 }
 
 .accordion-button:hover {
-    background-color: #333333 !important;
+    background-color: #3a2a4e !important;
 }
 
 .accordion-body {
-    background-color: #1a1a1a !important;
+    background-color: #1a0e2e !important;
     padding: 1.5rem;
 }
 
 .form-control {
-    background-color: #2a2a2a !important;
+    background-color: #2a1a3e !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: #ffffff !important;
     padding: 0.75rem 1rem;
@@ -285,9 +307,9 @@ body {
 }
 
 .form-control:focus {
-    background-color: #333333 !important;
-    border-color: #e50914 !important;
-    box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.25) !important;
+    background-color: #3a2a4e !important;
+    border-color: #8338ec !important;
+    box-shadow: 0 0 0 0.2rem rgba(131, 56, 236, 0.25) !important;
     color: #ffffff !important;
 }
 
@@ -307,255 +329,84 @@ body {
 }
 
 .ticket-status.text-success {
-    color: #28a745 !important;
+    color: #00c896 !important;
 }
 
 .accordion-button:not(.collapsed)::after {
     transform: rotate(-180deg);
 }
 
-.ticket-holder-card .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-.btn-primary:disabled,
-.btn-primary.disabled {
-    background-color: rgba(229, 9, 20, 0.65);
-    border-color: rgba(229, 9, 20, 0.65);
-}
-
-.btn-primary:hover {
-    background-color: #f40612;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(229, 9, 20, 0.3);
-}
-
-.navbar {
-    background: linear-gradient(to right, #1a1a1a, #2a2a2a) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-.navbar-brand {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #e50914 !important;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
-    transition: text-shadow 0.3s ease;
-}
-
-.navbar-brand:hover {
-    text-shadow: 0 0 20px rgba(229, 9, 20, 0.8);
-}
-
-.card-title {
-    color: #ffffff;
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.card-text {
-    color: #cccccc;
-    line-height: 1.6;
-}
-
-.badge {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    background-color: #e50914 !important;
-}
-.modal-content {
-    background-color: #2a2a2a;
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-}
-
-.modal-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 1.5rem;
-}
-
-.modal-title {
-    color: #ffffff;
-    font-size: 1.8rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-}
-
-.modal-body {
-    padding: 2rem;
-}
-
-.modal-body h6 {
-    color: #e50914;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    margin-bottom: 0.5rem;
-}
-
-.modal-body p {
-    color: #cccccc;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-}
-
-.movie-meta {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 1rem;
-    border-radius: 8px;
-}
-
-.btn-close {
-    filter: invert(1) grayscale(100%) brightness(200%);
-}
-
-.modal.fade .modal-dialog {
-    transform: scale(0.95);
-    transition: transform 0.3s ease-out;
-}
-
-.modal.show .modal-dialog {
-    transform: scale(1);
-}
 .ticket-holder-card {
-    border-left: 4px solid #e50914;
+    border-left: 4px solid #8338ec;
     transition: all 0.3s ease;
 }
 
 .ticket-holder-card:hover {
-    box-shadow: 0 0 15px rgba(229, 9, 20, 0.2);
+    box-shadow: 0 0 15px rgba(131, 56, 236, 0.3);
 }
 
 .ticket-holder-card .form-label {
-    color: #e50914;
+    color: #ff006e;
     font-weight: 500;
     margin-bottom: 0.5rem;
 }
 
 .ticket-holder-card .form-control:focus {
-    border-color: #e50914;
-    box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.25);
+    border-color: #8338ec;
+    box-shadow: 0 0 0 0.2rem rgba(131, 56, 236, 0.25);
+}
+
+.ticket-holder-card .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .ticket-number-hidden {
     display: none;
 }
-.btn-primary:disabled,
-.btn-primary.disabled {
-    background-color: rgba(229, 9, 20, 0.65);
-    border-color: rgba(229, 9, 20, 0.65);
+
+/* Add concert-specific animations */
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 0 5px rgba(255, 0, 110, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(131, 56, 236, 0.8), 0 0 30px rgba(255, 0, 110, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(255, 0, 110, 0.5);
+    }
 }
 
-.btn-primary:hover {
-    background-color: #f40612;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(229, 9, 20, 0.3);
+.concert-card:hover {
+    animation: pulse-glow 2s infinite;
 }
 
-.navbar {
-    background: linear-gradient(to right, #1a1a1a, #2a2a2a) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+/* Concert stage lights effect */
+.screen {
+    position: relative;
+    background: linear-gradient(90deg, #ff006e, #8338ec);
+    overflow: hidden;
 }
 
-.navbar-brand {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #e50914 !important;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
-    transition: text-shadow 0.3s ease;
+.screen::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, 
+        transparent 30%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        transparent 70%);
+    animation: stage-lights 3s linear infinite;
 }
 
-.navbar-brand:hover {
-    text-shadow: 0 0 20px rgba(229, 9, 20, 0.8);
-}
-
-.card-title {
-    color: #ffffff;
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.card-text {
-    color: #cccccc;
-    line-height: 1.6;
-}
-
-.badge {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    background-color: #e50914 !important;
-}
-.modal-content {
-    background-color: #2a2a2a;
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-}
-
-.modal-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 1.5rem;
-}
-
-.modal-title {
-    color: #ffffff;
-    font-size: 1.8rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-}
-
-.modal-body {
-    padding: 2rem;
-}
-
-.modal-body h6 {
-    color: #e50914;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    margin-bottom: 0.5rem;
-}
-
-.modal-body p {
-    color: #cccccc;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-}
-
-.movie-meta {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 1rem;
-    border-radius: 8px;
-}
-
-.btn-close {
-    filter: invert(1) grayscale(100%) brightness(200%);
-}
-
-.modal.fade .modal-dialog {
-    transform: scale(0.95);
-    transition: transform 0.3s ease-out;
-}
-
-.modal.show .modal-dialog {
-    transform: scale(1);
+@keyframes stage-lights {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
 }

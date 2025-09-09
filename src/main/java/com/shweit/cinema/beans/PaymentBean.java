@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.shweit.cinema.HibernateUtil;
 import com.shweit.cinema.model.Billing;
-import com.shweit.cinema.model.Movie;
+import com.shweit.cinema.model.Concert;
 import com.shweit.cinema.model.Ticket;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -26,7 +26,7 @@ import javax.annotation.PostConstruct;
 @RequestScoped
 public class PaymentBean {
     // Billing information
-    private int movieId;
+    private int concertId;
     private String firstName;
     private String lastName;
     private String email;
@@ -49,28 +49,28 @@ public class PaymentBean {
     
     @PostConstruct
     public void init() {
-        // First try to get movieId from request parameter
-        String movieIdParam = FacesContext.getCurrentInstance()
+        // First try to get concertId from request parameter
+        String concertIdParam = FacesContext.getCurrentInstance()
             .getExternalContext()
             .getRequestParameterMap()
-            .get("movieId");
+            .get("concertId");
         
-        if (movieIdParam != null) {
+        if (concertIdParam != null) {
             try {
-                this.movieId = Integer.parseInt(movieIdParam);
+                this.concertId = Integer.parseInt(concertIdParam);
             } catch (NumberFormatException e) {
-                System.err.println("Invalid movieId: " + movieIdParam);
+                System.err.println("Invalid concertId: " + concertIdParam);
             }
         }
     }
 
     // Getters and setters for all fields
-    public int getMovieId() {
-        return movieId;
+    public int getConcertId() {
+        return concertId;
     }
 
-    public void setMovieId(int movieId) {
-        this.movieId = movieId;
+    public void setConcertId(int concertId) {
+        this.concertId = concertId;
     }
     
     public String getFirstName() {
@@ -194,14 +194,7 @@ public class PaymentBean {
     }
     
     public String submit() {
-        System.out.println(
-            "TRANSACTION SUBMITTED: " +
-            "Movie ID: " + movieId +
-            ", First Name: " + firstName +
-            ", Last Name: " + lastName +
-            ", Payment Method: " + paymentMethod
-        );
-        
+                
         try {
             // Get ticket holders from JavaScript
             if (this.getTicketHoldersData() == null || this.getTicketHoldersData().isEmpty()) {
@@ -210,7 +203,7 @@ public class PaymentBean {
                 FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Es wurden keine Ticketinhaber gefunden", null)
                 );
-                return "/payment.xhtml?faces-redirect=true&movieId=" + movieId;
+                return "/payment.xhtml?faces-redirect=true&concertId=" + concertId;
             }
             
             ObjectMapper mapper = new ObjectMapper();
@@ -246,10 +239,10 @@ public class PaymentBean {
             session.save(billing);
 
             try {
-                // Get movie reference
-                Movie movie = (Movie) session.get(Movie.class, movieId);
-                if (movie == null) {
-                    throw new RuntimeException("Movie not found");
+                // Get concert reference
+                Concert concert = (Concert) session.get(Concert.class, concertId);
+                if (concert == null) {
+                    throw new RuntimeException("Concert not found");
                 }
 
                 // Create tickets for each ticket holder
@@ -257,7 +250,8 @@ public class PaymentBean {
                     Ticket ticket = new Ticket();
                     ticket.setFirstName(holder.get("firstName").asText());
                     ticket.setLastName(holder.get("lastName").asText());
-                    ticket.setShowtime(holder.get("showtime").asText());
+                    ticket.setConcertTime(holder.get("concertTime").asText());
+                    ticket.setTicketType(holder.get("ticketType").asText());
                     
                     JsonNode seatNode = holder.get("seat");
                     ticket.setSeatNumber(formatSeatNumber(seatNode));
@@ -267,8 +261,8 @@ public class PaymentBean {
                     
                     ticket.setTicketNumber(holder.get("ticketNumber").asText());
                     ticket.setPurchaseDate(new Timestamp(System.currentTimeMillis()));
-                    ticket.setHall(movie.getHall());
-                    ticket.setMovie(movie);
+                    ticket.setVenue(concert.getVenue());
+                    ticket.setConcert(concert);
                     ticket.setBilling(billing);
 
                     session.save(ticket);                    
@@ -285,7 +279,7 @@ public class PaymentBean {
                 FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error processing payment", null)
                 );
-                return "/payment.xhtml?faces-redirect=true&movieId=" + movieId;
+                return "/payment.xhtml?faces-redirect=true&concertId=" + concertId;
             } finally {
                 session.close();
             }
@@ -294,7 +288,7 @@ public class PaymentBean {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler beim verarbeiten der Daten. Bitte versuche es später erneut", null));
-            return "/payment.xhtml?faces-redirect=true&movieId=" + movieId;
+            return "/payment.xhtml?faces-redirect=true&concertId=" + concertId;
         }
     }
 

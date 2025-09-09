@@ -1,7 +1,7 @@
 package com.shweit.cinema.beans;
 
 import com.shweit.cinema.HibernateUtil;
-import com.shweit.cinema.model.Movie;
+import com.shweit.cinema.model.Concert;
 import com.shweit.cinema.model.Ticket;
 
 import org.hibernate.Session;
@@ -22,22 +22,22 @@ import java.io.IOException;
 @ManagedBean
 @RequestScoped
 public class BookingBean implements Serializable {
-    private int movieId;
-    private Movie movie;
+    private int concertId;
+    private Concert concert;
     
     @PostConstruct
     public void init() {
-        // Get movieId from request parameter if available
-        String movieIdParam = FacesContext.getCurrentInstance()
+        // Get concertId from request parameter if available
+        String concertIdParam = FacesContext.getCurrentInstance()
             .getExternalContext()
             .getRequestParameterMap()
-            .get("movieId");
+            .get("concertId");
         
-        if (movieIdParam != null && !movieIdParam.isEmpty()) {
+        if (concertIdParam != null && !concertIdParam.isEmpty()) {
             try {
-                this.movieId = Integer.parseInt(movieIdParam);
+                this.concertId = Integer.parseInt(concertIdParam);
             } catch (NumberFormatException e) {
-                System.err.println("Invalid movieId: " + movieIdParam);
+                System.err.println("Invalid concertId: " + concertIdParam);
                 try {
                     FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
                 } catch (IOException ex) {
@@ -47,57 +47,52 @@ public class BookingBean implements Serializable {
         } 
     }
     
-    public List<String> getMovieShowtimes() {
+    public String getConcertTime() {
         Session session = HibernateUtil.getSessionFactory().openSession();
 
-        System.out.println("movieId: " + movieId);
+        System.out.println("concertId: " + concertId);
 
-        Movie movie = (Movie) session.get(Movie.class, movieId);
-        if (movie == null) {
-            return new ArrayList<>();
+        Concert concert = (Concert) session.get(Concert.class, concertId);
+        if (concert == null) {
+            return "";
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.readValue(movie.getBroadcastingTimes(), new TypeReference<List<String>>() {});
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return concert.getConcertTime() != null ? concert.getConcertTime().toString() : "";
     }
 
 
-    public String getMovieName() {
+    public String getConcertName() {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        Movie movie = (Movie) session.get(Movie.class, movieId);
+        Concert concert = (Concert) session.get(Concert.class, concertId);
 
-        return movie != null ? movie.getName() : "Film nicht gefunden";
+        return concert != null ? concert.getBandName() : "Band nicht gefunden";
     }
 
-    public Movie getMovie() {
-        if (this.movie != null) {
-            return this.movie;
+    public Concert getConcert() {
+        if (this.concert != null) {
+            return this.concert;
         }
 
         Session session = HibernateUtil.getSessionFactory().openSession();
-        this.movie = (Movie) session.get(Movie.class, movieId);
+        this.concert = (Concert) session.get(Concert.class, concertId);
 
-        return this.movie;
+        return this.concert;
     }
 
-    public ArrayList<String> getBookedSeatsForShowtime(String showtime) {
+    public ArrayList<String> getBookedSeatsForConcert() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         ArrayList<String> bookedSeats = new ArrayList<>();
 
         try {
-            String hql = "FROM Ticket t WHERE t.movie.id = :movieId AND t.showtime = :showtime";
+            String hql = "FROM Ticket t WHERE t.concert.id = :concertId";
             List<Ticket> tickets = session.createQuery(hql)
-                .setParameter("movieId", movieId)
-                .setParameter("showtime", showtime)
+                .setParameter("concertId", concertId)
                 .list();
 
             for (Ticket ticket : tickets) {
-                bookedSeats.add(ticket.getSeatNumber());
+                if (ticket.getSeatNumber() != null) {
+                    bookedSeats.add(ticket.getSeatNumber());
+                }
             }
         } finally {
             session.close();

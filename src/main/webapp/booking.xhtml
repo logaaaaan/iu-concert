@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ticket Buchung - IU Cinema</title>
+    <title>Ticket Buchung - IU Concerts</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="assets/css/styles.css" rel="stylesheet" />
@@ -19,17 +19,17 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="index.xhtml">IU Cinema</a>
+            <a class="navbar-brand" href="index.xhtml"><i class="bi bi-music-note-beamed"></i> IU Concerts</a>
         </div>
     </nav>
 
     <div class="container mt-4 mt-lg-5">
         <div class="row g-4">
-            <input type="hidden" id="bookingForm:movieId" />
+            <input type="hidden" id="bookingForm:concertId" />
             <!-- Left Column - Seat Selection -->
             <div class="col-12 col-lg-8 mt-0">
                 <div class="booking-section">
-                    <h2 class="mb-4">Sitzplatzauswahl</h2>
+                    <h2 class="mb-4">Ticketauswahl</h2>
                     
                     <!-- Ticket Quantity and Showtime Selection -->
                     <div class="d-flex align-items-start justify-content-center gap-4 mb-3 mb-lg-4">
@@ -41,22 +41,23 @@
                                 <button class="btn btn-outline-secondary" id="increaseTickets"><i class="bi bi-plus"></i></button>
                             </div>
                         </div>
-                        <div class="showtime-selection">
-                            <label for="showtime" class="form-label">Vorstellung:</label>
-                            <select id="showtime" class="form-select">
-                                <c:forEach var="showtime" items="#{bookingBean.getMovieShowtimes()}">
-                                    <option style="color: black" data-booked-seats="#{bookingBean.getBookedSeatsForShowtime(showtime)}">#{showtime}</option>
-                                </c:forEach>
+                        <div class="ticket-type-selection">
+                            <label for="ticketType" class="form-label">Ticketart:</label>
+                            <select id="ticketType" class="form-select">
+                                <option value="standing" data-price="#{bookingBean.getConcert().price}">Stehplatz - #{bookingBean.getConcert().price}€</option>
+                                <option value="seated" data-price="#{bookingBean.getConcert().price}">Sitzplatz - #{bookingBean.getConcert().price}€</option>
+                                <option value="vip" data-price="#{bookingBean.getConcert().vipPrice}">VIP - #{bookingBean.getConcert().vipPrice}€</option>
                             </select>
                         </div>
                     </div>
                     
                     <!-- Cinema Hall -->
-                    <h2 class="text-center">#{bookingBean.getMovie().hall.name}</h2>
-                    <input type="hidden" id="hall:seatPlacement" value="#{bookingBean.getMovie().hall.seatPlacement}" />
+                    <h2 class="text-center">#{bookingBean.getConcert().venue.name}</h2>
+                    <input type="hidden" id="venue:seatPlacement" value="#{bookingBean.getConcert().venue.seatPlacement}" />
+                    <input type="hidden" id="venue:hasStanding" value="#{bookingBean.getConcert().venue.standingArea}" />
                     <div class="cinema-hall px-2 px-lg-0">
                         <div class="screen mb-5">
-                            <div class="screen-text">Leinwand</div>
+                            <div class="screen-text">🎸 Bühne 🎤</div>
                         </div>
                         
                         <div class="seats-container" id="seatsContainer">
@@ -84,24 +85,29 @@
                 </div>
             </div>
 
-            <!-- Right Column - Movie Info and Booking Summary -->
+            <!-- Right Column - Concert Info and Booking Summary -->
             <div class="col-12 col-lg-4 mt-4 mt-lg-0">
                 <div class="booking-summary">
                     <h3>Buchungsübersicht</h3>
-                    <div class="movie-info-booking">
-                        <img id="movieImage" src="#{bookingBean.getMovie().cover}" alt="Movie Poster" class="img-fluid rounded mb-3" />
-                        <h4 id="movieTitle">#{bookingBean.getMovie().name}</h4>
-                        <p id="movieDetails" style="color: #cccccc">#{bookingBean.getMovie().shortDesc}</p>
-                        <div class="movie-info">
-                            <ui:repeat var="genre" value="#{movieBean.getGenres(bookingBean.getMovie())}">
-                                <span class="badge bg-info">#{genre}</span>
+                    <div class="concert-info-booking">
+                        <img id="concertImage" src="#{bookingBean.getConcert().cover}" alt="Concert Poster" class="img-fluid rounded mb-3" />
+                        <h4 id="concertTitle">#{bookingBean.getConcert().bandName}</h4>
+                        <h6 class="text-muted">#{bookingBean.getConcert().tourName}</h6>
+                        <p id="concertDetails" style="color: #cccccc">#{bookingBean.getConcert().shortDesc}</p>
+                        <div class="concert-info">
+                            <ui:repeat var="genre" value="#{concertBean.getGenres(bookingBean.getConcert())}">
+                                <span class="badge bg-danger">#{genre}</span>
                             </ui:repeat>
-                            <span class="duration">#{bookingBean.getMovie().playtime} Spielzeit</span>
+                            <div class="mt-2">
+                                <small class="d-block"><i class="bi bi-calendar-event"></i> #{bookingBean.getConcert().concertDate}</small>
+                                <small class="d-block"><i class="bi bi-clock"></i> #{bookingBean.getConcert().concertTime} Uhr</small>
+                                <small class="d-block"><i class="bi bi-geo-alt"></i> #{bookingBean.getConcert().venue.name}</small>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="selected-seats-info mt-4">
-                        <h5>Ausgewählte Sitze</h5>
+                        <h5>Ausgewählte Tickets</h5>
                         <ul id="selectedSeatsList" class="list-unstyled">
                             <!-- Selected seats will be listed here -->
                         </ul>
@@ -110,7 +116,7 @@
                     <div class="price-summary mt-4">
                         <div class="d-flex justify-content-between mb-2">
                             <span>Preis pro Ticket:</span>
-                            <span id="pricePerTicket">#{bookingBean.getMovie().price} €</span>
+                            <span id="pricePerTicket">#{bookingBean.getConcert().price} €</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2 total-price">
                             <strong>Gesamtpreis:</strong>

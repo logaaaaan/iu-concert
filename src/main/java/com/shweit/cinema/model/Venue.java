@@ -1,26 +1,25 @@
 package com.shweit.cinema.model;
 
 import lombok.Data;
-
 import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "hall")
-public class Hall {
+@Table(name = "venue")
+public class Venue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int hallId;
+    private int venueId;
 
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
-    private int totalSeats;
+    private int totalCapacity;
 
-    @Column(nullable = false)
-    private int totalRows;
+    private Integer standingArea;
 
-    @Column(columnDefinition = "JSON")
-    private String seatPlacement;
+    private Integer seatingArea;
+
+    private Integer vipArea;
 }

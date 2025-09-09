@@ -9,7 +9,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IU Cinema - Buchungsbestätigung</title>
+    <title>IU Concerts - Buchungsbestätigung</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="assets/css/styles.css" rel="stylesheet" />
@@ -18,14 +18,14 @@
 <body class="bg-dark text-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="index.xhtml">IU Cinema</a>
+            <a class="navbar-brand" href="index.xhtml"><i class="bi bi-music-note-beamed"></i> IU Concerts</a>
         </div>
     </nav>
 
     <div class="container py-5">
         <div class="text-center mb-5">
-            <h1 class="display-4 text-netflix">Vielen Dank für Ihre Buchung!</h1>
-            <p class="lead">Hier sind Ihre virtuellen Kinokarten</p>
+            <h1 class="display-4 text-netflix">🎸 Vielen Dank für Ihre Buchung! 🎸</h1>
+            <p class="lead">Hier sind Ihre Konzerttickets</p>
         </div>
 
         <div class="row justify-content-center">
@@ -34,9 +34,10 @@
                     <ui:repeat var="ticket" value="#{confirmationBean.getTickets()}">
                         <div class="virtual-ticket mb-3">
                             <div class="ticket-main">
-                                <div class="cinema-logo">IU Cinema</div>
+                                <div class="cinema-logo">🎵 IU Concerts 🎵</div>
 
-                                <div class="movie-title">#{ticket.movie.name}</div>
+                                <div class="movie-title">#{ticket.concert.bandName}</div>
+                                <div class="text-muted">#{ticket.concert.tourName}</div>
 
                                 <div class="ticket-info mb-2">
                                     <div class="info-item">
@@ -55,11 +56,11 @@
                                     </div>
                                     <div class="info-item">
                                         <span class="info-label">Zeit</span>
-                                        <span class="info-value">#{ticket.showtime}</span>
+                                        <span class="info-value">#{ticket.concertTime}</span>
                                     </div>
                                     <div class="info-item">
-                                        <span class="info-label">Saal</span>
-                                        <span class="info-value">#{ticket.hall.name}</span>
+                                        <span class="info-label">Venue</span>
+                                        <span class="info-value">#{ticket.venue.name}</span>
                                     </div>
                                 </div>
                             </div>
@@ -88,9 +89,12 @@
                             </div>
 
                             <div class="ticket-stub">
-                                <div class="seat-indicator">#{ticket.seatNumber}</div>
+                                <div class="seat-indicator">
+                                    <c:if test="#{ticket.seatNumber != null}">#{ticket.seatNumber}</c:if>
+                                    <c:if test="#{ticket.seatNumber == null}">#{ticket.ticketType}</c:if>
+                                </div>
                                 <div class="movie-poster">
-                                    <img src="#{ticket.movie.cover}" alt="Movie Poster" style="width:100%; height:100%; object-fit:cover;" />
+                                    <img src="#{ticket.concert.cover}" alt="Concert Poster" style="width:100%; height:100%; object-fit:cover;" />
                                 </div>
                                 <div class="ticket-number">#{ticket.ticketNumber}</div>
                             </div>
