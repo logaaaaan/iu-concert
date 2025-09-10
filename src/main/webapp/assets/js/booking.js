@@ -152,7 +152,6 @@ function updateSeatSelection() {
 }
 
 // Make updateSelectedSeats globally accessible
-// Make updateSelectedSeats globally accessible
 function updateSelectedSeats() {
     const container = document.getElementById('seatsContainer');
     const selectedSeatsList = document.getElementById('selectedSeatsList');
@@ -201,7 +200,6 @@ function fillAlreadyBookedSeats() {
     const ticketTypeSelect = document.getElementById('ticketType');
     
     // Handle ticket type changes instead of showtime
-
     if (ticketTypeSelect) {
         ticketTypeSelect.addEventListener('change', () => {
             const selectedType = ticketTypeSelect.value;

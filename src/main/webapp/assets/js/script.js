@@ -2,7 +2,6 @@ function showConcertDetails(cardElement) {
     const title = cardElement.querySelector('.card-title').textContent;
     const image = cardElement.querySelector('.card-img-top').src;
     const genre = cardElement.querySelector('.badge').textContent;
-    const duration = cardElement.querySelector('.duration').textContent;
     const tour = cardElement.dataset.tour;
     const support = cardElement.dataset.support;
     const venue = cardElement.dataset.venue;
@@ -29,9 +28,8 @@ function showConcertDetails(cardElement) {
                     <p>${venue}</p>
                     <h6>Beschreibung</h6>
                     <p>${description}</p>
-                    <div class="movie-meta mb-4">
+                    <div class="concert-meta mb-4">
                         <span class="badge bg-info me-2">${genre}</span>
-                        <span class="duration">${duration}</span>
                         <div class="rating mt-3">
                             <div class="stars" data-rating="${rating}">
                                 ${generateStars(rating)}
@@ -102,15 +100,13 @@ function bookTickets(element) {
                      element.querySelector('.card-title')?.textContent;
         const image = element.querySelector('.card-img-top')?.src;
         const genre = element.querySelector('.badge')?.textContent;
-        const duration = element.querySelector('.duration')?.textContent;
 
         // Store concert details in localStorage
         const concertDetails = {
             concertId: concertId,
             title: title,
             image: image,
-            genre: genre,
-            duration: duration
+            genre: genre
         };
         
         try {
@@ -123,11 +119,4 @@ function bookTickets(element) {
     } catch (error) {
         console.error('Error during booking:', error);
     }
-}
-    
-// Close the modal if it's open
-const modalElement = document.getElementById('concertDetailModal');
-const modal = bootstrap.Modal.getInstance(modalElement);
-if (modal) {
-    modal.hide();
 }

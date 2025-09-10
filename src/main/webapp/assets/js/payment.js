@@ -28,13 +28,16 @@ function initializeBookingInfo() {
     document.getElementById('totalPrice').textContent = `${bookingInfo.totalPrice.toFixed(2)} €`;
 }
 
-// Generate ticket number
+// Generate ticket number for concerts
 function generateTicketNumber(seat) {
     const date = new Date();
     const dateStr = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
-    const parsedData = JSON.parse(window.localStorage.getItem('selectedMovie'));
+    
+    // Get concertId from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const concertId = urlParams.get('concertId');
 
-    return `TKT-${dateStr}-R${seat.row}S${seat.seat}-${parsedData.movieId}`;
+    return `TKT-${dateStr}-R${seat.row}S${seat.seat}-${concertId}`;
 }
 
 // Initialize ticket holder fields
@@ -116,17 +119,18 @@ function collectTicketHolderInfo() {
         const lastName = element.querySelector('.ticket-lastname').value.trim();
         const ticketNumber = generateTicketNumber(bookingInfo.seats[i]);
         const price = parseFloat(document.getElementById('price-per-ticket').textContent.replace('€', ''));
-        const showtime = bookingInfo.showtime;
+        const concertTime = document.querySelector('.concert-time')?.textContent || '19:30';
 
         if (!firstName || !lastName) return null;
 
         ticketHolders.push({
             seat: bookingInfo.seats[i],
-            showtime,
-            price,
-            firstName,
-            lastName,
-            ticketNumber
+            concertTime: concertTime,
+            price: price,
+            firstName: firstName,
+            lastName: lastName,
+            ticketNumber: ticketNumber,
+            ticketType: bookingInfo.ticketType || 'Standard'
         });
     }
     return ticketHolders;
@@ -232,20 +236,23 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             // Set form data
-            const movieIdField = document.getElementById('billingForm:movieId');
+            const concertIdField = document.getElementById('billingForm:concertId');
             const totalField = document.getElementById('billingForm:total');
             const ticketHoldersField = document.getElementById('billingForm:ticketHoldersData');
             
-            if (!movieIdField || !totalField || !ticketHoldersField) {
+            if (!concertIdField || !totalField || !ticketHoldersField) {
                 throw new Error('Required form fields not found');
             }
             
-            const selectedMovie = JSON.parse(window.localStorage.getItem('selectedMovie'));
-            if (!selectedMovie || !selectedMovie.movieId) {
-                throw new Error('Movie information not found');
+            // Get concertId from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const concertId = urlParams.get('concertId');
+            
+            if (!concertId) {
+                throw new Error('Concert information not found');
             }
             
-            movieIdField.value = selectedMovie.movieId;
+            concertIdField.value = concertId;
             totalField.value = ticketHolders.reduce((sum, holder) => sum + holder.price, 0);
             ticketHoldersField.value = JSON.stringify(ticketHolders);
         } catch (error) {
