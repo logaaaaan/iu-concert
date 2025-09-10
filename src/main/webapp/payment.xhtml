@@ -161,11 +161,10 @@
                                 </div>
                             </div>
 
-                            <!-- Hidden form fields for movie ID and total -->
-                            <h:inputHidden id="movieId" value="#{paymentBean.movieId}" />
+                            <!-- Hidden form fields for concert ID and total -->
+                            <h:inputHidden id="concertId" value="#{paymentBean.concertId}" />
                             <h:inputHidden id="total" value="#{paymentBean.total}" />
 
-                            <input type="hidden" name="movieId" value="#{param['movieId']}" />
                             <!-- Submit button -->
                             <h:commandButton value="Jetzt Bezahlen" action="#{paymentBean.submit}" styleClass="btn btn-primary w-100 mt-4" />
                         </h:form>
@@ -176,15 +175,20 @@
                 <div class="col-lg-4">
                     <div class="booking-summary">
                         <h3>Buchungsübersicht</h3>
-                        <div class="movie-info-booking">
-                            <img id="movieImage" src="#{bookingBean.getMovie().cover}" alt="Movie Poster" class="img-fluid rounded mb-3" />
-                            <h4 id="movieTitle">#{bookingBean.getMovie().name}</h4>
-                            <p id="movieDetails" style="color: #cccccc">#{bookingBean.getMovie().shortDesc}</p>
-                            <div class="movie-info">
-                                <ui:repeat var="genre" value="#{movieBean.getGenres(bookingBean.getMovie())}">
-                                    <span class="badge bg-info">#{genre}</span>
+                        <div class="concert-info-booking">
+                            <img id="concertImage" src="#{bookingBean.getConcert().cover}" alt="Concert Poster" class="img-fluid rounded mb-3" />
+                            <h4 id="concertTitle">#{bookingBean.getConcert().bandName}</h4>
+                            <h6 class="text-muted">#{bookingBean.getConcert().tourName}</h6>
+                            <p id="concertDetails" style="color: #cccccc">#{bookingBean.getConcert().shortDesc}</p>
+                            <div class="concert-info">
+                                <ui:repeat var="genre" value="#{concertBean.getGenres(bookingBean.getConcert())}">
+                                    <span class="badge bg-danger">#{genre}</span>
                                 </ui:repeat>
-                                <span class="duration">#{bookingBean.getMovie().playtime} Spielzeit</span>
+                                <div class="mt-2">
+                                    <small class="d-block"><i class="bi bi-calendar-event"></i> #{bookingBean.getConcert().concertDate}</small>
+                                    <small class="d-block"><i class="bi bi-clock"></i> #{bookingBean.getConcert().concertTime} Uhr</small>
+                                    <small class="d-block"><i class="bi bi-geo-alt"></i> #{bookingBean.getConcert().venue.name}</small>
+                                </div>
                             </div>
                         </div>
 
@@ -198,7 +202,7 @@
                         <div class="price-summary mt-4">
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Preis pro Ticket:</span>
-                                <span id="price-per-ticket">#{bookingBean.getMovie().price} €</span>
+                                <span id="price-per-ticket">#{bookingBean.getConcert().price} €</span>
                             </div>
                             <div class="d-flex justify-content-between mb-2 total-price">
                                 <strong>Gesamtpreis:</strong>
