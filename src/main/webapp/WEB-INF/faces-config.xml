@@ -7,11 +7,11 @@
     
     <navigation-rule>
         <from-view-id>/payment.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>/confirm.xhtml?faces-redirect=true</from-outcome>
-            <to-view-id>/confirm.xhtml</to-view-id>
-            <redirect />
-        </navigation-case>
+            <navigation-case>
+                <from-outcome>/confirmation.xhtml?faces-redirect=true</from-outcome>
+                <to-view-id>/confirmation.xhtml</to-view-id>
+                <redirect />
+            </navigation-case>
         <navigation-case>
             <from-outcome>success</from-outcome>
             <to-view-id>/payment.xhtml</to-view-id>
