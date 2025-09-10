@@ -10,13 +10,8 @@ import javax.faces.bean.ManagedBean;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 @ManagedBean
@@ -60,12 +55,12 @@ public class BookingBean implements Serializable {
         return concert.getConcertTime() != null ? concert.getConcertTime().toString() : "";
     }
 
-
     public String getConcertName() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Concert concert = (Concert) session.get(Concert.class, concertId);
 
-        return concert != null ? concert.getBandName() : "Band nicht gefunden";
+        return concert != null && concert.getBand() != null ? 
+               concert.getBand().getBandName() : "Band nicht gefunden";
     }
 
     public Concert getConcert() {
@@ -78,13 +73,14 @@ public class BookingBean implements Serializable {
 
         return this.concert;
     }
-
+    
+    @SuppressWarnings("unchecked")
     public ArrayList<String> getBookedSeatsForConcert() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         ArrayList<String> bookedSeats = new ArrayList<>();
 
         try {
-            String hql = "FROM Ticket t WHERE t.concert.id = :concertId";
+            String hql = "FROM Ticket t WHERE t.concert.concertId = :concertId";
             List<Ticket> tickets = session.createQuery(hql)
                 .setParameter("concertId", concertId)
                 .list();

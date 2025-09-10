@@ -1,9 +1,9 @@
 package com.shweit.cinema.beans;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+// import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.core.type.TypeReference;
+// import com.fasterxml.jackson.core.type.TypeReference;
 import com.shweit.cinema.HibernateUtil;
 import com.shweit.cinema.model.Billing;
 import com.shweit.cinema.model.Concert;
@@ -16,9 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 
@@ -194,7 +192,6 @@ public class PaymentBean {
     }
     
     public String submit() {
-                
         try {
             // Get ticket holders from JavaScript
             if (this.getTicketHoldersData() == null || this.getTicketHoldersData().isEmpty()) {
@@ -261,7 +258,6 @@ public class PaymentBean {
                     
                     ticket.setTicketNumber(holder.get("ticketNumber").asText());
                     ticket.setPurchaseDate(new Timestamp(System.currentTimeMillis()));
-                    ticket.setVenue(concert.getVenue());
                     ticket.setConcert(concert);
                     ticket.setBilling(billing);
 

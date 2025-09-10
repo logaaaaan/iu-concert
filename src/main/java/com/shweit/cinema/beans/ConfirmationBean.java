@@ -13,6 +13,7 @@ import java.util.List;
 
 @ManagedBean
 @RequestScoped
+@SuppressWarnings("unchecked")
 public class ConfirmationBean {
     private int billingId;
 
@@ -28,7 +29,7 @@ public class ConfirmationBean {
             try {
                 this.billingId = Integer.parseInt(billingIdParam);
             } catch (NumberFormatException e) {
-                // Handle invalid movieId
+                // Handle invalid billingId
                 System.err.println("Invalid billingId: " + billingIdParam);
             }
         }
@@ -39,7 +40,7 @@ public class ConfirmationBean {
 
         List<Ticket> tickets;
         try {
-            String hql = "FROM Ticket WHERE billingId = :billingId";
+            String hql = "FROM Ticket WHERE billing.billingId = :billingId";
             tickets = session.createQuery(hql)
                 .setParameter("billingId", billingId)
                 .list();
