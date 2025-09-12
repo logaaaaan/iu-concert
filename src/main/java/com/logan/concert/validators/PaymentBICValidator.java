@@ -1,4 +1,4 @@
-package com.logan.cinema.validators;
+package com.logan.concert.validators;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -7,8 +7,8 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-@FacesValidator("paymentCVVValidator")
-public class PaymentCVVValidator implements Validator {
+@FacesValidator("paymentBICValidator")
+public class PaymentBICValidator implements Validator {
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
@@ -16,12 +16,12 @@ public class PaymentCVVValidator implements Validator {
             return; // Let required=true handle empty fields
         }
 
-        String cvv = value.toString().trim();
+        String bic = value.toString().replaceAll("\\s+", ""); // Remove all whitespace
 
-        // Check if CVV has 3 or 4 digits
-        if (!cvv.matches("^\\d{3,4}$")) {
-            FacesMessage msg = new FacesMessage("CVV ungültig",
-                    "Bitte geben Sie einen gültigen CVV-Code ein (3-4 Ziffern)");
+        // Check if BIC has valid length (8 or 11 characters)
+        if (!bic.matches("^[A-Z]{6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3})?$")) {
+            FacesMessage msg = new FacesMessage("BIC-Format ungültig",
+                    "Bitte geben Sie einen gültigen BIC ein (8 oder 11 Zeichen)");
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
             throw new ValidatorException(msg);
         }

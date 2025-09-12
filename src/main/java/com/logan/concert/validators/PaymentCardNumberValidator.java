@@ -1,4 +1,4 @@
-package com.logan.cinema.validators;
+package com.logan.concert.validators;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;

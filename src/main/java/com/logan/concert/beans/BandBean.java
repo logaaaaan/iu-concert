@@ -1,4 +1,4 @@
-package com.logan.cinema.beans;
+package com.logan.concert.beans;
 
 import java.io.IOException;
 import org.hibernate.Session;
@@ -8,8 +8,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.logan.cinema.HibernateUtil;
-import com.logan.cinema.model.Band;
+import com.logan.concert.HibernateUtil;
+import com.logan.concert.model.Band;
 
 import java.util.ArrayList;
 

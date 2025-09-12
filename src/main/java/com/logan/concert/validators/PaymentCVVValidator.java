@@ -1,4 +1,4 @@
-package com.logan.cinema.validators;
+package com.logan.concert.validators;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -7,8 +7,8 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-@FacesValidator("paymentIBANValidator")
-public class PaymentIBANValidator implements Validator {
+@FacesValidator("paymentCVVValidator")
+public class PaymentCVVValidator implements Validator {
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
@@ -16,12 +16,12 @@ public class PaymentIBANValidator implements Validator {
             return; // Let required=true handle empty fields
         }
 
-        String iban = value.toString().replaceAll("\\s+", ""); // Remove all whitespace
+        String cvv = value.toString().trim();
 
-        // Check if IBAN starts with DE and has correct length
-        if (!iban.matches("^DE\\d{20}$")) {
-            FacesMessage msg = new FacesMessage("IBAN-Format ungültig",
-                    "Bitte geben Sie eine gültige deutsche IBAN ein (DE + 20 Ziffern)");
+        // Check if CVV has 3 or 4 digits
+        if (!cvv.matches("^\\d{3,4}$")) {
+            FacesMessage msg = new FacesMessage("CVV ungültig",
+                    "Bitte geben Sie einen gültigen CVV-Code ein (3-4 Ziffern)");
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
             throw new ValidatorException(msg);
         }

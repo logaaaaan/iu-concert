@@ -1,4 +1,4 @@
-package com.logan.cinema;
+package com.logan.concert;
 
 import lombok.Getter;
 import org.hibernate.SessionFactory;

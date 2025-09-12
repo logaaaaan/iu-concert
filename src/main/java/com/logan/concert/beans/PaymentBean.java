@@ -1,11 +1,11 @@
-package com.logan.cinema.beans;
+package com.logan.concert.beans;
 
 // import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.logan.cinema.HibernateUtil;
-import com.logan.cinema.model.Billing;
-import com.logan.cinema.model.Concert;
-import com.logan.cinema.model.Ticket;
+import com.logan.concert.HibernateUtil;
+import com.logan.concert.model.Billing;
+import com.logan.concert.model.Concert;
+import com.logan.concert.model.Ticket;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.hibernate.Session;

@@ -1,11 +1,11 @@
-package com.logan.cinema.beans;
+package com.logan.concert.beans;
 
 import org.hibernate.Session;
 
-import com.logan.cinema.HibernateUtil;
-import com.logan.cinema.model.Band;
-import com.logan.cinema.model.Concert;
-import com.logan.cinema.model.Ticket;
+import com.logan.concert.HibernateUtil;
+import com.logan.concert.model.Band;
+import com.logan.concert.model.Concert;
+import com.logan.concert.model.Ticket;
 
 import javax.enterprise.context.RequestScoped;
 import javax.faces.bean.ManagedBean;

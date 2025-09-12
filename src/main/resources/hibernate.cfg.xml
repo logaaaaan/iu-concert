@@ -12,10 +12,10 @@
         <property name="show_sql">true</property>
         <property name="format_sql">false</property>
 
-         <mapping class="com.logan.cinema.model.Band"/>
-         <mapping class="com.logan.cinema.model.Concert"/>
-         <mapping class="com.logan.cinema.model.Venue"/>
-         <mapping class="com.logan.cinema.model.Ticket"/>
-         <mapping class="com.logan.cinema.model.Billing"/>
+         <mapping class="com.logan.concert.model.Band"/>
+         <mapping class="com.logan.concert.model.Concert"/>
+         <mapping class="com.logan.concert.model.Venue"/>
+         <mapping class="com.logan.concert.model.Ticket"/>
+         <mapping class="com.logan.concert.model.Billing"/>
     </session-factory>
 </hibernate-configuration>

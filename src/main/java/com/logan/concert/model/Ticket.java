@@ -1,4 +1,4 @@
-package com.logan.cinema.model;
+package com.logan.concert.model;
 
 import lombok.Data;
 import javax.persistence.*;

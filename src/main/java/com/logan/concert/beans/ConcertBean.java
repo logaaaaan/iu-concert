@@ -1,10 +1,10 @@
-package com.logan.cinema.beans;
+package com.logan.concert.beans;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.logan.cinema.HibernateUtil;
-import com.logan.cinema.model.Band;
-import com.logan.cinema.model.Concert;
+import com.logan.concert.HibernateUtil;
+import com.logan.concert.model.Band;
+import com.logan.concert.model.Concert;
 
 // import java.io.IOException;
 import org.hibernate.Session;
