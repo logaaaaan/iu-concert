@@ -1,8 +1,9 @@
-package com.shweit.cinema.beans;
+package com.logan.cinema.beans;
 
-import com.shweit.cinema.HibernateUtil;
-import com.shweit.cinema.model.Ticket;
 import org.hibernate.Session;
+
+import com.logan.cinema.HibernateUtil;
+import com.logan.cinema.model.Ticket;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;

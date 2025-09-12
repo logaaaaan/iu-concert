@@ -1,4 +1,4 @@
-package com.shweit.cinema.model;
+package com.logan.cinema.model;
 
 import lombok.Data;
 import javax.persistence.*;

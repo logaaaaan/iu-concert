@@ -1,4 +1,4 @@
-package com.shweit.cinema.validators;
+package com.logan.cinema.validators;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;

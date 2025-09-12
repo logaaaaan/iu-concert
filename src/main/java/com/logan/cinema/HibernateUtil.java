@@ -1,4 +1,4 @@
-package com.shweit.cinema;
+package com.logan.cinema;
 
 import lombok.Getter;
 import org.hibernate.SessionFactory;

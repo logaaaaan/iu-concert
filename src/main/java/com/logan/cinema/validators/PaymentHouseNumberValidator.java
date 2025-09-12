@@ -1,4 +1,4 @@
-package com.shweit.cinema.validators;
+package com.logan.cinema.validators;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -7,27 +7,27 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-@FacesValidator("paymentCityValidator")
-public class PaymentCityValidator implements Validator {
-    private static final String CITY_PATTERN = "^[A-Za-zäöüÄÖÜß\\s.-]+$";
+@FacesValidator("paymentHouseNumberValidator")
+public class PaymentHouseNumberValidator implements Validator {
+    private static final String HOUSE_NUMBER_PATTERN = "^[0-9]+([-/][0-9]+)?[a-zA-Z]?$";
     
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         if (value == null) {
-            FacesMessage msg = new FacesMessage("Validation failed.", "Die Stadt ist ein Pflichtfeld.");
+            FacesMessage msg = new FacesMessage("Validation failed.", "Die Hausnummer ist ein Pflichtfeld.");
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
             throw new ValidatorException(msg);
         }
         
-        String city = value.toString().trim();
-        if (!city.matches(CITY_PATTERN)) {
-            FacesMessage msg = new FacesMessage("Validation failed.", "Der Stadtname darf nur Buchstaben, Leerzeichen, Punkte und Bindestriche enthalten.");
+        String houseNumber = value.toString().trim();
+        if (!houseNumber.matches(HOUSE_NUMBER_PATTERN)) {
+            FacesMessage msg = new FacesMessage("Validation failed.", "Bitte geben Sie eine gültige Hausnummer ein (z.B. 12, 12a, 12-14).");
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
             throw new ValidatorException(msg);
         }
         
-        if (city.length() < 2 || city.length() > 50) {
-            FacesMessage msg = new FacesMessage("Validation failed.", "Der Stadtname muss zwischen 2 und 50 Zeichen lang sein.");
+        if (houseNumber.length() > 10) {
+            FacesMessage msg = new FacesMessage("Validation failed.", "Die Hausnummer darf nicht länger als 10 Zeichen sein.");
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
             throw new ValidatorException(msg);
         }

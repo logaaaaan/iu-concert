@@ -1,13 +1,13 @@
-package com.shweit.cinema.beans;
+package com.logan.cinema.beans;
 
 // import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.logan.cinema.HibernateUtil;
+import com.logan.cinema.model.Billing;
+import com.logan.cinema.model.Concert;
+import com.logan.cinema.model.Ticket;
 import com.fasterxml.jackson.databind.JsonNode;
-// import com.fasterxml.jackson.core.type.TypeReference;
-import com.shweit.cinema.HibernateUtil;
-import com.shweit.cinema.model.Billing;
-import com.shweit.cinema.model.Concert;
-import com.shweit.cinema.model.Ticket;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 

@@ -1,11 +1,12 @@
-package com.shweit.cinema.beans;
-
-import com.shweit.cinema.HibernateUtil;
-import com.shweit.cinema.model.Band;
-import com.shweit.cinema.model.Concert;
-import com.shweit.cinema.model.Ticket;
+package com.logan.cinema.beans;
 
 import org.hibernate.Session;
+
+import com.logan.cinema.HibernateUtil;
+import com.logan.cinema.model.Band;
+import com.logan.cinema.model.Concert;
+import com.logan.cinema.model.Ticket;
+
 import javax.enterprise.context.RequestScoped;
 import javax.faces.bean.ManagedBean;
 import java.io.Serializable;

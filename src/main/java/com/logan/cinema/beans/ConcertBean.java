@@ -1,10 +1,11 @@
-package com.shweit.cinema.beans;
+package com.logan.cinema.beans;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shweit.cinema.HibernateUtil;
-import com.shweit.cinema.model.Band;
-import com.shweit.cinema.model.Concert;
+import com.logan.cinema.HibernateUtil;
+import com.logan.cinema.model.Band;
+import com.logan.cinema.model.Concert;
+
 // import java.io.IOException;
 import org.hibernate.Session;
 import javax.faces.bean.ManagedBean;
