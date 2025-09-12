@@ -12,9 +12,10 @@
         <property name="show_sql">true</property>
         <property name="format_sql">false</property>
 
-         <mapping class="com.shweit.cinema.model.Concert" />
-         <mapping class="com.shweit.cinema.model.Ticket" />
-         <mapping class="com.shweit.cinema.model.Venue" />
-         <mapping class="com.shweit.cinema.model.Billing" />
+         <mapping class="com.shweit.cinema.model.Band"/>
+         <mapping class="com.shweit.cinema.model.Concert"/>
+         <mapping class="com.shweit.cinema.model.Venue"/>
+         <mapping class="com.shweit.cinema.model.Ticket"/>
+         <mapping class="com.shweit.cinema.model.Billing"/>
     </session-factory>
 </hibernate-configuration>

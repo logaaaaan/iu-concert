@@ -37,7 +37,10 @@
                                 <div class="cinema-logo">🎵 IU Concerts 🎵</div>
 
                                 <div class="movie-title">#{ticket.concert.bandName}</div>
-                                <div class="text-muted">#{ticket.concert.tourName}</div>
+
+                                <ui:remove>
+                                <!-- <div class="text-muted">#{ticket.concert.tourName}</div> -->
+                                </ui:remove>
 
                                 <div class="ticket-info mb-2">
                                     <div class="info-item">
@@ -94,7 +97,7 @@
                                     <c:if test="#{ticket.seatNumber == null}">#{ticket.ticketType}</c:if>
                                 </div>
                                 <div class="movie-poster">
-                                    <img src="#{ticket.concert.cover}" alt="Concert Poster" style="width:100%; height:100%; object-fit:cover;" />
+                                    <img src="#{ticket.band.cover}" alt="Concert Poster" style="width:100%; height:100%; object-fit:cover;" />
                                 </div>
                                 <div class="ticket-number">#{ticket.ticketNumber}</div>
                             </div>

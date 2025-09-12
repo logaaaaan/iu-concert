@@ -90,9 +90,13 @@
                 <div class="booking-summary">
                     <h3>Buchungsübersicht</h3>
                     <div class="concert-info-booking">
-                        <img id="concertImage" src="#{bookingBean.getConcert().cover}" alt="Concert Poster" class="img-fluid rounded mb-3" />
+                        <img id="concertImage" src="#{bookingBean.getBand().cover}" alt="Concert Poster" class="img-fluid rounded mb-3" />
                         <h4 id="concertTitle">#{bookingBean.getConcert().bandName}</h4>
-                        <h6 class="text-muted">#{bookingBean.getConcert().tourName}</h6>
+
+                        <ui:remove>
+                        <!-- <h6 class="text-muted">#{bookingBean.getConcert().tourName}</h6> -->
+                        </ui:remove>
+
                         <p id="concertDetails" style="color: #cccccc">#{bookingBean.getConcert().shortDesc}</p>
                         <div class="concert-info">
                             <ui:repeat var="genre" value="#{concertBean.getGenres(bookingBean.getConcert())}">

@@ -28,11 +28,20 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3 g-lg-4">
             <ui:repeat var="concert" value="#{concertBean.getAllConcerts()}">
                 <div class="col">
-                    <div class="card h-100 concert-card" data-concert-id="#{concert.concertId}" data-tour="#{concert.tourName}" data-support="#{concertBean.getSupportActs(concert)}" data-description="#{concert.description}" data-rating="#{concert.rating}" data-video="#{concert.videoUrl}" data-venue="#{concert.venue.name}">
-                        <img src="#{concert.cover}" class="card-img-top" alt="#{concert.bandName}" />
+
+                    <ui:remove>
+                    <!-- <div class="card h-100 concert-card" data-concert-id="#{concert.concertId}" data-tour="#{concert.tourName}" data-support="#{concertBean.getSupportActs(concert)}" data-description="#{concert.description}" data-rating="#{concert.rating}" data-video="#{concert.videoUrl}" data-venue="#{concert.venue.name}"> </div> -->
+                    </ui:remove>
+
+                    <div class="card h-100 concert-card" data-concert-id="#{concert.concertId}" data-venue="#{concert.venue.name}">
+                        <img src="#{band.cover}" class="card-img-top" alt="#{concert.bandName}" />
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">#{concert.bandName}</h5>
-                            <h6 class="text-muted">#{concert.tourName}</h6>
+
+                            <ui:remove>
+                            <!-- <h6 class="text-muted">#{concert.tourName}</h6> -->
+                            </ui:remove>
+
                             <p class="card-text flex-grow-1">#{concert.shortDesc}</p>
                             <div class="movie-info">
                                 <ui:repeat var="genre" value="#{concertBean.getGenres(concert)}">
