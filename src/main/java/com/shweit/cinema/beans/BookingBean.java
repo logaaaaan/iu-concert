@@ -1,6 +1,7 @@
 package com.shweit.cinema.beans;
 
 import com.shweit.cinema.HibernateUtil;
+import com.shweit.cinema.model.Band;
 import com.shweit.cinema.model.Concert;
 import com.shweit.cinema.model.Ticket;
 
@@ -96,4 +97,10 @@ public class BookingBean implements Serializable {
 
         return bookedSeats;
     }
+
+    public Band getBand() {
+        Concert concert = getConcert();
+        return concert != null ? concert.getBand() : null;
+    }
+
 }

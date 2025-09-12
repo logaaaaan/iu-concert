@@ -63,4 +63,9 @@ public class BandBean {
             return ""; // Return empty string in case of error
         }
     }
+    
+    // Get band name for a Band object
+    public String getBandName(Band band) {
+        return band != null ? band.getBandName() : "Unbekannte Band";
+    }
 }

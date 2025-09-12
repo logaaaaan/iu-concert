@@ -40,7 +40,12 @@ public class ConfirmationBean {
 
         List<Ticket> tickets;
         try {
-            String hql = "FROM Ticket WHERE billing.billingId = :billingId";
+            String hql = "SELECT t FROM Ticket t " +
+             "LEFT JOIN FETCH t.concert c " +
+             "LEFT JOIN FETCH c.band " +
+             "LEFT JOIN FETCH c.venue " +
+             "WHERE t.billing.billingId = :billingId";
+
             tickets = session.createQuery(hql)
                 .setParameter("billingId", billingId)
                 .list();
