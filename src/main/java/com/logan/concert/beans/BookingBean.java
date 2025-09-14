@@ -6,6 +6,7 @@ import com.logan.concert.HibernateUtil;
 import com.logan.concert.model.Band;
 import com.logan.concert.model.Concert;
 import com.logan.concert.model.Ticket;
+import com.logan.concert.model.Venue;
 
 import javax.enterprise.context.RequestScoped;
 import javax.faces.bean.ManagedBean;
@@ -105,16 +106,47 @@ public class BookingBean implements Serializable {
     }
 
     public int getBookedTicketsCount() {
-    Session session = HibernateUtil.getSessionFactory().openSession();
-    try {
-        String hql = "SELECT COUNT(*) FROM Ticket t WHERE t.concert.concertId = :concertId";
-        Long count = (Long) session.createQuery(hql)
-            .setParameter("concertId", concertId)
-            .uniqueResult();
-        return count != null ? count.intValue() : 0;
-    } finally {
-        session.close();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            String hql = "SELECT COUNT(*) FROM Ticket t WHERE t.concert.concertId = :concertId";
+            Long count = (Long) session.createQuery(hql)
+                .setParameter("concertId", concertId)
+                .uniqueResult();
+            return count != null ? count.intValue() : 0;
+        } finally {
+            session.close();
+        }
     }
-}
+
+    public int getAvailableTickets(String ticketType) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Venue venue = getConcert().getVenue();
+            int capacity = 0;
+            
+            switch(ticketType) {
+                case "standing":
+                    capacity = venue.getStandingArea() != null ? venue.getStandingArea() : 0;
+                    break;
+                case "seated":
+                    capacity = venue.getSeatingArea() != null ? venue.getSeatingArea() : 0;
+                    break;
+                case "vip":
+                    capacity = venue.getVipArea() != null ? venue.getVipArea() : 0;
+                    break;
+            }
+
+            String hql = "SELECT COUNT(*) FROM Ticket t WHERE t.concert.concertId = :concertId AND t.ticketType = :ticketType";
+            Long booked = (Long) session.createQuery(hql)
+                .setParameter("concertId", concertId)
+                .setParameter("ticketType", ticketType)
+                .uniqueResult();
+
+            return Math.max(0, capacity - (booked != null ? booked.intValue() : 0));
+        } finally {
+            session.close();
+        }
+    }
+
 
 }

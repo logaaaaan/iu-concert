@@ -4,6 +4,8 @@ const MIN_TICKETS = 1;
 
 // Global variables
 let currentQuantity = MIN_TICKETS;
+let availableTickets = {}; // Speichert verfügbare Tickets pro Typ
+let initialTicketsSet = false; // Stellt sicher, dass Startwerte nur einmal gesetzt werden
 
 // Initialize ticket quantity controls
 function initializeTicketQuantity() {
@@ -17,22 +19,35 @@ function initializeTicketQuantity() {
         return;
     }
 
+    // Initialisiere verfügbare Tickets nur einmal beim ersten Laden
+    if (!initialTicketsSet) {
+        // Generiere zufällige Startwerte für jeden Tickettyp
+        availableTickets = {
+            'standing': Math.floor(Math.random() * 100) + 20, // 20-119 Tickets
+            'seated': Math.floor(Math.random() * 80) + 30,    // 30-109 Tickets
+            'vip': Math.floor(Math.random() * 30) + 10        // 10-39 VIP-Tickets
+        };
+        initialTicketsSet = true;
+        
+        // Zeige die Startwerte an
+        updateAvailableTickets();
+    }
+
     // Event listeners for quantity buttons
     decreaseBtn.addEventListener('click', () => {
         if (currentQuantity > MIN_TICKETS) {
             currentQuantity--;
             quantitySpan.textContent = currentQuantity;
             updateBookingSummary();
-            updateAvailableTickets();
         }
     });
 
     increaseBtn.addEventListener('click', () => {
-        if (currentQuantity < MAX_TICKETS) {
+        const ticketType = document.getElementById('ticketType').value;
+        if (currentQuantity < MAX_TICKETS && currentQuantity < availableTickets[ticketType]) {
             currentQuantity++;
             quantitySpan.textContent = currentQuantity;
             updateBookingSummary();
-            updateAvailableTickets();
         }
     });
 
@@ -43,111 +58,46 @@ function initializeTicketQuantity() {
         const pricePerTicket = parseFloat(selectedOption.getAttribute('data-price'));
         document.getElementById('pricePerTicket').textContent = pricePerTicket.toFixed(2) + ' €';
         
+        // Setze Menge zurück, wenn nicht genug Tickets verfügbar
+        const ticketType = selectedOption.value;
+        if (currentQuantity > availableTickets[ticketType]) {
+            currentQuantity = Math.max(MIN_TICKETS, availableTickets[ticketType]);
+            quantitySpan.textContent = currentQuantity;
+        }
+        
         updateBookingSummary();
         updateAvailableTickets();
     });
 
     // Initial updates
     updateBookingSummary();
-    updateAvailableTickets();
 }
 
-// Update booking summary with selected tickets
 function updateBookingSummary() {
     const quantity = parseInt(document.getElementById('ticketQuantity').textContent);
     const ticketTypeSelect = document.getElementById('ticketType');
     const selectedOption = ticketTypeSelect.options[ticketTypeSelect.selectedIndex];
     const pricePerTicket = parseFloat(selectedOption.getAttribute('data-price'));
-    const totalPriceElement = document.getElementById('totalPrice');
-    const selectedTicketsList = document.getElementById('selectedTicketsList');
-    const bookButton = document.getElementById('bookButton');
-
-    // Calculate total price
     const totalPrice = quantity * pricePerTicket;
-    totalPriceElement.textContent = `${totalPrice.toFixed(2)} €`;
 
-    // Update selected tickets list
-    selectedTicketsList.innerHTML = '';
-    const ticketTypeName = selectedOption.textContent.split(' - ')[0];
-    
-    for (let i = 0; i < quantity; i++) {
-        const ticketDiv = document.createElement('div');
-        ticketDiv.className = 'selected-ticket';
-        ticketDiv.innerHTML = `
-            <span>${ticketTypeName} #${i + 1}</span>
-            <span>${pricePerTicket.toFixed(2)} €</span>
-        `;
-        selectedTicketsList.appendChild(ticketDiv);
-    }
-
-    // Enable/disable book button
-    const availableTickets = calculateAvailableTickets();
-    bookButton.disabled = quantity === 0 || quantity > availableTickets;
-    
-    if (bookButton.disabled) {
-        bookButton.classList.remove('btn-primary');
-        bookButton.classList.add('btn-secondary');
-    } else {
-        bookButton.classList.remove('btn-secondary');
-        bookButton.classList.add('btn-primary');
-    }
+    document.getElementById('totalPrice').textContent = `${totalPrice.toFixed(2)} €`;
 }
 
-// Calculate available tickets
-function calculateAvailableTickets() {
-    const ticketTypeSelect = document.getElementById('ticketType');
-    const selectedOption = ticketTypeSelect.options[ticketTypeSelect.selectedIndex];
-    const ticketType = selectedOption.value;
-    
-    // Get venue capacities
-    const totalCapacity = parseInt(document.getElementById('venueTotalCapacity').value) || 0;
-    const standingCapacity = parseInt(document.getElementById('venueStandingCapacity').value) || 0;
-    const seatingCapacity = parseInt(document.getElementById('venueSeatingCapacity').value) || 0;
-    const vipCapacity = parseInt(document.getElementById('venueVipCapacity').value) || 0;
-    const bookedTickets = parseInt(document.getElementById('bookedTickets').value) || 0;
-    
-    // Calculate available tickets based on ticket type
-    let capacity = 0;
-    
-    switch(ticketType) {
-        case 'standing':
-            capacity = standingCapacity > 0 ? standingCapacity : totalCapacity;
-            break;
-        case 'seated':
-            capacity = seatingCapacity > 0 ? seatingCapacity : totalCapacity;
-            break;
-        case 'vip':
-            capacity = vipCapacity > 0 ? vipCapacity : totalCapacity;
-            break;
-        default:
-            capacity = totalCapacity;
-    }
-    
-    return Math.max(0, capacity - bookedTickets);
-}
-
-// Update available tickets display
 function updateAvailableTickets() {
-    const availableTickets = calculateAvailableTickets();
-    const availableTicketsElement = document.getElementById('availableTickets');
-    const increaseBtn = document.getElementById('increaseTickets');
+    const ticketType = document.getElementById('ticketType').value;
+    const availableTicketsElement = document.getElementById('availableCount');
     
     if (availableTicketsElement) {
-        availableTicketsElement.textContent = `Verfügbare Tickets: ${availableTickets}`;
+        availableTicketsElement.textContent = availableTickets[ticketType];
         
-        // Style based on availability
-        if (availableTickets <= 0) {
-            availableTicketsElement.className = 'text-danger fw-bold';
-        } else if (availableTickets < 10) {
-            availableTicketsElement.className = 'text-warning fw-bold';
+        // Stil basierend auf Verfügbarkeit
+        if (availableTickets[ticketType] <= 0) {
+            availableTicketsElement.className = 'text-danger';
+        } else if (availableTickets[ticketType] < 10) {
+            availableTicketsElement.className = 'text-warning';
         } else {
-            availableTicketsElement.className = 'text-success fw-bold';
+            availableTicketsElement.className = 'text-success';
         }
-    }
-    
-    // Enable/disable increase button based on availability
-    if (increaseBtn) {
-        increaseBtn.disabled = currentQuantity >= availableTickets || currentQuantity >= MAX_TICKETS;
     }
 }
 
@@ -160,17 +110,24 @@ function handleBooking() {
     const ticketType = selectedOption.value;
     const ticketTypeName = selectedOption.textContent.split(' - ')[0];
     
+    // Reduziere verfügbare Tickets
+    availableTickets[ticketType] = Math.max(0, availableTickets[ticketType] - quantity);
+    
     // Prepare booking data
     const bookingData = {
         quantity: quantity,
         ticketType: ticketType,
         ticketTypeName: ticketTypeName,
         pricePerTicket: pricePerTicket,
-        totalPrice: quantity * pricePerTicket
+        totalPrice: quantity * pricePerTicket,
+        remainingTickets: availableTickets[ticketType]
     };
 
     // Store booking data in localStorage
     localStorage.setItem('bookingData', JSON.stringify(bookingData));
+
+    // Zeige aktualisierte verfügbare Tickets an
+    updateAvailableTickets();
 
     // Redirect to payment page
     const concertId = new URLSearchParams(window.location.search).get('concertId');

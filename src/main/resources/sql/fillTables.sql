@@ -17,12 +17,12 @@ VALUES
     ('Ed Sheeran', 'https://2wjyoqczplq2loncx0jfrnk1q5w-thumbnail.storage.muc1.de.bnerd.com/thumbnail/de/Veranstaltungen/2025/Ed%20Sheeran/10955/image-thumb__10955__thumbnail-event-detail-hero/2025_03_07_ED%20SHEERAN_Shot09_034%20copy%201.2f4e5768.webp', 'Singer-Songwriter', 'Britischer Singer-Songwriter', '["Pop", "Folk"]');
 
 -- Insert sample data into concerts (Termine)
-INSERT INTO concert (bandId, venueId, duration, concertDate, concertTime, price, vipPrice)
+INSERT INTO concert (bandId, venueId, duration, concertDate, concertTime, price, vipPrice, standingSeatsSold, seatingSeatsSold, vipSeatsSold)
 VALUES
-    (1, 1, '02:30:00', '2025-10-15', '19:30:00', 89.99, 249.99),  -- Metallica in Arena Hauptstadt
-    (2, 3, '03:15:00', '2025-11-20', '18:00:00', 149.99, 399.99), -- Taylor Swift in Open Air Bühne
-    (3, 3, '02:00:00', '2025-09-05', '20:00:00', 99.99, 299.99),  -- Rammstein in Open Air Bühne
-    (4, 2, '02:15:00', '2025-12-10', '19:00:00', 79.99, 189.99);  -- Ed Sheeran in Konzerthaus Berlin
+    (1, 1, '02:30:00', '2025-10-15', '19:30:00', 89.99, 249.99., 6112, 5344, 191),  -- Metallica in Arena Hauptstadt
+    (2, 3, '03:15:00', '2025-11-20', '18:00:00', 149.99, 399.99, 18750, 2210, 488), -- Taylor Swift in Open Air Bühne
+    (3, 3, '02:00:00', '2025-09-05', '20:00:00', 99.99, 299.99, 63, 120, 22),  -- Rammstein in Open Air Bühne
+    (4, 2, '02:15:00', '2025-12-10', '19:00:00', 79.99, 189.99, 0, 1530, 73);  -- Ed Sheeran in Konzerthaus Berlin
 
 -- Insert sample data into billing
 INSERT INTO billing (firstName, lastName, street, zip, houseNumber, city, paymentInfo, transactionDetails)

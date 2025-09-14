@@ -54,7 +54,10 @@
                     <div class="text-center mt-4">
                         <h4>#{bookingBean.getConcert().venue.name}</h4>
                         <p class="text-muted">Bitte wählen Sie die gewünschte Ticketart und Anzahl aus.</p>
-                        <p id="availableTickets" class="text-success fw-bold">Verfügbare Tickets werden geladen...</p>
+                        <p id="availableTickets" class="text-success fw-bold">
+                            Verfügbare Tickets: 
+                            <span id="availableCount">20</span> <!-- Startwert, wird durch JS aktualisiert -->
+                        </p>             
                     </div>
                     
                     <!-- Hidden fields for venue capacities -->

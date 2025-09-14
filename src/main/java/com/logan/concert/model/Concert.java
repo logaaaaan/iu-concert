@@ -30,4 +30,10 @@ public class Concert {
     private float price;
 
     private float vipPrice;
+
+    private int standingSeatsSold;
+
+    private int seatingSeatsSold;
+
+    private int vipSeatsSold;
 }
