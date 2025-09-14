@@ -47,7 +47,7 @@ CREATE TABLE concert (
     vipPrice FLOAT,
     standingSeatsSold INT,
     seatingSeatsSold INT,
-    vipSeatsSold INT
+    vipSeatsSold INT,
     
     FOREIGN KEY (bandId) REFERENCES band(bandId) ON DELETE CASCADE,
     FOREIGN KEY (venueId) REFERENCES venue(venueId) ON DELETE CASCADE
