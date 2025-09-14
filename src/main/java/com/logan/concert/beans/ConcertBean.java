@@ -62,4 +62,24 @@ public class ConcertBean {
             return new ArrayList<>();
         }
     }
+
+    public String getGenresAsString(Concert concert) {
+    if (concert == null || concert.getBand() == null) {
+        return "";
+    }
+    
+    Band band = concert.getBand();
+    if (band.getGenre() == null || band.getGenre().isEmpty()) {
+        return "";
+    }
+    
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+        List<String> genreList = mapper.readValue(band.getGenre(), new TypeReference<List<String>>() {});
+        return String.join(", ", genreList);
+    } catch (IOException e) {
+        e.printStackTrace();
+        return "";
+    }
+}
 }
