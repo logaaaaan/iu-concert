@@ -1,192 +1,89 @@
 // Constants for configuration
-const MAX_TICKETS = 5;
+const MAX_TICKETS = 10;
 const MIN_TICKETS = 1;
 
-// Initialize ticket quantity controls with error handling
+// Global variables
+let currentQuantity = MIN_TICKETS;
+
+// Initialize ticket quantity controls
 function initializeTicketQuantity() {
     const decreaseBtn = document.getElementById('decreaseTickets');
     const increaseBtn = document.getElementById('increaseTickets');
     const quantitySpan = document.getElementById('ticketQuantity');
-    let currentQuantity = MIN_TICKETS;
+    const ticketTypeSelect = document.getElementById('ticketType');
 
-    if (!decreaseBtn || !increaseBtn || !quantitySpan) {
-        console.error('Required ticket quantity elements not found');
+    if (!decreaseBtn || !increaseBtn || !quantitySpan || !ticketTypeSelect) {
+        console.error('Required elements not found');
         return;
     }
 
-    const updateQuantity = (newQuantity) => {
-        if (newQuantity >= MIN_TICKETS && newQuantity <= MAX_TICKETS) {
-            currentQuantity = newQuantity;
+    // Event listeners for quantity buttons
+    decreaseBtn.addEventListener('click', () => {
+        if (currentQuantity > MIN_TICKETS) {
+            currentQuantity--;
             quantitySpan.textContent = currentQuantity;
-            updateSeatSelection();
+            updateBookingSummary();
+            updateAvailableTickets();
         }
-    };
-
-    decreaseBtn.addEventListener('click', () => updateQuantity(currentQuantity - 1));
-    increaseBtn.addEventListener('click', () => updateQuantity(currentQuantity + 1));
-}
-
-// Generate seats grid with row numbers and error handling
-function generateSeats() {
-    try {
-        const container = document.getElementById('seatsContainer');
-        const seatPlacementElement = document.getElementById('venue:seatPlacement');
-        const hasStandingElement = document.getElementById('venue:hasStanding');
-
-        if (!container || !seatPlacementElement) {
-            throw new Error('Required seat container elements not found');
-        }
-
-        const seatPlacement = seatPlacementElement.value;
-        const dict = JSON.parse(seatPlacement);
-        const rows = dict['rows'];
-        const seatsPerRow = dict['columns'];
-
-        if (!rows || !seatsPerRow) {
-            throw new Error('Invalid seat placement configuration');
-        }
-
-        // Create document fragment for better performance
-        const fragment = document.createDocumentFragment();
-
-        // Generate seats
-        for (let row = 0; row < rows; row++) {
-            const rowDiv = document.createElement('div');
-            rowDiv.className = 'seat-row';
-
-            // Add row number
-            const rowNumber = document.createElement('div');
-            rowNumber.className = 'row-number';
-            rowNumber.textContent = row + 1;
-            rowDiv.appendChild(rowNumber);
-
-            for (let seat = 0; seat < seatsPerRow; seat++) {
-                const seatNumber = row * seatsPerRow + seat + 1;
-                const seatElement = document.createElement('div');
-                seatElement.className = 'seat available';
-                seatElement.dataset.seatNumber = seatNumber;
-                seatElement.dataset.row = row + 1;
-                seatElement.dataset.seat = seat + 1;
-                seatElement.title = `Reihe ${row + 1}, Sitz ${seat + 1}`;
-                rowDiv.appendChild(seatElement);
-            }
-
-            fragment.appendChild(rowDiv);
-        }
-
-        container.appendChild(fragment);
-    } catch (error) {
-        console.error('Error generating seats:', error);
-        const container = document.getElementById('seatsContainer');
-        if (container) {
-            container.innerHTML = '<div class="alert alert-danger">Fehler beim Laden der Sitzplätze</div>';
-        }
-    }
-}
-
-// Handle seat selection with improved error handling and animations
-function handleSeatSelection() {
-    const container = document.getElementById('seatsContainer');
-    const quantitySpan = document.getElementById('ticketQuantity');
-
-    if (!container || !quantitySpan) {
-        console.error('Required seat selection elements not found');
-        return;
-    }
-
-    const addTemporaryClass = (element, className, duration = 500) => {
-        element.classList.add(className);
-        setTimeout(() => element.classList.remove(className), duration);
-    };
-
-    const showError = (message) => {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'alert alert-warning fade-in';
-        errorDiv.style.position = 'fixed';
-        errorDiv.style.top = '20px';
-        errorDiv.style.left = '50%';
-        errorDiv.style.transform = 'translateX(-50%)';
-        errorDiv.style.zIndex = '1000';
-        errorDiv.textContent = message;
-        document.body.appendChild(errorDiv);
-        setTimeout(() => errorDiv.remove(), 3000);
-    };
-
-    container.addEventListener('click', (e) => {
-        const seat = e.target;
-        if (!seat.classList.contains('seat')) return;
-
-        if (seat.classList.contains('occupied')) {
-            addTemporaryClass(seat, 'shake');
-            showError('Dieser Sitzplatz ist bereits belegt');
-            return;
-        }
-
-        const maxSeats = parseInt(quantitySpan.textContent);
-        const currentSelected = container.querySelectorAll('.seat.selected').length;
-
-        if (!seat.classList.contains('selected') && currentSelected >= maxSeats) {
-            addTemporaryClass(seat, 'shake');
-            showError(`Sie können nur ${maxSeats} Sitzplätze auswählen`);
-            return;
-        }
-
-        seat.classList.toggle('selected');
-        addTemporaryClass(seat, 'pulse');
-        updateSelectedSeats();
     });
+
+    increaseBtn.addEventListener('click', () => {
+        if (currentQuantity < MAX_TICKETS) {
+            currentQuantity++;
+            quantitySpan.textContent = currentQuantity;
+            updateBookingSummary();
+            updateAvailableTickets();
+        }
+    });
+
+    // Event listener for ticket type changes
+    ticketTypeSelect.addEventListener('change', () => {
+        // Update price per ticket display
+        const selectedOption = ticketTypeSelect.options[ticketTypeSelect.selectedIndex];
+        const pricePerTicket = parseFloat(selectedOption.getAttribute('data-price'));
+        document.getElementById('pricePerTicket').textContent = pricePerTicket.toFixed(2) + ' €';
+        
+        updateBookingSummary();
+        updateAvailableTickets();
+    });
+
+    // Initial updates
+    updateBookingSummary();
+    updateAvailableTickets();
 }
 
-function updateSeatSelection() {
-    const container = document.getElementById('seatsContainer');
-    const maxSeats = parseInt(document.getElementById('ticketQuantity').textContent);
-    const selectedSeats = container.querySelectorAll('.seat.selected');
-
-    if (selectedSeats.length > maxSeats) {
-        Array.from(selectedSeats)
-            .slice(maxSeats)
-            .forEach(seat => seat.classList.remove('selected'));
-    }
-    // Always update the selected seats list and total price
-    updateSelectedSeats();
-}
-
-// Make updateSelectedSeats globally accessible
-function updateSelectedSeats() {
-    const container = document.getElementById('seatsContainer');
-    const selectedSeatsList = document.getElementById('selectedSeatsList');
+// Update booking summary with selected tickets
+function updateBookingSummary() {
+    const quantity = parseInt(document.getElementById('ticketQuantity').textContent);
+    const ticketTypeSelect = document.getElementById('ticketType');
+    const selectedOption = ticketTypeSelect.options[ticketTypeSelect.selectedIndex];
+    const pricePerTicket = parseFloat(selectedOption.getAttribute('data-price'));
     const totalPriceElement = document.getElementById('totalPrice');
+    const selectedTicketsList = document.getElementById('selectedTicketsList');
     const bookButton = document.getElementById('bookButton');
-    const pricePerTicket = parseFloat(document.getElementById('pricePerTicket').textContent.replace('€', ''));
 
-    const selectedSeats = container.querySelectorAll('.seat.selected');
-    while (selectedSeatsList.firstChild) {
-        selectedSeatsList.removeChild(selectedSeatsList.firstChild);
+    // Calculate total price
+    const totalPrice = quantity * pricePerTicket;
+    totalPriceElement.textContent = `${totalPrice.toFixed(2)} €`;
+
+    // Update selected tickets list
+    selectedTicketsList.innerHTML = '';
+    const ticketTypeName = selectedOption.textContent.split(' - ')[0];
+    
+    for (let i = 0; i < quantity; i++) {
+        const ticketDiv = document.createElement('div');
+        ticketDiv.className = 'selected-ticket';
+        ticketDiv.innerHTML = `
+            <span>${ticketTypeName} #${i + 1}</span>
+            <span>${pricePerTicket.toFixed(2)} €</span>
+        `;
+        selectedTicketsList.appendChild(ticketDiv);
     }
 
-    Array.from(selectedSeats).forEach(seat => {
-        const seatNumber = seat.dataset.seatNumber;
-        const row = Math.floor((seatNumber - 1) / 10) + 1;
-        const seatInRow = ((seatNumber - 1) % 10) + 1;
-
-        const li = document.createElement('li');
-        li.classList.add('fade-in');
-
-        const seatSpan = document.createElement('span');
-        seatSpan.textContent = `Reihe ${row}, Sitz ${seatInRow}`;
-
-        const priceSpan = document.createElement('span');
-        priceSpan.textContent = `${pricePerTicket.toFixed(2)} €`;
-
-        li.appendChild(seatSpan);
-        li.appendChild(priceSpan);
-        selectedSeatsList.appendChild(li);
-    });
-
-    const totalPrice = selectedSeats.length * pricePerTicket;
-    totalPriceElement.textContent = `${totalPrice.toFixed(2)} €`;
-    bookButton.disabled = selectedSeats.length === 0;
-
+    // Enable/disable book button
+    const availableTickets = calculateAvailableTickets();
+    bookButton.disabled = quantity === 0 || quantity > availableTickets;
+    
     if (bookButton.disabled) {
         bookButton.classList.remove('btn-primary');
         bookButton.classList.add('btn-secondary');
@@ -196,81 +93,98 @@ function updateSelectedSeats() {
     }
 }
 
-function fillAlreadyBookedSeats() {
+// Calculate available tickets
+function calculateAvailableTickets() {
     const ticketTypeSelect = document.getElementById('ticketType');
+    const selectedOption = ticketTypeSelect.options[ticketTypeSelect.selectedIndex];
+    const ticketType = selectedOption.value;
     
-    // Handle ticket type changes instead of showtime
-    if (ticketTypeSelect) {
-        ticketTypeSelect.addEventListener('change', () => {
-            const selectedType = ticketTypeSelect.value;
-            const seatsContainer = document.getElementById('seatsContainer');
-            
-            // Show/hide seat selection based on ticket type
-            if (selectedType === 'standing') {
-                seatsContainer.style.display = 'none';
-            } else {
-                seatsContainer.style.display = 'block';
-            }
-            
-            // Update price per ticket
-            const selectedOption = ticketTypeSelect.options[ticketTypeSelect.selectedIndex];
-            const price = selectedOption.getAttribute('data-price');
-            document.getElementById('pricePerTicket').textContent = price + ' €';
-            updateSelectedSeats();
-        });
+    // Get venue capacities
+    const totalCapacity = parseInt(document.getElementById('venueTotalCapacity').value) || 0;
+    const standingCapacity = parseInt(document.getElementById('venueStandingCapacity').value) || 0;
+    const seatingCapacity = parseInt(document.getElementById('venueSeatingCapacity').value) || 0;
+    const vipCapacity = parseInt(document.getElementById('venueVipCapacity').value) || 0;
+    const bookedTickets = parseInt(document.getElementById('bookedTickets').value) || 0;
+    
+    // Calculate available tickets based on ticket type
+    let capacity = 0;
+    
+    switch(ticketType) {
+        case 'standing':
+            capacity = standingCapacity > 0 ? standingCapacity : totalCapacity;
+            break;
+        case 'seated':
+            capacity = seatingCapacity > 0 ? seatingCapacity : totalCapacity;
+            break;
+        case 'vip':
+            capacity = vipCapacity > 0 ? vipCapacity : totalCapacity;
+            break;
+        default:
+            capacity = totalCapacity;
     }
+    
+    return Math.max(0, capacity - bookedTickets);
+}
 
-    // Load already booked seats from database
-    const bookedSeatsData = document.querySelector('[data-booked-seats]');
-    if (bookedSeatsData) {
-        const bookedSeatsString = bookedSeatsData.getAttribute('data-booked-seats');
-        if (bookedSeatsString && bookedSeatsString !== '[]') {
-            const bookedSeats = bookedSeatsString.substring(1, bookedSeatsString.length-1).split(", ");
-            bookedSeats.forEach(seat => {
-                const [row, seatNumber] = seat.split(":");
-                const formattedSeatNumber = parseInt(row) * 10 + parseInt(seatNumber) - 10;
-                const seatElem = document.querySelector(`[data-seat-number="${formattedSeatNumber}"]`);
-                if (seatElem) {
-                    seatElem.classList.remove('available');
-                    seatElem.classList.add('occupied');
-                }
-            });
+// Update available tickets display
+function updateAvailableTickets() {
+    const availableTickets = calculateAvailableTickets();
+    const availableTicketsElement = document.getElementById('availableTickets');
+    const increaseBtn = document.getElementById('increaseTickets');
+    
+    if (availableTicketsElement) {
+        availableTicketsElement.textContent = `Verfügbare Tickets: ${availableTickets}`;
+        
+        // Style based on availability
+        if (availableTickets <= 0) {
+            availableTicketsElement.className = 'text-danger fw-bold';
+        } else if (availableTickets < 10) {
+            availableTicketsElement.className = 'text-warning fw-bold';
+        } else {
+            availableTicketsElement.className = 'text-success fw-bold';
         }
+    }
+    
+    // Enable/disable increase button based on availability
+    if (increaseBtn) {
+        increaseBtn.disabled = currentQuantity >= availableTickets || currentQuantity >= MAX_TICKETS;
     }
 }
 
-// Initialize everything when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-    initializeTicketQuantity();
-    generateSeats();
-    fillAlreadyBookedSeats();
-    handleSeatSelection();
-
-    // Add booking button click handler
-    document.getElementById('bookButton').addEventListener('click', handleBooking);
-});
-
-// Update handleBooking function for concerts
+// Handle booking process
 function handleBooking() {
-    const ticketType = document.getElementById('ticketType').value;
-    const selectedSeats = Array.from(document.querySelectorAll('.seat.selected')).map(seat => {
-        const seatNumber = parseInt(seat.dataset.seatNumber);
-        const row = Math.floor((seatNumber - 1) / 10) + 1;
-        const seatInRow = ((seatNumber - 1) % 10) + 1;
-        return { row, seat: seatInRow, seatNumber };
-    });
-
+    const quantity = parseInt(document.getElementById('ticketQuantity').textContent);
+    const ticketTypeSelect = document.getElementById('ticketType');
+    const selectedOption = ticketTypeSelect.options[ticketTypeSelect.selectedIndex];
+    const pricePerTicket = parseFloat(selectedOption.getAttribute('data-price'));
+    const ticketType = selectedOption.value;
+    const ticketTypeName = selectedOption.textContent.split(' - ')[0];
+    
+    // Prepare booking data
     const bookingData = {
+        quantity: quantity,
         ticketType: ticketType,
-        seats: selectedSeats,
-        totalPrice: parseFloat(document.getElementById('totalPrice').textContent.replace('€', ''))
+        ticketTypeName: ticketTypeName,
+        pricePerTicket: pricePerTicket,
+        totalPrice: quantity * pricePerTicket
     };
 
     // Store booking data in localStorage
     localStorage.setItem('bookingData', JSON.stringify(bookingData));
 
-    // Retrieve the concertId from the URL
+    // Redirect to payment page
     const concertId = new URLSearchParams(window.location.search).get('concertId');
-
     window.location.href = 'payment.xhtml?concertId=' + concertId;
 }
+
+// Initialize everything when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    // Only initialize the necessary functions
+    initializeTicketQuantity();
+    
+    // Add booking button click handler
+    const bookButton = document.getElementById('bookButton');
+    if (bookButton) {
+        bookButton.addEventListener('click', handleBooking);
+    }
+});

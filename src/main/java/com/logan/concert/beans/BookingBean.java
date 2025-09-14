@@ -104,4 +104,17 @@ public class BookingBean implements Serializable {
         return concert != null ? concert.getBand() : null;
     }
 
+    public int getBookedTicketsCount() {
+    Session session = HibernateUtil.getSessionFactory().openSession();
+    try {
+        String hql = "SELECT COUNT(*) FROM Ticket t WHERE t.concert.concertId = :concertId";
+        Long count = (Long) session.createQuery(hql)
+            .setParameter("concertId", concertId)
+            .uniqueResult();
+        return count != null ? count.intValue() : 0;
+    } finally {
+        session.close();
+    }
+}
+
 }
