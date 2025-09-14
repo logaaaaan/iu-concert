@@ -66,6 +66,88 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/script.js"></script>
+    
+    <script>
+        console.log("Eingebettetes Script wird geladen");
+
+        function showConcertDetails(cardElement) {
+            console.log("showConcertDetails called");
+            
+            const title = cardElement.querySelector('.card-title').textContent;
+            const image = cardElement.querySelector('.card-img-top').src;
+            const venue = cardElement.getAttribute('data-venue');
+            const concertId = cardElement.getAttribute('data-concert-id');
+            const description = cardElement.querySelector('.card-text').textContent;
+            const genres = Array.from(cardElement.querySelectorAll('.badge.bg-danger'))
+                                .map(badge => badge.textContent)
+                                .join(', ');
+            
+            const modalContent = `
+                <div class="modal-header">
+                    <h5 class="modal-title">${title}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="${image}" class="img-fluid rounded mb-3" alt="${title}" style="max-height: 300px; object-fit: cover;"/>
+                        </div>
+                        <div class="col-md-8">
+                            <h6>Ort</h6>
+                            <p><strong>${venue}</strong></p>
+                            <h6>Beschreibung</h6>
+                            <p>${description}</p>
+                            <h6>Genres</h6>
+                            <p>${genres}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
+                    <button type="button" class="btn btn-primary" onclick="bookTicketsFromModal(this)">Tickets buchen</button>
+                </div>
+            `;
+            
+            const concertModalElement = document.getElementById('concertDetailModal');
+            const modalContentContainer = concertModalElement.querySelector('.modal-content');
+            
+            // Vorherigen Inhalt leeren und neuen Inhalt einfügen
+            modalContentContainer.innerHTML = modalContent;
+            
+            // Modal anzeigen
+            const modal = new bootstrap.Modal(concertModalElement);
+            modal.show();
+            
+            // Debug: Überprüfen Sie den Modal-Inhalt in der Konsole
+            console.log("Modal content set:", modalContentContainer.innerHTML);
+        }
+
+        function bookTicketsFromModal(buttonElement) {
+            // Finden Sie die Karte, die das Modal geöffnet hat
+            const cardElement = document.querySelector('.concert-card[data-concert-id]');
+            if (cardElement) {
+                const concertId = cardElement.getAttribute('data-concert-id');
+                window.location.href = `booking.xhtml?concertId=${concertId}`;
+            }
+        }
+
+        function bookTickets(cardElement) {
+            console.log("bookTickets called");
+            
+            try {
+                const concertId = cardElement.getAttribute('data-concert-id');
+                window.location.href = `booking.xhtml?concertId=${concertId}`;
+            } catch (error) {
+                console.error('Error during booking:', error);
+            }
+        }
+
+        // Funktionen global verfügbar machen
+        window.showConcertDetails = showConcertDetails;
+        window.bookTickets = bookTickets;
+        window.bookTicketsFromModal = bookTicketsFromModal;
+
+        console.log("Funktionen wurden registriert");
+    </script>
 </body>
 </html>
