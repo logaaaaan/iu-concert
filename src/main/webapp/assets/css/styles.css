@@ -59,7 +59,7 @@ body {
 }
 
 .card-img-top {
-    height: 450px;
+    height: 350px;
     object-fit: cover;
     transition: transform 0.5s ease;
 }
