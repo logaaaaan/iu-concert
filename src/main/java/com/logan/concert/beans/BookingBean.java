@@ -16,6 +16,7 @@ import javax.faces.context.FacesContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
+import org.hibernate.Transaction;  
 
 @ManagedBean
 @RequestScoped
@@ -119,34 +120,64 @@ public class BookingBean implements Serializable {
     }
 
     public int getAvailableTickets(String ticketType) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        try {
-            Venue venue = getConcert().getVenue();
-            int capacity = 0;
-            
-            switch(ticketType) {
-                case "standing":
-                    capacity = venue.getStandingArea() != null ? venue.getStandingArea() : 0;
-                    break;
-                case "seated":
-                    capacity = venue.getSeatingArea() != null ? venue.getSeatingArea() : 0;
-                    break;
-                case "vip":
-                    capacity = venue.getVipArea() != null ? venue.getVipArea() : 0;
-                    break;
-            }
-
-            String hql = "SELECT COUNT(*) FROM Ticket t WHERE t.concert.concertId = :concertId AND t.ticketType = :ticketType";
-            Long booked = (Long) session.createQuery(hql)
-                .setParameter("concertId", concertId)
-                .setParameter("ticketType", ticketType)
-                .uniqueResult();
-
-            return Math.max(0, capacity - (booked != null ? booked.intValue() : 0));
-        } finally {
-            session.close();
-        }
+    Concert concert = getConcert();
+    if (concert == null) return 0;
+    
+    Venue venue = concert.getVenue();
+    int capacity = 0;
+    int sold = 0;
+    
+    switch(ticketType) {
+        case "standing":
+            capacity = venue.getStandingArea() != null ? venue.getStandingArea() : 0;
+            sold = concert.getStandingSeatsSold();
+            break;
+        case "seated":
+            capacity = venue.getSeatingArea() != null ? venue.getSeatingArea() : 0;
+            sold = concert.getSeatingSeatsSold();
+            break;
+        case "vip":
+            capacity = venue.getVipArea() != null ? venue.getVipArea() : 0;
+            sold = concert.getVipSeatsSold();
+            break;
+        default:
+            capacity = 0;
     }
+    
+    return Math.max(0, capacity - sold);
+}
 
+public void updateSoldTickets(String ticketType, int quantity) {
+    Session session = HibernateUtil.getSessionFactory().openSession();
+    Transaction transaction = null;
+    
+    try {
+        transaction = session.beginTransaction();
+        
+        // Concert-Objekt neu laden
+        Concert concert = (Concert) session.get(Concert.class, concertId);
+        
+        // Je nach Tickettyp die entsprechende Sold-Zahl erhöhen
+        switch(ticketType) {
+            case "standing":
+                concert.setStandingSeatsSold(concert.getStandingSeatsSold() + quantity);
+                break;
+            case "seated":
+                concert.setSeatingSeatsSold(concert.getSeatingSeatsSold() + quantity);
+                break;
+            case "vip":
+                concert.setVipSeatsSold(concert.getVipSeatsSold() + quantity);
+                break;
+        }
+        
+        session.update(concert);
+        transaction.commit();
+    } catch (Exception e) {
+        if (transaction != null) transaction.rollback();
+        e.printStackTrace();
+    } finally {
+        session.close();
+    }
+}
 
 }

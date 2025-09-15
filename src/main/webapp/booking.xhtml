@@ -56,16 +56,17 @@
                         <p class="text-muted">Bitte wählen Sie die gewünschte Ticketart und Anzahl aus.</p>
                         <p id="availableTickets" class="text-success fw-bold">
                             Verfügbare Tickets: 
-                            <span id="availableCount">20</span> <!-- Startwert, wird durch JS aktualisiert -->
-                        </p>             
+                            <span id="availableCount">#{bookingBean.getAvailableTickets('standing')}</span>
+                        </p>
                     </div>
-                    
-                    <!-- Hidden fields for venue capacities -->
-                    <input type="hidden" id="venueTotalCapacity" value="#{bookingBean.getConcert().venue.totalCapacity}" />
+
+                    <!-- Hidden fields für Venue-Kapazitäten und verkaufte Tickets -->
                     <input type="hidden" id="venueStandingCapacity" value="#{bookingBean.getConcert().venue.standingArea}" />
                     <input type="hidden" id="venueSeatingCapacity" value="#{bookingBean.getConcert().venue.seatingArea}" />
                     <input type="hidden" id="venueVipCapacity" value="#{bookingBean.getConcert().venue.vipArea}" />
-                    <input type="hidden" id="bookedTickets" value="#{bookingBean.getBookedTicketsCount()}" />
+                    <input type="hidden" id="standingSold" value="#{bookingBean.getConcert().standingSeatsSold}" />
+                    <input type="hidden" id="seatingSold" value="#{bookingBean.getConcert().seatingSeatsSold}" />
+                    <input type="hidden" id="vipSold" value="#{bookingBean.getConcert().vipSeatsSold}" />
                 </div>
             </div>
 
