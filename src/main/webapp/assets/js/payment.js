@@ -1,35 +1,53 @@
 // Get booking information from localStorage
 function getBookingInfo() {
-    const bookingData = localStorage.getItem('bookingData');
-    if (!bookingData) {
-        window.location.href = 'index.xhtml';
+    try {
+        const bookingData = localStorage.getItem('bookingData');
+        console.log('Booking data from localStorage:', bookingData);
+        
+        if (!bookingData) {
+            console.error('No booking data found in localStorage');
+            // window.location.href = 'index.xhtml';
+            return null;
+        }
+        
+        const parsedData = JSON.parse(bookingData);
+        console.log('Parsed booking data:', parsedData);
+        
+        // Prüfen auf die erwarteten Felder
+        if (!parsedData || !parsedData.quantity || !parsedData.totalPrice) {
+            console.error('Invalid booking data structure:', parsedData);
+            // window.location.href = 'index.xhtml';
+            return null;
+        }
+        
+        return parsedData;
+    } catch (e) {
+        console.error('Error parsing booking data:', e);
+        // window.location.href = 'index.xhtml';
         return null;
     }
-    const parsedData = JSON.parse(bookingData);
-    if (!parsedData || !parsedData.seats || !parsedData.totalPrice) {
-        window.location.href = 'index.xhtml';
-        return null;
-    }
-    return parsedData;
 }
 
 // Initialize booking information display
 function initializeBookingInfo() {
+    console.log('Initializing booking info');
     const bookingInfo = getBookingInfo();
-    if (!bookingInfo) return;
-
-    // Update selected seats
-    const seatsList = document.getElementById('selectedSeatsList');
-    seatsList.innerHTML = bookingInfo.seats.map(seat =>
-        `<li>Reihe ${seat.row}, Sitz ${seat.seat}</li>`
-    ).join('');
+    if (!bookingInfo) {
+        console.error('No booking info available');
+        return;
+    }
 
     // Update total price
-    document.getElementById('totalPrice').textContent = `${bookingInfo.totalPrice.toFixed(2)} €`;
+    const totalPriceElement = document.getElementById('totalPrice');
+    if (totalPriceElement) {
+        totalPriceElement.textContent = `${bookingInfo.totalPrice.toFixed(2)} €`;
+    } else {
+        console.error('Total price element not found');
+    }
 }
 
 // Generate ticket number for concerts
-function generateTicketNumber(seat) {
+function generateTicketNumber(index) {
     const date = new Date();
     const dateStr = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
     
@@ -37,18 +55,38 @@ function generateTicketNumber(seat) {
     const urlParams = new URLSearchParams(window.location.search);
     const concertId = urlParams.get('concertId');
 
-    return `TKT-${dateStr}-R${seat.row}S${seat.seat}-${concertId}`;
+    return `TKT-${dateStr}-${index}-${concertId}`;
 }
 
 // Initialize ticket holder fields
 function initializeTicketHolders() {
+    console.log('Initializing ticket holders');
     const bookingInfo = getBookingInfo();
-    if (!bookingInfo || !bookingInfo.seats) return;
+    if (!bookingInfo || !bookingInfo.quantity) {
+        console.error('No booking info or quantity found');
+        return;
+    }
+    
     const ticketHolderSection = document.getElementById('ticketHolderSection');
-    if (!ticketHolderSection) return;
+    if (!ticketHolderSection) {
+        console.error('Ticket holder section not found');
+        return;
+    }
 
-    const seats = bookingInfo.seats;
-    const pricePerTicket = parseFloat(document.getElementById('price-per-ticket').textContent.replace('€', ''));
+    const quantity = bookingInfo.quantity;
+    console.log('Quantity:', quantity);
+    
+    // Preis pro Ticket ermitteln
+    let pricePerTicket = bookingInfo.pricePerTicket;
+    if (!pricePerTicket) {
+        const priceElement = document.getElementById('price-per-ticket');
+        if (priceElement) {
+            pricePerTicket = parseFloat(priceElement.textContent.replace('€', '').trim());
+        } else {
+            console.error('Price per ticket element not found');
+            pricePerTicket = 0;
+        }
+    }
 
     function createTicketHolder(index) {
         const ticketId = `ticket-${index}`;
@@ -93,128 +131,136 @@ function initializeTicketHolders() {
         return ticketHolder;
     }
 
-    // Create ticket holders based on selected seats
-    seats.forEach((_, index) => {
-        ticketHolderSection.appendChild(createTicketHolder(index + 1));
-    });
+    // Clear existing ticket holders
+    ticketHolderSection.innerHTML = '';
+    
+    // Create ticket holders based on quantity
+    for (let i = 0; i < quantity; i++) {
+        ticketHolderSection.appendChild(createTicketHolder(i + 1));
+    }
 
     // Update total price
-    const totalPrice = document.getElementById('totalPrice');
-    if (totalPrice) {
-        totalPrice.textContent = `${(seats.length * pricePerTicket).toFixed(2)} €`;
+    const totalPriceElement = document.getElementById('totalPrice');
+    if (totalPriceElement) {
+        totalPriceElement.textContent = `${(quantity * pricePerTicket).toFixed(2)} €`;
     }
-}
-
-// Collect ticket holder information
-function collectTicketHolderInfo() {
-    const bookingInfo = getBookingInfo();
-    if (!bookingInfo || !bookingInfo.seats) return null;
-
-    const ticketHolders = [];
-    const ticketElements = document.querySelectorAll('.accordion-item');
-
-    for (let i = 0; i < ticketElements.length; i++) {
-        const element = ticketElements[i];
-        const firstName = element.querySelector('.ticket-firstname').value.trim();
-        const lastName = element.querySelector('.ticket-lastname').value.trim();
-        const ticketNumber = generateTicketNumber(bookingInfo.seats[i]);
-        const price = parseFloat(document.getElementById('price-per-ticket').textContent.replace('€', ''));
-        const concertTime = document.querySelector('.concert-time')?.textContent || '19:30';
-
-        if (!firstName || !lastName) return null;
-
-        ticketHolders.push({
-            seat: bookingInfo.seats[i],
-            concertTime: concertTime,
-            price: price,
-            firstName: firstName,
-            lastName: lastName,
-            ticketNumber: ticketNumber,
-            ticketType: bookingInfo.ticketType || 'Standard'
-        });
-    }
-    return ticketHolders;
 }
 
 // Handle payment method selection
 function handlePaymentMethodChange() {
     console.log("Payment method changed");
     const paymentMethodSelect = document.querySelector('[name="billingForm:paymentMethod"]:checked');
+    if (!paymentMethodSelect) {
+        console.error('Payment method select not found');
+        return;
+    }
+    
     const paymentMethod = paymentMethodSelect.value;
     
     const sepaFields = document.getElementById('sepaFields');
     const creditCardFields = document.getElementById('creditCardFields');
 
     // Reset all fields
-    sepaFields.style.display = 'none';
-    creditCardFields.style.display = 'none';
+    if (sepaFields) sepaFields.style.display = 'none';
+    if (creditCardFields) creditCardFields.style.display = 'none';
     
     // Clear and set required attribute for SEPA fields
     const ibanField = document.getElementById('billingForm:iban');
     const bicField = document.getElementById('billingForm:bic');
-    ibanField.value = '';
-    bicField.value = '';
-    ibanField.required = false;
-    bicField.required = false;
+    if (ibanField && bicField) {
+        ibanField.required = false;
+        bicField.required = false;
+    }
     
     // Clear and set required attribute for credit card fields
     const cardNumberField = document.getElementById('billingForm:cardNumber');
     const expiryDateField = document.getElementById('billingForm:expiryDate');
     const cvvField = document.getElementById('billingForm:cvv');
-    cardNumberField.value = '';
-    expiryDateField.value = '';
-    cvvField.value = '';
-    cardNumberField.required = false;
-    expiryDateField.required = false;
-    cvvField.required = false;
+    if (cardNumberField && expiryDateField && cvvField) {
+        cardNumberField.required = false;
+        expiryDateField.required = false;
+        cvvField.required = false;
+    }
 
     // Show and require fields based on selected payment method
-    if (paymentMethod === 'sepa') {
+    if (paymentMethod === 'sepa' && sepaFields) {
         sepaFields.style.display = 'block';
-        ibanField.required = true;
-        bicField.required = true;
-    } else if (paymentMethod === 'creditCard') {
+        if (ibanField && bicField) {
+            ibanField.required = true;
+            bicField.required = true;
+        }
+    } else if (paymentMethod === 'creditCard' && creditCardFields) {
         creditCardFields.style.display = 'block';
-        cardNumberField.required = true;
-        expiryDateField.required = true;
-        cvvField.required = true;
+        if (cardNumberField && expiryDateField && cvvField) {
+            cardNumberField.required = true;
+            expiryDateField.required = true;
+            cvvField.required = true;
+        }
     }
 }
 
-// Format card number with spaces
-function formatCardNumber(input) {
-    const value = input.value.replace(/\s/g, '');
-    input.value = value.replace(/(.{4})/g, '$1 ').trim();
-}
-
-const showError = (message) => {
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'alert alert-warning fade-in';
-    errorDiv.style.position = 'fixed';
-    errorDiv.style.top = '20px';
-    errorDiv.style.left = '50%';
-    errorDiv.style.transform = 'translateX(-50%)';
-    errorDiv.style.zIndex = '1000';
-    errorDiv.textContent = message;
-    document.body.appendChild(errorDiv);
-    setTimeout(() => errorDiv.remove(), 3000);
-};
+// Global error handler to catch all errors
+window.addEventListener('error', function(e) {
+    console.error('Global error caught:', e.error);
+    console.error('Error message:', e.message);
+    console.error('Error stack:', e.error ? e.error.stack : 'No stack available');
+    
+    // Prevent default behavior (like page reload)
+    e.preventDefault();
+    
+    // Display error message on page
+    const errorDisplay = document.createElement('div');
+    errorDisplay.style.position = 'fixed';
+    errorDisplay.style.top = '0';
+    errorDisplay.style.left = '0';
+    errorDisplay.style.width = '100%';
+    errorDisplay.style.backgroundColor = 'red';
+    errorDisplay.style.color = 'white';
+    errorDisplay.style.padding = '10px';
+    errorDisplay.style.zIndex = '9999';
+    errorDisplay.style.fontFamily = 'monospace';
+    errorDisplay.style.fontSize = '14px';
+    errorDisplay.style.whiteSpace = 'pre-wrap';
+    errorDisplay.innerHTML = `
+        <strong>Error:</strong> ${e.message}<br>
+        ${e.error ? `<strong>Stack:</strong> ${e.error.stack}` : ''}
+    `;
+    
+    document.body.appendChild(errorDisplay);
+    
+    // Keep the error visible for 30 seconds
+    setTimeout(() => {
+        if (document.body.contains(errorDisplay)) {
+            document.body.removeChild(errorDisplay);
+        }
+    }, 30000);
+    
+    return false;
+});
 
 // Initialize everything when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-    initializeBookingInfo();
-    initializeTicketHolders();
-
-    // Add input event listeners for real-time validation
+    console.log('Payment page loaded');
+    
+    // Prevent form submission for debugging
     const form = document.getElementById('billingForm');
-    const inputs = form.querySelectorAll('input[required]');
-
-    inputs.forEach(input => {
-        if (input.id === 'billingForm:cardNumber') {
-            input.addEventListener('input', () => formatCardNumber(input));
-        }
-    });
-
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            console.log('Form submission intercepted');
+            e.preventDefault();
+            // You can manually trigger the form submission later
+            // form.submit();
+        });
+    }
+    
+    // Initialize booking info first
+    initializeBookingInfo();
+    
+    // Then initialize ticket holders
+    setTimeout(() => {
+        initializeTicketHolders();
+    }, 100);
+    
     // Handle payment method changes
     const paymentMethodInputs = document.querySelectorAll('[name="billingForm:paymentMethod"]');
     paymentMethodInputs.forEach(input => {
@@ -222,43 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initialize payment fields based on default selection
-    handlePaymentMethodChange();
-
-    // Add payment form submit handler
-    form.addEventListener('submit', (e) => {
-        
-        // Validate ticket holder information
-        const ticketHolders = collectTicketHolderInfo();
-        if (!ticketHolders) {
-            showError('Bitte füllen Sie alle Ticketinhaber-Informationen aus.');
-            return;
-        }
-        
-        try {
-            // Set form data
-            const concertIdField = document.getElementById('billingForm:concertId');
-            const totalField = document.getElementById('billingForm:total');
-            const ticketHoldersField = document.getElementById('billingForm:ticketHoldersData');
-            
-            if (!concertIdField || !totalField || !ticketHoldersField) {
-                throw new Error('Required form fields not found');
-            }
-            
-            // Get concertId from URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const concertId = urlParams.get('concertId');
-            
-            if (!concertId) {
-                throw new Error('Concert information not found');
-            }
-            
-            concertIdField.value = concertId;
-            totalField.value = ticketHolders.reduce((sum, holder) => sum + holder.price, 0);
-            ticketHoldersField.value = JSON.stringify(ticketHolders);
-        } catch (error) {
-            e.preventDefault();
-            console.error('Error preparing form submission:', error);
-            showError('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
-        }
-    });
+    setTimeout(() => {
+        handlePaymentMethodChange();
+    }, 200);
 });
