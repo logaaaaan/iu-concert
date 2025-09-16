@@ -156,6 +156,10 @@ public void updateSoldTickets(String ticketType, int quantity) {
         
         // Concert-Objekt neu laden
         Concert concert = (Concert) session.get(Concert.class, concertId);
+        if (concert == null) {
+            System.err.println("Concert not found with ID: " + concertId);
+            return;
+        }
         
         // Je nach Tickettyp die entsprechende Sold-Zahl erhöhen
         switch(ticketType) {
@@ -172,12 +176,25 @@ public void updateSoldTickets(String ticketType, int quantity) {
         
         session.update(concert);
         transaction.commit();
+        
+        System.out.println("Successfully updated sold tickets: " + quantity + " x " + ticketType);
+        System.out.println("New standing sold: " + concert.getStandingSeatsSold());
+        System.out.println("New seating sold: " + concert.getSeatingSeatsSold());
+        System.out.println("New VIP sold: " + concert.getVipSeatsSold());
+        
     } catch (Exception e) {
         if (transaction != null) transaction.rollback();
+        System.err.println("Error updating sold tickets: " + e.getMessage());
         e.printStackTrace();
     } finally {
         session.close();
     }
 }
+
+public void setConcertId(int concertId) {
+    this.concertId = concertId;
+    this.concert = null; // Reset concert cache
+}
+
 
 }

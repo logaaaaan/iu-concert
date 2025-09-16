@@ -233,14 +233,31 @@ public class PaymentBean {
     public String submit() {
         try {
             System.out.println("=== PAYMENT BEAN SUBMIT CALLED ===");
-            System.out.println("First Name: " + firstName);
-            System.out.println("Last Name: " + lastName);
-            System.out.println("Email: " + email);
-            System.out.println("Payment Method: " + paymentMethod);
             
-            // Einfache Weiterleitung zur Bestätigungsseite
-            return "/confirmation?faces-redirect=true";
+            // Booking data aus localStorage lesen (von JavaScript)
+            String bookingDataJson = FacesContext.getCurrentInstance()
+                .getExternalContext()
+                .getRequestParameterMap()
+                .get("bookingData");
             
+            if (bookingDataJson != null && !bookingDataJson.isEmpty()) {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode bookingData = mapper.readTree(bookingDataJson);
+                
+                int quantity = bookingData.get("quantity").asInt();
+                String ticketType = bookingData.get("ticketType").asText();
+                
+                // Sold tickets updaten
+                BookingBean bookingBean = new BookingBean();
+                bookingBean.setConcertId(concertId); // ConcertId setzen
+                bookingBean.updateSoldTickets(ticketType, quantity);
+                
+                System.out.println("Updated sold tickets: " + quantity + " x " + ticketType);
+            }
+            
+            // Weiterleitung zur Bestätigungsseite
+            return "/confirmation.xhtml?faces-redirect=true";
+
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null,

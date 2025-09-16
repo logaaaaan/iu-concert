@@ -31,16 +31,19 @@ function updateBookingSummary() {
             <p>${bookingInfo.quantity} x ${bookingInfo.ticketTypeName}</p>
             <p>Preis pro Ticket: ${bookingInfo.pricePerTicket.toFixed(2)} €</p>
         `;
-    } else {
-        console.error('Ticket summary element not found');
     }
 
     // Update total price
     const totalPriceElement = document.getElementById('totalPrice');
     if (totalPriceElement) {
         totalPriceElement.textContent = `${bookingInfo.totalPrice.toFixed(2)} €`;
-    } else {
-        console.error('Total price element not found');
+    }
+
+    // Booking data an Hidden Field übergeben
+    const bookingDataField = document.getElementById('billingForm:bookingData');
+    if (bookingDataField) {
+        bookingDataField.value = JSON.stringify(bookingInfo);
+        console.log('Booking data set to form field:', bookingDataField.value);
     }
 }
 
