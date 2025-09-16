@@ -232,104 +232,21 @@ public class PaymentBean {
     
     public String submit() {
         try {
-            // Get ticket holders from JavaScript
-            if (this.getTicketHoldersData() == null || this.getTicketHoldersData().isEmpty()) {
-                System.out.println("TicketHoldersData is null or empty" + this.getTicketHoldersData());
-
-                FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Es wurden keine Ticketinhaber gefunden", null)
-                );
-                return "/payment.xhtml?faces-redirect=true&concertId=" + concertId;
-            }
+            System.out.println("=== PAYMENT BEAN SUBMIT CALLED ===");
+            System.out.println("First Name: " + firstName);
+            System.out.println("Last Name: " + lastName);
+            System.out.println("Email: " + email);
+            System.out.println("Payment Method: " + paymentMethod);
             
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode ticketHoldersNode = mapper.readTree(this.getTicketHoldersData());
+            // Einfache Weiterleitung zur Bestätigungsseite
+            return "/confirmation?faces-redirect=true";
             
-            // Create transaction details based on payment method
-            Map<String, String> transactionDetails = new HashMap<>();
-            if ("sepa".equals(paymentMethod)) {
-                transactionDetails.put("iban", iban);
-                transactionDetails.put("bic", bic);
-            } else if ("creditCard".equals(paymentMethod)) {
-                transactionDetails.put("cardNumber", cardNumber);
-                transactionDetails.put("expiryDate", expiryDate);
-                transactionDetails.put("cvv", cvv);
-            }
-            
-            // Create Billing entity
-            Billing billing = new Billing();
-            billing.setFirstName(firstName);
-            billing.setLastName(lastName);
-            billing.setStreet(street);
-            billing.setHouseNumber(houseNumber);
-            billing.setZip(zipCode);
-            billing.setCity(city);
-            billing.setPaymentInfo(paymentMethod);
-            billing.setTransactionDetails(mapper.writeValueAsString(transactionDetails));
-            
-            // Start Hibernate session
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            
-            // Save billing information
-            session.save(billing);
-
-            try {
-                // Get concert reference
-                Concert concert = (Concert) session.get(Concert.class, concertId);
-                if (concert == null) {
-                    throw new RuntimeException("Concert not found");
-                }
-
-                // Create tickets for each ticket holder
-                for (JsonNode holder : ticketHoldersNode) {
-                    Ticket ticket = new Ticket();
-                    ticket.setFirstName(holder.get("firstName").asText());
-                    ticket.setLastName(holder.get("lastName").asText());
-                    ticket.setConcertTime(holder.get("concertTime").asText());
-                    ticket.setTicketType(holder.get("ticketType").asText());
-                    
-                    JsonNode seatNode = holder.get("seat");
-                    ticket.setSeatNumber(formatSeatNumber(seatNode));
-                    
-                    // Get price directly as float
-                    ticket.setPrice((float) holder.get("price").asDouble());
-                    
-                    ticket.setTicketNumber(holder.get("ticketNumber").asText());
-                    ticket.setPurchaseDate(new Timestamp(System.currentTimeMillis()));
-                    ticket.setConcert(concert);
-                    ticket.setBilling(billing);
-
-                    session.save(ticket);                    
-                }
-
-                transaction.commit();
-                return "/confirmation.xhtml?faces-redirect=true&billingId=" + billing.getBillingId();
-
-            } catch (Exception e) {
-                if (transaction != null) {
-                    transaction.rollback();
-                }
-                e.printStackTrace();
-                FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error processing payment", null)
-                );
-                return "/payment.xhtml?faces-redirect=true&concertId=" + concertId;
-            } finally {
-                session.close();
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler beim verarbeiten der Daten. Bitte versuche es später erneut", null));
-            return "/payment.xhtml?faces-redirect=true&concertId=" + concertId;
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler beim verarbeiten der Daten", null));
+            return null;
         }
     }
 
-    private String formatSeatNumber(JsonNode seatNode) {
-        int row = seatNode.get("row").asInt();
-        int seat = seatNode.get("seat").asInt();
-        return String.format("%02d:%02d", row, seat);
-    }
 }
