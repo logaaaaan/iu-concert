@@ -6,35 +6,33 @@ function getBookingInfo() {
         
         if (!bookingData) {
             console.error('No booking data found in localStorage');
-            // window.location.href = 'index.xhtml';
             return null;
         }
         
-        const parsedData = JSON.parse(bookingData);
-        console.log('Parsed booking data:', parsedData);
-        
-        // Prüfen auf die erwarteten Felder
-        if (!parsedData || !parsedData.quantity || !parsedData.totalPrice) {
-            console.error('Invalid booking data structure:', parsedData);
-            // window.location.href = 'index.xhtml';
-            return null;
-        }
-        
-        return parsedData;
+        return JSON.parse(bookingData);
     } catch (e) {
         console.error('Error parsing booking data:', e);
-        // window.location.href = 'index.xhtml';
         return null;
     }
 }
 
-// Initialize booking information display
-function initializeBookingInfo() {
-    console.log('Initializing booking info');
+// Update booking summary with selected tickets
+function updateBookingSummary() {
     const bookingInfo = getBookingInfo();
     if (!bookingInfo) {
         console.error('No booking info available');
         return;
+    }
+
+    // Update ticket summary
+    const ticketSummaryElement = document.getElementById('ticketSummary');
+    if (ticketSummaryElement) {
+        ticketSummaryElement.innerHTML = `
+            <p>${bookingInfo.quantity} x ${bookingInfo.ticketTypeName}</p>
+            <p>Preis pro Ticket: ${bookingInfo.pricePerTicket.toFixed(2)} €</p>
+        `;
+    } else {
+        console.error('Ticket summary element not found');
     }
 
     // Update total price
@@ -46,104 +44,80 @@ function initializeBookingInfo() {
     }
 }
 
-// Generate ticket number for concerts
-function generateTicketNumber(index) {
-    const date = new Date();
-    const dateStr = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
-    
-    // Get concertId from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const concertId = urlParams.get('concertId');
+// Validate all form fields
+function validateForm() {
+    // Check required billing fields
+    const requiredFields = [
+        'billingForm:firstName',
+        'billingForm:lastName',
+        'billingForm:email',
+        'billingForm:street',
+        'billingForm:houseNumber',
+        'billingForm:zipCode',
+        'billingForm:city'
+    ];
 
-    return `TKT-${dateStr}-${index}-${concertId}`;
+    for (const fieldId of requiredFields) {
+        const field = document.getElementById(fieldId);
+        if (!field || !field.value.trim()) {
+            return false;
+        }
+    }
+
+    // Check payment method specific fields
+    const paymentMethod = document.querySelector('input[name="billingForm:paymentMethod"]:checked');
+    if (!paymentMethod) {
+        return false;
+    }
+
+    if (paymentMethod.value === 'sepa') {
+        const iban = document.getElementById('billingForm:iban');
+        const bic = document.getElementById('billingForm:bic');
+        if (!iban || !iban.value.trim() || !bic || !bic.value.trim()) {
+            return false;
+        }
+    } else if (paymentMethod.value === 'creditCard') {
+        const cardNumber = document.getElementById('billingForm:cardNumber');
+        const expiryDate = document.getElementById('billingForm:expiryDate');
+        const cvv = document.getElementById('billingForm:cvv');
+        if (!cardNumber || !cardNumber.value.trim() || 
+            !expiryDate || !expiryDate.value.trim() || 
+            !cvv || !cvv.value.trim()) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
-// Initialize ticket holder fields
-function initializeTicketHolders() {
-    console.log('Initializing ticket holders');
-    const bookingInfo = getBookingInfo();
-    if (!bookingInfo || !bookingInfo.quantity) {
-        console.error('No booking info or quantity found');
-        return;
+// Update submit button state
+function updateSubmitButton() {
+    const isValid = validateForm();
+    const submitButton = document.getElementById('billingForm:submitButton');
+    if (submitButton) {
+        submitButton.disabled = !isValid;
     }
-    
-    const ticketHolderSection = document.getElementById('ticketHolderSection');
-    if (!ticketHolderSection) {
-        console.error('Ticket holder section not found');
-        return;
-    }
+}
 
-    const quantity = bookingInfo.quantity;
-    console.log('Quantity:', quantity);
-    
-    // Preis pro Ticket ermitteln
-    let pricePerTicket = bookingInfo.pricePerTicket;
-    if (!pricePerTicket) {
-        const priceElement = document.getElementById('price-per-ticket');
-        if (priceElement) {
-            pricePerTicket = parseFloat(priceElement.textContent.replace('€', '').trim());
-        } else {
-            console.error('Price per ticket element not found');
-            pricePerTicket = 0;
-        }
-    }
+// Add event listeners to all form fields
+function setupFormValidation() {
+    const formFields = document.querySelectorAll('#billingForm input, #billingForm select');
+    formFields.forEach(field => {
+        field.addEventListener('input', updateSubmitButton);
+        field.addEventListener('change', updateSubmitButton);
+    });
 
-    function createTicketHolder(index) {
-        const ticketId = `ticket-${index}`;
-        const ticketHolder = document.createElement('div');
-        ticketHolder.className = 'accordion-item bg-dark text-light border-secondary mb-3';
-        ticketHolder.innerHTML = `
-            <h2 class="accordion-header">
-                <button class="accordion-button bg-dark text-light border-0" type="button" data-bs-toggle="collapse" data-bs-target="#${ticketId}" style="box-shadow: none;">
-                    <span class="fw-bold">Ticket #${index}</span> - <span class="ticket-status ms-2 opacity-75">Unvollständig</span>
-                </button>
-            </h2>
-            <div id="${ticketId}" class="accordion-collapse collapse show">
-                <div class="accordion-body bg-dark">
-                    <div class="row g-4">
-                        <div class="col-6">
-                            <label class="form-label text-light opacity-75">Vorname</label>
-                            <input type="text" class="form-control bg-dark text-light border-secondary ticket-firstname" required>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label text-light opacity-75">Nachname</label>
-                            <input type="text" class="form-control bg-dark text-light border-secondary ticket-lastname" required>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
+    // Also listen for payment method changes
+    const paymentMethods = document.querySelectorAll('input[name="billingForm:paymentMethod"]');
+    paymentMethods.forEach(radio => {
+        radio.addEventListener('change', () => {
+            handlePaymentMethodChange();
+            updateSubmitButton();
+        });
+    });
 
-        // Add input event listeners
-        const firstNameInput = ticketHolder.querySelector('.ticket-firstname');
-        const lastNameInput = ticketHolder.querySelector('.ticket-lastname');
-        const statusSpan = ticketHolder.querySelector('.ticket-status');
-
-        function checkCompletion() {
-            const isComplete = firstNameInput.value.trim() !== '' && lastNameInput.value.trim() !== '';
-            statusSpan.textContent = isComplete ? 'Vollständig' : 'Unvollständig';
-            statusSpan.className = `ticket-status ms-2 ${isComplete ? 'text-success opacity-75' : 'opacity-75'}`;
-        }
-
-        firstNameInput.addEventListener('input', checkCompletion);
-        lastNameInput.addEventListener('input', checkCompletion);
-
-        return ticketHolder;
-    }
-
-    // Clear existing ticket holders
-    ticketHolderSection.innerHTML = '';
-    
-    // Create ticket holders based on quantity
-    for (let i = 0; i < quantity; i++) {
-        ticketHolderSection.appendChild(createTicketHolder(i + 1));
-    }
-
-    // Update total price
-    const totalPriceElement = document.getElementById('totalPrice');
-    if (totalPriceElement) {
-        totalPriceElement.textContent = `${(quantity * pricePerTicket).toFixed(2)} €`;
-    }
+    // Initial validation
+    updateSubmitButton();
 }
 
 // Handle payment method selection
@@ -199,67 +173,15 @@ function handlePaymentMethodChange() {
     }
 }
 
-// Global error handler to catch all errors
-window.addEventListener('error', function(e) {
-    console.error('Global error caught:', e.error);
-    console.error('Error message:', e.message);
-    console.error('Error stack:', e.error ? e.error.stack : 'No stack available');
-    
-    // Prevent default behavior (like page reload)
-    e.preventDefault();
-    
-    // Display error message on page
-    const errorDisplay = document.createElement('div');
-    errorDisplay.style.position = 'fixed';
-    errorDisplay.style.top = '0';
-    errorDisplay.style.left = '0';
-    errorDisplay.style.width = '100%';
-    errorDisplay.style.backgroundColor = 'red';
-    errorDisplay.style.color = 'white';
-    errorDisplay.style.padding = '10px';
-    errorDisplay.style.zIndex = '9999';
-    errorDisplay.style.fontFamily = 'monospace';
-    errorDisplay.style.fontSize = '14px';
-    errorDisplay.style.whiteSpace = 'pre-wrap';
-    errorDisplay.innerHTML = `
-        <strong>Error:</strong> ${e.message}<br>
-        ${e.error ? `<strong>Stack:</strong> ${e.error.stack}` : ''}
-    `;
-    
-    document.body.appendChild(errorDisplay);
-    
-    // Keep the error visible for 30 seconds
-    setTimeout(() => {
-        if (document.body.contains(errorDisplay)) {
-            document.body.removeChild(errorDisplay);
-        }
-    }, 30000);
-    
-    return false;
-});
-
 // Initialize everything when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Payment page loaded');
     
-    // Prevent form submission for debugging
-    const form = document.getElementById('billingForm');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            console.log('Form submission intercepted');
-            e.preventDefault();
-            // You can manually trigger the form submission later
-            // form.submit();
-        });
-    }
-    
     // Initialize booking info first
-    initializeBookingInfo();
+    updateBookingSummary();
     
-    // Then initialize ticket holders
-    setTimeout(() => {
-        initializeTicketHolders();
-    }, 100);
+    // Setup form validation
+    setupFormValidation();
     
     // Handle payment method changes
     const paymentMethodInputs = document.querySelectorAll('[name="billingForm:paymentMethod"]');

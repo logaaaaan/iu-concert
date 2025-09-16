@@ -1,12 +1,11 @@
 package com.logan.concert.beans;
 
-// import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.logan.concert.HibernateUtil;
 import com.logan.concert.model.Billing;
 import com.logan.concert.model.Concert;
 import com.logan.concert.model.Ticket;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -41,7 +40,11 @@ public class PaymentBean {
     private String expiryDate;
     private String cvv;
     
-    // Hidden fields for ticket information
+    // Ticket information from booking
+    private int ticketQuantity;
+    private String ticketType;
+    private String ticketTypeName;
+    private float pricePerTicket;
     private float total;
     private String ticketHoldersData; // JSON string from form
     
@@ -175,12 +178,48 @@ public class PaymentBean {
         this.cvv = cvv;
     }
     
+    public int getTicketQuantity() {
+        return ticketQuantity;
+    }
+    
+    public void setTicketQuantity(int ticketQuantity) {
+        this.ticketQuantity = ticketQuantity;
+    }
+    
+    public String getTicketType() {
+        return ticketType;
+    }
+    
+    public void setTicketType(String ticketType) {
+        this.ticketType = ticketType;
+    }
+    
+    public String getTicketTypeName() {
+        return ticketTypeName;
+    }
+    
+    public void setTicketTypeName(String ticketTypeName) {
+        this.ticketTypeName = ticketTypeName;
+    }
+    
+    public float getPricePerTicket() {
+        return pricePerTicket;
+    }
+    
+    public void setPricePerTicket(float pricePerTicket) {
+        this.pricePerTicket = pricePerTicket;
+    }
+    
     public float getTotal() {
         return total;
     }
 
     public void setTotal(float total) {
         this.total = total;
+    }
+    
+    public float getTotalPrice() {
+        return ticketQuantity * pricePerTicket;
     }
     
     public String getTicketHoldersData() {

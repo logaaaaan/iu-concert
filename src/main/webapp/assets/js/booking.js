@@ -151,9 +151,13 @@ function handleBooking() {
     // Store booking data in localStorage
     localStorage.setItem('bookingData', JSON.stringify(bookingData));
 
-    // Redirect to payment page
+    // Redirect to payment page with booking data as URL parameter
     const concertId = new URLSearchParams(window.location.search).get('concertId');
-    window.location.href = 'payment.xhtml?concertId=' + concertId;
+    const url = new URL('payment.xhtml', window.location.origin);
+    url.searchParams.set('concertId', concertId);
+    url.searchParams.set('bookingData', JSON.stringify(bookingData));
+    
+    window.location.href = url.toString();
 }
 
 // Initialize everything when the page loads
