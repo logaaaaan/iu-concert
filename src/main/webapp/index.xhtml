@@ -132,6 +132,14 @@
                                                     <i class="bi bi-info-circle"></i> 
                                                     #{concertBean.getAvailabilityText(soldPercentage)}
                                                 </small>
+                                                <div class="progress mb-2" style="height: 20px;">
+                                                    <div class="progress-bar #{soldPercentage >= 80 ? 'bg-danger' : (soldPercentage >= 60 ? 'bg-warning' : 'bg-success')}"
+                                                        style="width: #{soldPercentage}%;">
+
+                                                        #{soldPercentage}% verkauft
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
