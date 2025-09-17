@@ -62,6 +62,21 @@ function updateAvailableTickets() {
     if (increaseBtn) {
         increaseBtn.disabled = currentQuantity >= availableTickets || currentQuantity >= MAX_TICKETS;
     }
+    
+    // Deaktiviere den Book-Button wenn keine Tickets verfügbar sind
+    const bookButton = document.getElementById('bookButton');
+    if (bookButton) {
+        bookButton.disabled = availableTickets <= 0;
+        if (availableTickets <= 0) {
+            bookButton.textContent = 'Ausverkauft';
+            bookButton.classList.add('btn-secondary');
+            bookButton.classList.remove('btn-primary');
+        } else {
+            bookButton.textContent = 'Jetzt Buchen';
+            bookButton.classList.add('btn-primary');
+            bookButton.classList.remove('btn-secondary');
+        }
+    }
 }
 
 // Update booking summary with selected tickets

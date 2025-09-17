@@ -107,7 +107,7 @@ VALUES
     (1, 1, '02:30:00', '2025-10-15', '19:30:00', 89.99, 249.99, 6112, 5344, 191),  -- Metallica in Arena Hauptstadt
     (2, 3, '03:15:00', '2025-11-20', '18:00:00', 149.99, 399.99, 18750, 2210, 488), -- Taylor Swift in Open Air Bühne
     (3, 3, '02:00:00', '2025-09-05', '20:00:00', 99.99, 299.99, 63, 120, 22),  -- Rammstein in Open Air Bühne
-    (4, 2, '02:15:00', '2025-12-10', '19:00:00', 79.99, 189.99, 0, 1530, 73);  -- Ed Sheeran in Konzerthaus Berlin
+    (4, 2, '02:15:00', '2025-12-10', '19:00:00', 79.99, 189.99, 0, 1530, 96);  -- Ed Sheeran in Konzerthaus Berlin
 
 -- Insert sample data into billing
 INSERT INTO billing (firstName, lastName, street, zip, houseNumber, city, paymentInfo, transactionDetails)

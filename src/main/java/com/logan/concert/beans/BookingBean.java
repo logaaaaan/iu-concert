@@ -196,5 +196,8 @@ public void setConcertId(int concertId) {
     this.concert = null; // Reset concert cache
 }
 
+public boolean isTicketTypeAvailable(String ticketType) {
+    return getAvailableTickets(ticketType) > 0;
 
+}
 }

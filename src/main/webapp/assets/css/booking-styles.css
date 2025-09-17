@@ -250,6 +250,13 @@
     height: 100%;
 }
 
+.img-size {
+    height: 300px;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
 .movie-info-booking img {
     width: 100%;
     max-width: 200px;

@@ -40,14 +40,25 @@
                                 <button class="btn btn-outline-secondary" id="increaseTickets"><i class="bi bi-plus"></i></button>
                             </div>
                         </div>
-                        <div class="ticket-type-selection">
-                            <label for="ticketType" class="form-label">Ticketart:</label>
-                            <select id="ticketType" class="form-select">
-                                <option value="standing" data-price="#{bookingBean.getConcert().price}">Stehplatz - #{bookingBean.getConcert().price}€</option>
-                                <option value="seated" data-price="#{bookingBean.getConcert().price}">Sitzplatz - #{bookingBean.getConcert().price}€</option>
-                                <option value="vip" data-price="#{bookingBean.getConcert().vipPrice}">VIP - #{bookingBean.getConcert().vipPrice}€</option>
-                            </select>
-                        </div>
+                        <select id="ticketType" class="form-select">
+                            <c:if test="#{bookingBean.isTicketTypeAvailable('standing')}">
+                                <option value="standing" data-price="#{bookingBean.getConcert().price}">
+                                    Stehplatz - #{bookingBean.getConcert().price}€
+                                </option>
+                            </c:if>
+                            
+                            <c:if test="#{bookingBean.isTicketTypeAvailable('seated')}">
+                                <option value="seated" data-price="#{bookingBean.getConcert().price}">
+                                    Sitzplatz - #{bookingBean.getConcert().price}€
+                                </option>
+                            </c:if>
+                            
+                            <c:if test="#{bookingBean.isTicketTypeAvailable('vip')}">
+                                <option value="vip" data-price="#{bookingBean.getConcert().vipPrice}">
+                                    VIP - #{bookingBean.getConcert().vipPrice}€
+                                </option>
+                            </c:if>
+                        </select>
                     </div>
                     
                     <!-- Verfügbare Tickets Anzeige -->
@@ -75,7 +86,7 @@
                 <div class="booking-summary">
                     <h3>Buchungsübersicht</h3>
                     <div class="concert-info-booking">
-                        <img id="concertImage" src="#{bookingBean.getBand().cover}" alt="Concert Poster" class="img-fluid rounded mb-3" />
+                        <img id="concertImage" src="#{bookingBean.getBand().cover}" alt="Concert Poster" class="img-fluid rounded mb-3 img-size" />
                         <h4 id="concertTitle">#{bookingBean.getBand().bandName}</h4>
 
                         <p id="concertDetails" style="color: #cccccc">#{bookingBean.getBand().shortDesc}</p>
