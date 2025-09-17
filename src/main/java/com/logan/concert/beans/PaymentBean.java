@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.logan.concert.HibernateUtil;
 import com.logan.concert.model.Billing;
 import com.logan.concert.model.Concert;
-import com.logan.concert.model.Ticket;
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 

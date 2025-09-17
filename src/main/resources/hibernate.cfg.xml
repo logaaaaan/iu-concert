@@ -15,7 +15,6 @@
          <mapping class="com.logan.concert.model.Band"/>
          <mapping class="com.logan.concert.model.Concert"/>
          <mapping class="com.logan.concert.model.Venue"/>
-         <mapping class="com.logan.concert.model.Ticket"/>
          <mapping class="com.logan.concert.model.Billing"/>
     </session-factory>
 </hibernate-configuration>
