@@ -100,10 +100,10 @@
                                         
                                         <!-- Info Section -->
                                         <div class="col-md-7">
-                                            <h5 class="text-netflix mb-3">🎤 Über das Konzert</h5>
+                                            <h5 class=" mb-3">🎤 Über das Konzert</h5>
                                             <p class="text-muted lh-base">#{concert.band.description}</p>
                                             
-                                            <h5 class="text-netflix mt-4 mb-3">🎵 Musikrichtungen</h5>
+                                            <h5 class=" mt-4 mb-3">🎵 Musikrichtungen</h5>
                                             <div class="d-flex flex-wrap gap-2 mb-4">
                                                 <ui:repeat var="genre" value="#{concertBean.getGenres(concert)}">
                                                     <span class="badge bg-danger fs-6">#{genre}</span>
@@ -111,7 +111,7 @@
                                             </div>
                                             
                                             <!-- Highlights anzeigen -->
-                                            <h5 class="text-netflix mt-4 mb-3">⭐ Besondere Highlights</h5>
+                                            <h5 class=" mt-4 mb-3">⭐ Besondere Highlights</h5>
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="bg-light p-3 rounded">
@@ -123,15 +123,11 @@
                                             </div>
 
                                             <!-- Ladebalken für Ticketverfügbarkeit -->
-                                            <h5 class="text-netflix mt-4 mb-3">📊 Ticketverfügbarkeit</h5>
+                                            <h5 class=" mt-4 mb-3">📊 Ticketverfügbarkeit</h5>
                                             <c:set var="soldPercentage" value="#{concertBean.getSoldPercentage(concert)}" />
                                             <div class="mb-2">
                                                 <strong>Verkauft: #{soldPercentage}%</strong>
                                                 <br/>
-                                                <small class="text-muted">
-                                                    <i class="bi bi-info-circle"></i> 
-                                                    #{concertBean.getAvailabilityText(soldPercentage)}
-                                                </small>
                                                 <div class="progress mb-2" style="height: 20px;">
                                                     <div class="progress-bar #{soldPercentage >= 80 ? 'bg-danger' : (soldPercentage >= 60 ? 'bg-warning' : 'bg-success')}"
                                                         style="width: #{soldPercentage}%;">
@@ -139,7 +135,10 @@
                                                         #{soldPercentage}% verkauft
                                                     </div>
                                                 </div>
-
+                                                                                                <small class="text-muted">
+                                                    <i class="bi bi-info-circle"></i> 
+                                                    #{concertBean.getAvailabilityText(soldPercentage)}
+                                                </small>
                                             </div>
                                         </div>
                                     </div>
@@ -148,7 +147,7 @@
                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                                         <i class="bi bi-arrow-left"></i> Zurück zur Übersicht
                                     </button>
-                                    <button type="button" class="btn btn-netflix btn-lg" 
+                                    <button type="button" class="btn btn-primary btn-lg" 
                                             onclick="window.location.href='booking.xhtml?concertId=#{concert.concertId}'">
                                         <i class="bi bi-ticket-perforated"></i> Jetzt Tickets sichern
                                     </button>
