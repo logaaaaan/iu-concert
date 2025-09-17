@@ -8,8 +8,8 @@
     <navigation-rule>
         <from-view-id>/payment.xhtml</from-view-id>
             <navigation-case>
-                <from-outcome>/confirmation.xhtml?faces-redirect=true</from-outcome>
-                <to-view-id>/confirmation.xhtml</to-view-id>
+                <from-outcome>/final_screen.xhtml?faces-redirect=true</from-outcome>
+                <to-view-id>/final_screen.xhtml</to-view-id>
                 <redirect />
             </navigation-case>
         <navigation-case>

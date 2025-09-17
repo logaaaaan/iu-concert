@@ -256,7 +256,7 @@ public class PaymentBean {
             }
             
             // Weiterleitung zur Bestätigungsseite
-            return "/confirmation.xhtml?faces-redirect=true";
+            return "/final_screen.xhtml?faces-redirect=true";
 
         } catch (Exception e) {
             e.printStackTrace();
