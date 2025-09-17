@@ -36,4 +36,12 @@ public class Concert {
     private int seatingSeatsSold;
 
     private int vipSeatsSold;
+
+    @Column(name = "highlights", columnDefinition = "JSON")
+    private String highlights;
+
+    public String getHighlights() {
+        return highlights;
+    }
+
 }

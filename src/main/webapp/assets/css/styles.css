@@ -410,3 +410,53 @@ body {
         transform: translateX(100%) translateY(100%) rotate(45deg);
     }
 }
+.modal-content {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    border-bottom: 2px solid #e50914;
+    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+}
+
+.text-netflix {
+    color: #e50914;
+    font-weight: 600;
+    border-bottom: 2px solid #e50914;
+    padding-bottom: 5px;
+}
+
+.concert-details-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-left: 4px solid #e50914;
+}
+
+.btn-netflix {
+    background: linear-gradient(135deg, #e50914 0%, #b8070f 100%);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.btn-netflix:hover {
+    background: linear-gradient(135deg, #ff0a1a 0%, #d10000 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
+}
+
+.progress {
+    border-radius: 10px;
+    background: #e9ecef;
+}
+
+.badge {
+    font-size: 0.9em;
+    padding: 0.5em 0.8em;
+    border-radius: 6px;
+}
+
+.progress-bar-high { background-color: #dc3545; }
+.progress-bar-medium { background-color: #ffc107; }
+.progress-bar-low { background-color: #28a745; }

@@ -48,6 +48,7 @@ CREATE TABLE concert (
     standingSeatsSold INT,
     seatingSeatsSold INT,
     vipSeatsSold INT,
+    highlights JSON,
     
     FOREIGN KEY (bandId) REFERENCES band(bandId) ON DELETE CASCADE,
     FOREIGN KEY (venueId) REFERENCES venue(venueId) ON DELETE CASCADE
@@ -102,12 +103,12 @@ VALUES
     ('Ed Sheeran', 'https://2wjyoqczplq2loncx0jfrnk1q5w-thumbnail.storage.muc1.de.bnerd.com/thumbnail/de/Veranstaltungen/2025/Ed%20Sheeran/10955/image-thumb__10955__thumbnail-event-detail-hero/2025_03_07_ED%20SHEERAN_Shot09_034%20copy%201.2f4e5768.webp', 'Singer-Songwriter', 'Intim und doch grandios: Ed Sheeran bezaubert mit seiner Loop-Station und seiner charismatischen Bühnenpräsenz. Perfekt für einen unvergesslichen Akustik-Abend.', '["Pop", "Folk"]');
 
 -- Insert sample data into concerts (Termine)
-INSERT INTO concert (bandId, venueId, duration, concertDate, concertTime, price, vipPrice, standingSeatsSold, seatingSeatsSold, vipSeatsSold)
+INSERT INTO concert (bandId, venueId, duration, concertDate, concertTime, price, vipPrice, standingSeatsSold, seatingSeatsSold, vipSeatsSold, highlights)
 VALUES
-    (1, 1, '02:30:00', '2025-10-15', '19:30:00', 89.99, 249.99, 6112, 5344, 191),  -- Metallica in Arena Hauptstadt
-    (2, 3, '03:15:00', '2025-11-20', '18:00:00', 149.99, 399.99, 18750, 2210, 488), -- Taylor Swift in Open Air Bühne
-    (3, 3, '02:00:00', '2025-09-05', '20:00:00', 99.99, 299.99, 63, 120, 22),  -- Rammstein in Open Air Bühne
-    (4, 2, '02:15:00', '2025-12-10', '19:00:00', 79.99, 189.99, 0, 1530, 96);  -- Ed Sheeran in Konzerthaus Berlin
+    (1, 1, '02:30:00', '2025-10-15', '19:30:00', 89.99, 249.99, 6112, 5344, 191,  '["Pyrotechnische Spezialeffekte", "Extended Drum-Solo", "Guest Appearances", "Meet & Greet"]'),  -- Metallica in Arena Hauptstadt
+    (2, 3, '03:15:00', '2025-11-20', '18:00:00', 149.99, 399.99, 18750, 2210, 488, '["Open-Air Event", "Sommernachtsspecial", "Picknick-Bereich", "Feuerwerk", "Bühnenoutfit-Wechsel"]'), -- Taylor Swift in Open Air Bühne
+    (3, 3, '02:00:00', '2025-09-05', '20:00:00', 99.99, 299.99, 63, 120, 22, '["Feuer-Show", "Bühnen-Akrobatik", "Deutsche Lyrik-Performance", "Special Effects", "Pyrotechnik"]'),  -- Rammstein in Open Air Bühne
+    (4, 2, '02:15:00', '2025-12-10', '19:00:00', 79.99, 189.99, 0, 1530, 96, '["Akustische Unpacked Session", "Loop-Station Performance", "Intime Atmosphäre", "Akustik-optimierte Halle"]');  -- Ed Sheeran in Konzerthaus Berlin
 
 -- Insert sample data into billing
 INSERT INTO billing (firstName, lastName, street, zip, houseNumber, city, paymentInfo, transactionDetails)

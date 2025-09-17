@@ -60,28 +60,90 @@
                     <div class="modal fade" id="concertModal#{concert.concertId}" tabindex="-1" aria-labelledby="concertModalLabel#{concert.concertId}" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="concertModalLabel#{concert.concertId}">#{concert.band.bandName}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <div class="modal-header bg-dark text-light">
+                                    <h4 class="modal-title" id="concertModalLabel#{concert.concertId}">
+                                        <i class="bi bi-music-note-beamed"></i> #{concert.band.bandName}
+                                    </h4>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            <img src="#{concert.band.cover}" class="img-fluid rounded" alt="#{concert.band.bandName}" />
+                                        <!-- Bild Section -->
+                                        <div class="col-md-5">
+                                            <img src="#{concert.band.cover}" class="img-fluid rounded shadow mb-3" alt="#{concert.band.bandName}" style="height: 250px; width: 100%; object-fit: cover;" />
+                                            
+                                            <div class="concert-details-card p-3 bg-light rounded">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <strong><i class="bi bi-calendar-event"></i> Datum:</strong>
+                                                    <span class="badge bg-primary">#{concert.concertDate}</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <strong><i class="bi bi-clock"></i> Uhrzeit:</strong>
+                                                    <span class="badge bg-secondary">#{concert.concertTime} Uhr</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <strong><i class="bi bi-geo-alt"></i> Ort:</strong>
+                                                    <span class="text-end">#{concert.venue.name}</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <strong><i class="bi bi-tag"></i> Preise ab:</strong>
+                                                    <span class="badge bg-success">#{concert.price}€</span>
+                                                </div>
+                                                <c:if test="#{concert.vipPrice > 0}">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <strong><i class="bi bi-star"></i> VIP ab:</strong>
+                                                    <span class="badge bg-warning text-dark">#{concert.vipPrice}€</span>
+                                                </div>
+                                                </c:if>
+                                            </div>
                                         </div>
-                                        <div class="col-md-8">
-                                            <h6>Ort</h6>
-                                            <p>#{concert.venue.name}</p>
-                                            <h6>Beschreibung</h6>
-                                            <p>#{concert.band.description}</p>
-                                            <h6>Genres</h6>
-                                            <p>#{concertBean.getGenresAsString(concert)}</p>
+                                        
+                                        <!-- Info Section -->
+                                        <div class="col-md-7">
+                                            <h5 class="text-netflix mb-3">🎤 Über das Konzert</h5>
+                                            <p class="text-muted lh-base">#{concert.band.description}</p>
+                                            
+                                            <h5 class="text-netflix mt-4 mb-3">🎵 Musikrichtungen</h5>
+                                            <div class="d-flex flex-wrap gap-2 mb-4">
+                                                <ui:repeat var="genre" value="#{concertBean.getGenres(concert)}">
+                                                    <span class="badge bg-danger fs-6">#{genre}</span>
+                                                </ui:repeat>
+                                            </div>
+                                            
+                                            <!-- Highlights anzeigen -->
+                                            <h5 class="text-netflix mt-4 mb-3">⭐ Besondere Highlights</h5>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="bg-light p-3 rounded">
+                                                        <ui:repeat var="highlight" value="#{concertBean.getHighlightsList(concert)}">
+                                                            <span class="badge bg-info text-dark me-1 mb-1">#{highlight}</span>
+                                                        </ui:repeat>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Ladebalken für Ticketverfügbarkeit -->
+                                            <h5 class="text-netflix mt-4 mb-3">📊 Ticketverfügbarkeit</h5>
+                                            <c:set var="soldPercentage" value="#{concertBean.getSoldPercentage(concert)}" />
+                                            <div class="mb-2">
+                                                <strong>Verkauft: #{soldPercentage}%</strong>
+                                                <br/>
+                                                <small class="text-muted">
+                                                    <i class="bi bi-info-circle"></i> 
+                                                    #{concertBean.getAvailabilityText(soldPercentage)}
+                                                </small>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
-                                    <button type="button" class="btn btn-primary" onclick="window.location.href='booking.xhtml?concertId=#{concert.concertId}'">Tickets buchen</button>
+                                <div class="modal-footer bg-light">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        <i class="bi bi-arrow-left"></i> Zurück zur Übersicht
+                                    </button>
+                                    <button type="button" class="btn btn-netflix btn-lg" 
+                                            onclick="window.location.href='booking.xhtml?concertId=#{concert.concertId}'">
+                                        <i class="bi bi-ticket-perforated"></i> Jetzt Tickets sichern
+                                    </button>
                                 </div>
                             </div>
                         </div>

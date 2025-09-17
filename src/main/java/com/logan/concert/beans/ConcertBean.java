@@ -66,22 +66,61 @@ public class ConcertBean {
     }
 
     public String getGenresAsString(Concert concert) {
-    if (concert == null || concert.getBand() == null) {
-        return "";
+        if (concert == null || concert.getBand() == null) {
+            return "";
+        }
+        
+        Band band = concert.getBand();
+        if (band.getGenre() == null || band.getGenre().isEmpty()) {
+            return "";
+        }
+        
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            List<String> genreList = mapper.readValue(band.getGenre(), new TypeReference<List<String>>() {});
+            return String.join(", ", genreList);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
-    
-    Band band = concert.getBand();
-    if (band.getGenre() == null || band.getGenre().isEmpty()) {
-        return "";
+
+    // Methode zur Prozentberechnung
+    public double getSoldPercentage(Concert concert) {
+        if (concert == null || concert.getVenue() == null) return 0;
+        
+        int totalCapacity = concert.getVenue().getStandingArea() + 
+                        concert.getVenue().getSeatingArea() + 
+                        concert.getVenue().getVipArea();
+        
+        int totalSold = concert.getStandingSeatsSold() + 
+                    concert.getSeatingSeatsSold() + 
+                    concert.getVipSeatsSold();
+        
+        if (totalCapacity == 0) return 0;
+        
+        // Float-Berechnung verwenden für kleine Prozente
+        double percentage = (totalSold * 100.0f) / totalCapacity;
+        return Math.round(percentage * 100.0) / 100.0; // Rundet auf ganze Prozent
     }
-    
-    ObjectMapper mapper = new ObjectMapper();
-    try {
-        List<String> genreList = mapper.readValue(band.getGenre(), new TypeReference<List<String>>() {});
-        return String.join(", ", genreList);
-    } catch (IOException e) {
-        e.printStackTrace();
-        return "";
+
+    // Methode für Verfügbarkeitstext
+    public String getAvailabilityText(int percentage) {
+        if (percentage >= 85) return "Fast ausverkauft! Sehr wenige Tickets verfügbar";
+        if (percentage >= 65) return "Begrenzte Verfügbarkeit - Jetzt schnell sein!";
+        if (percentage >= 40) return "Gute Verfügbarkeit - Sichere dir dein Ticket";
+        return "Viele Tickets verfügbar - Gute Auswahl";
     }
-}
+
+    // Methode zur Extraktion der Highlights aus JSON
+    public List<String> getHighlightsList(Concert concert) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(concert.getHighlights(), new TypeReference<List<String>>(){});
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
 }

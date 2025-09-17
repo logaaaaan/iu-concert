@@ -42,6 +42,7 @@ CREATE TABLE concert (
     standingSeatsSold INT,
     seatingSeatsSold INT,
     vipSeatsSold INT,
+    highlights JSON,
     
     FOREIGN KEY (bandId) REFERENCES band(bandId) ON DELETE CASCADE,
     FOREIGN KEY (venueId) REFERENCES venue(venueId) ON DELETE CASCADE
