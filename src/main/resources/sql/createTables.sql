@@ -60,20 +60,3 @@ CREATE TABLE billing (
     paymentInfo VARCHAR(50) NOT NULL,
     transactionDetails JSON
 );
-
--- Create table for tickets
-CREATE TABLE ticket (
-    ticketId INT AUTO_INCREMENT PRIMARY KEY,
-    firstName VARCHAR(100) NOT NULL,
-    lastName VARCHAR(100) NOT NULL,
-    concertTime VARCHAR(5),
-    seatNumber VARCHAR(10),
-    ticketType VARCHAR(50) NOT NULL,
-    price FLOAT NOT NULL,
-    purchaseDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ticketNumber VARCHAR(100) NOT NULL,
-    concertId INT NOT NULL,
-    billingId INT NOT NULL,
-    FOREIGN KEY (concertId) REFERENCES concert(concertId) ON DELETE CASCADE,
-    FOREIGN KEY (billingId) REFERENCES billing(billingId) ON DELETE CASCADE
-);

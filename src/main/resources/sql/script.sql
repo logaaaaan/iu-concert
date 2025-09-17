@@ -67,23 +67,6 @@ CREATE TABLE billing (
     transactionDetails JSON
 );
 
--- Create table for tickets
-CREATE TABLE ticket (
-    ticketId INT AUTO_INCREMENT PRIMARY KEY,
-    firstName VARCHAR(100) NOT NULL,
-    lastName VARCHAR(100) NOT NULL,
-    concertTime VARCHAR(5),
-    seatNumber VARCHAR(10),
-    ticketType VARCHAR(50) NOT NULL,
-    price FLOAT NOT NULL,
-    purchaseDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ticketNumber VARCHAR(100) NOT NULL,
-    concertId INT NOT NULL,
-    billingId INT NOT NULL,
-    FOREIGN KEY (concertId) REFERENCES concert(concertId) ON DELETE CASCADE,
-    FOREIGN KEY (billingId) REFERENCES billing(billingId) ON DELETE CASCADE
-);
-
 -- SQL script for inserting test data into the concert database
 SET FOREIGN_KEY_CHECKS = 0; -- Temporarily disable foreign key checks
 
@@ -116,24 +99,5 @@ VALUES
     ('John', 'Doe', 'Main Street', '12345', '10', 'Berlin', 'paypal', '{}'),
     ('Jane', 'Smith', 'Elm Street', '54321', '5', 'Hamburg', 'creditcard', '{"last4": "1234", "expiry": "12/25"}'),
     ('Alice', 'Johnson', 'Oak Avenue', '67890', '15', 'München', 'banktransfer', '{"iban": "DE89370400440532013000"}');
-
--- Insert sample data into tickets (angepasst an die neue Struktur)
-INSERT INTO ticket (firstName, lastName, concertId, concertTime, seatNumber, ticketType, price, ticketNumber, billingId)
-VALUES
-    -- Metallica tickets
-    ('Max', 'Mustermann', 1, '19:30', 'A12', 'VIP', 249.99, 'TKT-MET-001', 1),
-    ('Anna', 'Schmidt', 1, '19:30', 'B15', 'Standard', 89.99, 'TKT-MET-002', 2),
-    
-    -- Taylor Swift tickets
-    ('Lisa', 'Müller', 2, '18:00', 'VIP1', 'VIP', 399.99, 'TKT-TS-001', 3),
-    ('Tom', 'Weber', 2, '18:00', 'C25', 'Standard', 149.99, 'TKT-TS-002', 1),
-    
-    -- Rammstein tickets
-    ('Sarah', 'Fischer', 3, '20:00', 'VIP2', 'VIP', 299.99, 'TKT-RAM-001', 2),
-    ('David', 'Wagner', 3, '20:00', 'D10', 'Standard', 99.99, 'TKT-RAM-002', 3),
-    
-    -- Ed Sheeran tickets
-    ('Maria', 'Becker', 4, '19:00', 'VIP3', 'VIP', 189.99, 'TKT-ED-001', 1),
-    ('Paul', 'Hoffmann', 4, '19:00', 'E5', 'Standard', 79.99, 'TKT-ED-002', 2);
 
 SET FOREIGN_KEY_CHECKS = 1; -- Re-enable foreign key checks
