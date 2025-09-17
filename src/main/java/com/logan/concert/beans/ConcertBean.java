@@ -8,6 +8,7 @@ import com.logan.concert.model.Concert;
 
 // import java.io.IOException;
 import org.hibernate.Session;
+import org.hibernate.Query;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -22,16 +23,17 @@ public class ConcertBean {
 
     public List<Concert> getAllConcerts() {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-
-        List<Concert> concerts = session.createCriteria(Concert.class).list();
-
-        session.getTransaction().commit();
-        session.close();
-
-        return concerts;
+        try {
+            String hql = "FROM Concert c ORDER BY c.concertDate ASC";
+            Query query = session.createQuery(hql);
+            @SuppressWarnings("unchecked")
+            List<Concert> concerts = query.list();
+            return concerts;
+        } finally {
+            session.close();
+        }
     }
-    
+
     // Get band name for a concert
     public String getBandName(Concert concert) {
         return concert != null && concert.getBand() != null ? 
