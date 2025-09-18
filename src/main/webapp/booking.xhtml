@@ -90,7 +90,8 @@
                         <h4 id="concertTitle">#{bookingBean.getBand().bandName}</h4>
 
                         <p id="concertDetails" style="color: #cccccc">#{bookingBean.getBand().shortDesc}</p>
-                        <div class="concert-info">
+                        <div id="selectedTicketsList">
+                            <div class="concert-info">
                             <ui:repeat var="genre" value="#{concertBean.getGenres(bookingBean.getConcert())}">
                                 <span class="badge bg-danger">#{genre}</span>
                             </ui:repeat>
@@ -100,13 +101,12 @@
                                 <small class="d-block"><i class="bi bi-geo-alt"></i> #{bookingBean.getConcert().venue.name}</small>
                             </div>
                         </div>
+                        </div>
+                        
                     </div>
                     
                     <div class="selected-tickets-info mt-4">
                         <h5>Ausgewählte Tickets</h5>
-                        <div id="selectedTicketsList">
-                            <!-- Selected tickets will be listed here -->
-                        </div>
                     </div>
 
                     <div class="price-summary mt-4">
