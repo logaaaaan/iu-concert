@@ -141,18 +141,21 @@
                         <div class="concert-info-booking">
                             <img id="concertImage" src="#{bookingBean.getBand().cover}" alt="Concert Poster" class="img-fluid rounded mb-3" />
                             <h4 id="concertTitle">#{bookingBean.getBand().bandName}</h4>
-
                             <p id="concertDetails" style="color: #cccccc">#{bookingBean.getBand().shortDesc}</p>
-                            <div class="concert-info">
-                                <ui:repeat var="genre" value="#{concertBean.getGenres(bookingBean.getConcert())}">
-                                    <span class="badge bg-danger">#{genre}</span>
-                                </ui:repeat>
-                                <div class="mt-2">
-                                    <small class="d-block"><i class="bi bi-calendar-event"></i> #{bookingBean.getConcert().concertDate}</small>
-                                    <small class="d-block"><i class="bi bi-clock"></i> #{bookingBean.getConcert().concertTime} Uhr</small>
-                                    <small class="d-block"><i class="bi bi-geo-alt"></i> #{bookingBean.getConcert().venue.name}</small>
+
+                            <div id="selectedTicketsList">
+                                <div class="concert-info">
+                                    <ui:repeat var="genre" value="#{concertBean.getGenres(bookingBean.getConcert())}">
+                                        <span class="badge bg-danger">#{genre}</span>
+                                    </ui:repeat>
+                                    <div class="mt-2">
+                                        <small class="d-block"><i class="bi bi-calendar-event"></i> #{bookingBean.getConcert().concertDate}</small>
+                                        <small class="d-block"><i class="bi bi-clock"></i> #{bookingBean.getConcert().concertTime} Uhr</small>
+                                        <small class="d-block"><i class="bi bi-geo-alt"></i> #{bookingBean.getConcert().venue.name}</small>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="selected-seats-info mt-4">
