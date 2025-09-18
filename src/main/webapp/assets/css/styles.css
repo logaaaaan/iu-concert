@@ -1,3 +1,4 @@
+/* Basis-Styles */
 body {
     background: linear-gradient(135deg, #1e0033 0%, #110011 50%, #220022 100%);
     color: #ffffff;
@@ -25,6 +26,7 @@ body {
     background: linear-gradient(90deg, #ff006e, #8338ec);
 }
 
+/* Card Styles */
 .card {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     background: linear-gradient(145deg, #2a1a3e, #1a0e2e);
@@ -72,8 +74,9 @@ body {
     filter: contrast(1.1) saturate(1.2);
 }
 
-.concert-details {
-    font-size: 0.9rem;
+.concert-details,
+.concert-details small {
+    color: #ffffff !important;
 }
 
 .concert-details i {
@@ -81,7 +84,7 @@ body {
     margin-right: 0.3rem;
 }
 
-.movie-info, .concert-info {
+.movie-info {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -92,19 +95,13 @@ body {
     border-radius: 8px;
 }
 
-.duration {
-    color: #ff006e;
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-left: auto;
-}
-
 .badge {
     padding: 0.4rem 0.8rem;
     font-size: 0.85rem;
     font-weight: 500;
     margin: 0;
     white-space: nowrap;
+    border-radius: 6px !important;
 }
 
 .badge.bg-danger {
@@ -123,6 +120,7 @@ body {
     z-index: 2;
 }
 
+/* Button Styles */
 .btn-info {
     background-color: #2b2b2b;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -163,6 +161,7 @@ body {
     box-shadow: 0 4px 8px rgba(131, 56, 236, 0.3);
 }
 
+/* Navbar Styles */
 .navbar {
     background: linear-gradient(to right, #1a0033, #2a0044) !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -192,6 +191,7 @@ body {
     color: #ff006e;
 }
 
+/* Text Styles */
 .card-title {
     color: #ffffff;
     font-size: 1.4rem;
@@ -204,16 +204,18 @@ body {
     line-height: 1.6;
 }
 
+/* Modal Styles */
 .modal-content {
     background: linear-gradient(145deg, #2a1a3e, #1a0e2e);
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .modal-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 1.5rem;
+    background: linear-gradient(135deg, #1e0033 0%, #110011 50%, #220022 100%) !important;
+    border-bottom: 1px solid #ff006e !important;
 }
 
 .modal-title {
@@ -225,6 +227,13 @@ body {
 
 .modal-body {
     padding: 2rem;
+}
+
+.modal-body h5,
+.modal-body h6,
+.modal-body p,
+.modal-body strong {
+    color: #ffffff !important;
 }
 
 .modal-body h6 {
@@ -241,12 +250,6 @@ body {
     margin-bottom: 1.5rem;
 }
 
-.movie-meta, .concert-meta {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 1rem;
-    border-radius: 8px;
-}
-
 .btn-close {
     filter: invert(1) grayscale(100%) brightness(200%);
 }
@@ -260,111 +263,108 @@ body {
     transform: scale(1);
 }
 
-.accordion-item {
-    background-color: #1a0e2e !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    overflow: hidden;
+.modal-footer {
+    background: linear-gradient(135deg, #1e0033 0%, #110011 50%, #220022 100%) !important;
+    border-top: 1px solid #ff006e !important;
 }
 
-.accordion-button {
-    background-color: #2a1a3e !important;
-    color: #ffffff !important;
-    border: none !important;
-    padding: 1.25rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.accordion-button:not(.collapsed) {
-    background-color: #2a1a3e !important;
-    color: #ffffff !important;
-    box-shadow: none !important;
-}
-
-.accordion-button::after {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
-}
-
-.accordion-button:hover {
-    background-color: #3a2a4e !important;
-}
-
-.accordion-body {
-    background-color: #1a0e2e !important;
-    padding: 1.5rem;
-}
-
-.form-control {
-    background-color: #2a1a3e !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: #ffffff !important;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.form-control:focus {
-    background-color: #3a2a4e !important;
-    border-color: #8338ec !important;
-    box-shadow: 0 0 0 0.2rem rgba(131, 56, 236, 0.25) !important;
+/* Concert Details Card in Modal */
+.concert-details-card {
+    background: linear-gradient(145deg, #2a1a3e, #1a0e2e) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     color: #ffffff !important;
 }
 
-.form-control::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+.concert-details-card .d-flex {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 0;
 }
 
-.form-label {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
+.concert-details-card .d-flex:last-child {
+    border-bottom: none;
 }
 
-.ticket-status {
-    font-size: 0.9rem;
+.concert-details-card i {
+    background: linear-gradient(90deg, #ff006e, #8338ec);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-right: 0.5rem;
     transition: all 0.3s ease;
 }
 
-.ticket-status.text-success {
-    color: #00c896 !important;
+.concert-details-card i:hover {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 5px rgba(255, 0, 110, 0.7));
 }
 
-.accordion-button:not(.collapsed)::after {
-    transform: rotate(-180deg);
+.concert-details-card .badge {
+    font-weight: 600;
+    padding: 0.4rem 0.7rem !important;
 }
 
-.ticket-holder-card {
-    border-left: 4px solid #8338ec;
-    transition: all 0.3s ease;
+.badge.bg-primary {
+    background: linear-gradient(90deg, #8338ec, #5a20c5) !important;
 }
 
-.ticket-holder-card:hover {
-    box-shadow: 0 0 15px rgba(131, 56, 236, 0.3);
+.badge.bg-secondary {
+    background: linear-gradient(90deg, #3a86ff, #5a20c5) !important;
 }
 
-.ticket-holder-card .form-label {
-    color: #ff006e;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
+.badge.bg-success {
+    background: linear-gradient(90deg, #00c896, #00a878) !important;
 }
 
-.ticket-holder-card .form-control:focus {
-    border-color: #8338ec;
-    box-shadow: 0 0 0 0.2rem rgba(131, 56, 236, 0.25);
+.badge.bg-warning {
+    background: linear-gradient(90deg, #ffbe0b, #ff9e00) !important;
 }
 
-.ticket-holder-card .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+/* Progress Bar Styles */
+.progress {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border-radius: 10px;
+    height: 20px !important;
 }
 
-.ticket-number-hidden {
-    display: none;
+.progress-bar {
+    border-radius: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(255, 0, 110, 0.3);
 }
 
-/* Add concert-specific animations */
+.progress-bar.bg-danger {
+    background: linear-gradient(90deg, #ff006e, #8338ec) !important;
+}
+
+.progress-bar.bg-warning {
+    background: linear-gradient(90deg, #ffc107, #ff8c00) !important;
+}
+
+.progress-bar.bg-success {
+    background: linear-gradient(90deg, #00c896, #00d9ff) !important;
+}
+
+/* Text and Highlight Styles */
+.text-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.badge.bg-info {
+    background: linear-gradient(90deg, #3a86ff, #5a20c5) !important;
+    color: white !important;
+    margin: 0.2rem;
+    padding: 0.5rem 0.8rem;
+}
+
+.modal-body .bg-light {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Concert Card Animation */
 @keyframes pulse-glow {
     0% {
         box-shadow: 0 0 5px rgba(255, 0, 110, 0.5);
@@ -380,82 +380,3 @@ body {
 .concert-card:hover {
     animation: pulse-glow 2s infinite;
 }
-
-/* Concert stage lights effect */
-.screen {
-    position: relative;
-    background: linear-gradient(90deg, #ff006e, #8338ec);
-    overflow: hidden;
-}
-
-.screen::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, 
-        transparent 30%, 
-        rgba(255, 255, 255, 0.1) 50%, 
-        transparent 70%);
-    animation: stage-lights 3s linear infinite;
-}
-
-@keyframes stage-lights {
-    0% {
-        transform: translateX(-100%) translateY(-100%) rotate(45deg);
-    }
-    100% {
-        transform: translateX(100%) translateY(100%) rotate(45deg);
-    }
-}
-.modal-content {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.modal-header {
-    border-bottom: 2px solid #e50914;
-    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
-}
-
-.text-netflix {
-    color: #e50914;
-    font-weight: 600;
-    border-bottom: 2px solid #e50914;
-    padding-bottom: 5px;
-}
-
-.concert-details-card {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-}
-
-.btn-netflix {
-    background: linear-gradient(135deg, #e50914 0%, #b8070f 100%);
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-}
-
-.btn-netflix:hover {
-    background: linear-gradient(135deg, #ff0a1a 0%, #d10000 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
-}
-
-.progress {
-    border-radius: 10px;
-    background: #e9ecef;
-}
-
-.badge {
-    font-size: 0.9em;
-    padding: 0.5em 0.8em;
-    border-radius: 6px;
-}
-
-.progress-bar-high { background-color: #dc3545; }
-.progress-bar-medium { background-color: #ffc107; }
-.progress-bar-low { background-color: #28a745; }
