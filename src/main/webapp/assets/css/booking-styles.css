@@ -17,31 +17,6 @@
     display: inline-block;
 }
 
-.booking-section h2::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    width: 40px;
-    height: 2px;
-    background: linear-gradient(90deg, #ff006e, #8338ec);
-}
-
-/* Konzertsaal-Styling */
-.concert-venue {
-    position: relative;
-    padding: 2rem;
-}
-
-.screen {
-    background: linear-gradient(90deg, #ff006e, #8338ec);
-    height: 60px;
-    border-radius: 50%/100% 100% 0 0;
-    position: relative;
-    box-shadow: 0 -8px 24px rgba(131, 56, 236, 0.3);
-    transform: perspective(200px) rotateX(-10deg);
-    overflow: hidden;
-}
 
 .screen::before {
     content: '';
@@ -57,82 +32,12 @@
     animation: stage-lights 3s linear infinite;
 }
 
-@keyframes stage-lights {
-    0% {
-        transform: translateX(-100%) translateY(-100%) rotate(45deg);
-    }
-    100% {
-        transform: translateX(100%) translateY(100%) rotate(45deg);
-    }
-}
-
-.screen-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 600;
-}
-
-/* Ticket-Quantity und Selection */
-.ticket-quantity, .showtime-selection {
-    flex: 0 0 280px;
-    height: 150px;
-    padding: 1.5rem;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.ticket-quantity .d-flex {
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.ticket-quantity label,
-.showtime-selection label {
-    text-align: center;
-    display: block;
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.ticket-quantity button {
-    width: 45px;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    background: linear-gradient(145deg, #2a1a3e, #1a0e2e);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
 .ticket-quantity button:hover {
     background: linear-gradient(145deg, #3a2a4e, #2a1e3e);
     border-color: rgba(255, 255, 255, 0.3);
     color: #ffffff;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(131, 56, 236, 0.3);
-}
-
-.ticket-quantity span {
-    font-size: 1.4rem;
-    color: #ffffff;
-    min-width: 40px;
-    text-align: center;
-    font-weight: 600;
 }
 
 /* Form-Select Anpassungen */
@@ -146,12 +51,6 @@
     color: #ffffff !important;
     font-size: 1rem;
     transition: all 0.3s ease;
-}
-
-.showtime-selection select:hover,
-#ticketType:hover {
-    border-color: rgba(255, 255, 255, 0.3) !important;
-    transform: translateY(-2px);
 }
 
 .showtime-selection select:focus,
@@ -187,48 +86,9 @@
     display: inline-block;
 }
 
-.booking-summary h3::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    width: 40px;
-    height: 2px;
-    background: linear-gradient(90deg, #ff006e, #8338ec);
-}
-
-.concert-info-booking h4 {
-    color: #ffffff;
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.concert-info-booking p {
-    color: #cccccc;
-    line-height: 1.6;
-}
-
-.img-size {
-    height: 300px;
-    width: 100%;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-}
-
 /* Badge-Anpassungen */
 .badge.bg-danger {
     background: linear-gradient(90deg, #ff006e, #8338ec) !important;
-}
-
-/* Selected Tickets Info */
-.selected-tickets-info h5 {
-    color: #ffffff;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 0.5rem;
 }
 
 #selectedTicketsList {
@@ -241,13 +101,6 @@
 /* Price Summary */
 .price-summary {
     color: #ffffff;
-}
-
-.total-price {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 1rem;
-    margin-top: 1rem;
-    font-size: 1.2rem;
 }
 
 /* Buchungsbutton */
@@ -282,19 +135,6 @@
     
     .booking-section, .booking-summary {
         padding: 1.5rem;
-    }
-}
-
-/* Animations */
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 5px rgba(255, 0, 110, 0.5);
-    }
-    50% {
-        box-shadow: 0 0 20px rgba(131, 56, 236, 0.8), 0 0 30px rgba(255, 0, 110, 0.4);
-    }
-    100% {
-        box-shadow: 0 0 5px rgba(255, 0, 110, 0.5);
     }
 }
 
