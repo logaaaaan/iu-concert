@@ -185,3 +185,85 @@ document.addEventListener('DOMContentLoaded', () => {
         bookButton.addEventListener('click', handleBooking);
     }
 });
+
+
+        // Update available tickets display based on selected ticket type
+        function updateAvailableTickets() {
+            const ticketType = document.getElementById('ticketType').value;
+            const availableCount = document.getElementById('availableCount');
+            
+            // Get capacity and sold data
+            const standingCapacity = parseInt(document.getElementById('venueStandingCapacity').value);
+            const seatingCapacity = parseInt(document.getElementById('venueSeatingCapacity').value);
+            const vipCapacity = parseInt(document.getElementById('venueVipCapacity').value);
+            const standingSold = parseInt(document.getElementById('standingSold').value);
+            const seatingSold = parseInt(document.getElementById('seatingSold').value);
+            const vipSold = parseInt(document.getElementById('vipSold').value);
+            
+            let available = 0;
+            switch(ticketType) {
+                case 'standing':
+                    available = standingCapacity - standingSold;
+                    break;
+                case 'seated':
+                    available = seatingCapacity - seatingSold;
+                    break;
+                case 'vip':
+                    available = vipCapacity - vipSold;
+                    break;
+            }
+            
+            availableCount.textContent = available;
+        }
+
+        // Update price and summary when ticket type or quantity changes
+        function updateSummary() {
+            const ticketType = document.getElementById('ticketType');
+            const quantity = parseInt(document.getElementById('ticketQuantity').textContent);
+            const selectedOption = ticketType.options[ticketType.selectedIndex];
+            const price = parseFloat(selectedOption.dataset.price);
+            const typeText = selectedOption.text.split(' - ')[0];
+            
+            // Update summary display
+            document.getElementById('selectedQuantity').textContent = quantity;
+            document.getElementById('selectedType').textContent = typeText;
+            document.getElementById('pricePerTicket').textContent = price + ' €';
+            document.getElementById('lineTotal').textContent = (price * quantity).toFixed(2) + '€';
+            document.getElementById('totalPrice').textContent = (price * quantity).toFixed(2) + ' €';
+            
+            updateAvailableTickets();
+        }
+
+        // Quantity controls
+        document.getElementById('increaseTickets').addEventListener('click', function() {
+            const quantityElement = document.getElementById('ticketQuantity');
+            let quantity = parseInt(quantityElement.textContent);
+            const maxTickets = parseInt(document.getElementById('availableCount').textContent);
+            
+            if (quantity &lt; maxTickets &amp;&amp; quantity &lt; 10) {
+                quantityElement.textContent = quantity + 1;
+                updateSummary();
+            }
+        });
+
+        document.getElementById('decreaseTickets').addEventListener('click', function() {
+            const quantityElement = document.getElementById('ticketQuantity');
+            let quantity = parseInt(quantityElement.textContent);
+            
+            if (quantity &gt; 1) {
+                quantityElement.textContent = quantity - 1;
+                updateSummary();
+            }
+        });
+
+        // Ticket type change
+        document.getElementById('ticketType').addEventListener('change', function() {
+            // Reset quantity to 1 when changing ticket type
+            document.getElementById('ticketQuantity').textContent = '1';
+            updateSummary();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSummary();
+        });
