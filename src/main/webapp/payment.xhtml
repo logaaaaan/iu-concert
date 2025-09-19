@@ -26,6 +26,34 @@
         </nav>
 
         <div class="container mt-4 mt-lg-5">
+
+            <!-- Simple Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card" style=" border: 1px solid #ff006e;">
+                    <div class="card-body text-center">
+                        <h1 class="display-6 mb-2 text-white">#{bookingBean.getBand().bandName}</h1>
+                        <p class="lead mb-3 text-muted">#{bookingBean.getBand().shortDesc}</p>
+                        <div class="d-flex justify-content-center gap-2 mb-3">
+                            <ui:repeat var="genre" value="#{concertBean.getGenres(bookingBean.getConcert())}">
+                                <span class="badge" style="background: linear-gradient(90deg, #ff006e, #8338ec);">#{genre}</span>
+                            </ui:repeat>
+                        </div>
+                        <div class="row text-center">
+                            <div class="col-md-4">
+                                <h5 class="text-white"><i class="bi bi-calendar-event"></i> #{bookingBean.getConcert().concertDate}</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <h5 class="text-white"><i class="bi bi-clock"></i> #{bookingBean.getConcert().concertTime} Uhr</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <h5 class="text-white"><i class="bi bi-geo-alt"></i> #{bookingBean.getConcert().venue.name}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
             <div class="row g-4">
                 <!-- Left Column - Payment Section -->
                 <div class="col-12 col-lg-8">
@@ -33,6 +61,7 @@
                         <h2 class="mb-4">Zahlung</h2>
 
                         <!-- Billing Address Form -->
+                        <br></br>
                         <h:form id="billingForm" class="mb-4">
                             <h3 class="mb-3">Rechnungsadresse</h3>
                             <div class="row g-3">
@@ -76,6 +105,7 @@
 
 
                             <!-- Payment Method Selection -->
+                            <br></br>
                             <h3 class="mb-3 mt-4">Zahlungsmethode</h3>
                             <div class="payment-methods">
                                 <div class="form-check mb-3">
@@ -143,16 +173,14 @@
                             <h4 id="concertTitle">#{bookingBean.getBand().bandName}</h4>
                             <p id="concertDetails" style="color: #cccccc">#{bookingBean.getBand().shortDesc}</p>
 
-                            <div id="selectedTicketsList">
-                                <div class="concert-info">
-                                    <ui:repeat var="genre" value="#{concertBean.getGenres(bookingBean.getConcert())}">
-                                        <span class="badge bg-danger">#{genre}</span>
-                                    </ui:repeat>
-                                    <div class="mt-2">
-                                        <small class="d-block"><i class="bi bi-calendar-event"></i> #{bookingBean.getConcert().concertDate}</small>
-                                        <small class="d-block"><i class="bi bi-clock"></i> #{bookingBean.getConcert().concertTime} Uhr</small>
-                                        <small class="d-block"><i class="bi bi-geo-alt"></i> #{bookingBean.getConcert().venue.name}</small>
-                                    </div>
+                            <div class="concert-info">
+                                <ui:repeat var="genre" value="#{concertBean.getGenres(bookingBean.getConcert())}">
+                                    <span class="badge bg-danger">#{genre}</span>
+                                </ui:repeat>
+                                <div class="mt-2">
+                                    <small class="d-block"><i class="bi bi-calendar-event"></i> #{bookingBean.getConcert().concertDate}</small>
+                                    <small class="d-block"><i class="bi bi-clock"></i> #{bookingBean.getConcert().concertTime} Uhr</small>
+                                    <small class="d-block"><i class="bi bi-geo-alt"></i> #{bookingBean.getConcert().venue.name}</small>
                                 </div>
                             </div>
 

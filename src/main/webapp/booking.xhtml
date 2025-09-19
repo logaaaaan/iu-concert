@@ -15,6 +15,134 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="assets/css/styles.css" rel="stylesheet" />
     <link href="assets/css/booking-styles.css" rel="stylesheet" />
+    <style>
+        /* Zusätzliche Stile für die Buchungsseite */
+        .ticket-controls-card {
+            background: linear-gradient(145deg, #2a1a3e, #1a0e2e);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .booking-header {
+            background: linear-gradient(135deg, #1e0033 0%, #110011 50%, #220022 100%) !important;
+            border-bottom: 1px solid #ff006e !important;
+        }
+        
+        .selected-ticket-item {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .availability-badge {
+            background: linear-gradient(90deg, #00c896, #00d9ff) !important;
+            color: white !important;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: block;
+        }
+        
+        .price-highlight {
+            background: linear-gradient(90deg, #ff006e, #8338ec);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+        
+        .ticket-area-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .ticket-area-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .quantity-btn {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .select-with-icon {
+            position: relative;
+        }
+
+        .select-with-icon select {
+            padding-right: 2.5rem;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .select-with-icon::after {
+            content: "⌄";
+            font-size: 1.2rem;
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #ff006e;
+        }
+        
+        /* Verbesserte Farben */
+        .bg-light {
+            background: rgba(255, 255, 255, 0.05) !important;
+            color: white;
+        }
+        
+        .text-success {
+            color: #00c896 !important;
+        }
+        
+        .btn-success {
+            background: linear-gradient(90deg, #00c896, #00d9ff);
+            border: none;
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(90deg, #00a878, #00b8e6);
+        }
+        
+        .bg-info {
+            background: linear-gradient(135deg, #3a86ff, #5a20c5) !important;
+        }
+        
+        .border-warning {
+            border-color: #ffbe0b !important;
+        }
+        
+        .border-primary {
+            border-color: #3a86ff !important;
+        }
+        
+        .border-success {
+            border-color: #00c896 !important;
+        }
+        
+        .text-warning {
+            color: #ffbe0b !important;
+        }
+        
+        .text-primary {
+            color: #3a86ff !important;
+        }
+        
+        .text-muted {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -24,105 +152,225 @@
     </nav>
 
     <div class="container mt-4 mt-lg-5">
-        <div class="row g-4">
-            <!-- Left Column - Ticket Selection -->
-            <div class="col-12 col-lg-8 mt-0">
-                <div class="booking-section">
-                    <h2 class="mb-4">Ticketauswahl</h2>
-                    
-                    <!-- Ticket Quantity and Type Selection -->
-                    <div class="d-flex align-items-start justify-content-center gap-4 mb-3 mb-lg-4">
-                        <div class="ticket-quantity">
-                            <label class="form-label">Anzahl der Tickets:</label>
-                            <div class="d-flex align-items-center">
-                                <button class="btn btn-outline-secondary" id="decreaseTickets"><i class="bi bi-dash"></i></button>
-                                <span id="ticketQuantity" class="mx-3">1</span>
-                                <button class="btn btn-outline-secondary" id="increaseTickets"><i class="bi bi-plus"></i></button>
+        <!-- Simple Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card" style=" border: 1px solid #ff006e;">
+                    <div class="card-body text-center">
+                        <h1 class="display-6 mb-2 text-white">#{bookingBean.getBand().bandName}</h1>
+                        <p class="lead mb-3 text-muted">#{bookingBean.getBand().shortDesc}</p>
+                        <div class="d-flex justify-content-center gap-2 mb-3">
+                            <ui:repeat var="genre" value="#{concertBean.getGenres(bookingBean.getConcert())}">
+                                <span class="badge" style="background: linear-gradient(90deg, #ff006e, #8338ec);">#{genre}</span>
+                            </ui:repeat>
+                        </div>
+                        <div class="row text-center">
+                            <div class="col-md-4">
+                                <h5 class="text-white"><i class="bi bi-calendar-event"></i> #{bookingBean.getConcert().concertDate}</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <h5 class="text-white"><i class="bi bi-clock"></i> #{bookingBean.getConcert().concertTime} Uhr</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <h5 class="text-white"><i class="bi bi-geo-alt"></i> #{bookingBean.getConcert().venue.name}</h5>
                             </div>
                         </div>
-                        <select id="ticketType" class="form-select">
-                            <c:if test="#{bookingBean.isTicketTypeAvailable('standing')}">
-                                <option value="standing" data-price="#{bookingBean.getConcert().price}">
-                                    Stehplatz - #{bookingBean.getConcert().price}€
-                                </option>
-                            </c:if>
-                            
-                            <c:if test="#{bookingBean.isTicketTypeAvailable('seated')}">
-                                <option value="seated" data-price="#{bookingBean.getConcert().price}">
-                                    Sitzplatz - #{bookingBean.getConcert().price}€
-                                </option>
-                            </c:if>
-                            
-                            <c:if test="#{bookingBean.isTicketTypeAvailable('vip')}">
-                                <option value="vip" data-price="#{bookingBean.getConcert().vipPrice}">
-                                    VIP - #{bookingBean.getConcert().vipPrice}€
-                                </option>
-                            </c:if>
-                        </select>
                     </div>
-                    
-                    <!-- Verfügbare Tickets Anzeige -->
-                    <div class="text-center mt-4">
-                        <h4>#{bookingBean.getConcert().venue.name}</h4>
-                        <p class="text-muted">Bitte wählen Sie die gewünschte Ticketart und Anzahl aus.</p>
-                        <p id="availableTickets" class="text-success fw-bold">
-                            Verfügbare Tickets: 
-                            <span id="availableCount">#{bookingBean.getAvailableTickets('standing')}</span>
-                        </p>
+                </div>
+            </div>
+        </div>
+
+        <br></br>
+
+        <div class="row g-4">
+            <!-- Left Column - Ticket Selection -->
+            <div class="col-12 col-lg-7 mt-0">
+                <div class="booking-summary">
+                    <h3 class="mb-4 text-white"><i class="bi bi-ticket-perforated"></i> Ticket-Auswahl</h3>
+
+                    <!-- Ticket Selection Controls in Card -->
+                    <div class="ticket-controls-card mb-4">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-white">Anzahl der Tickets:</label>
+                                <div class="d-flex align-items-center">
+                                    <button class="btn btn-outline-primary quantity-btn" id="decreaseTickets"><i class="bi bi-dash"></i></button>
+                                    <span id="ticketQuantity" class="mx-3 h5 mb-0 text-white">1</span>
+                                    <button class="btn btn-outline-primary quantity-btn" id="increaseTickets"><i class="bi bi-plus"></i></button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-white">Ticketart:</label>
+                                <div class="select-with-icon">
+                                    <select id="ticketType" class="form-select">
+                                        <c:if test="#{bookingBean.isTicketTypeAvailable('standing')}">
+                                            <option value="standing" data-price="#{bookingBean.getConcert().price}">
+                                                Stehplatz - #{bookingBean.getConcert().price}€
+                                            </option>
+                                        </c:if>
+                                        
+                                        <c:if test="#{bookingBean.isTicketTypeAvailable('seated')}">
+                                            <option value="seated" data-price="#{bookingBean.getConcert().price}">
+                                                Sitzplatz - #{bookingBean.getConcert().price}€
+                                            </option>
+                                        </c:if>
+                                        
+                                        <c:if test="#{bookingBean.isTicketTypeAvailable('vip')}">
+                                            <option value="vip" data-price="#{bookingBean.getConcert().vipPrice}">
+                                                VIP - #{bookingBean.getConcert().vipPrice}€
+                                            </option>
+                                        </c:if>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Hidden fields für Venue-Kapazitäten und verkaufte Tickets -->
+                    <!-- Venue Visualization -->
+                    <div class="concert-details-card p-3 bg-light rounded">
+                        <h5 class="text-center mb-4 text-white">#{bookingBean.getConcert().venue.name}</h5>
+                        <p class="text-center text-muted mb-4">Wählen Sie die gewünschte Ticketart und Anzahl aus.</p>
+                        
+                        <!-- Available Tickets Display -->
+                        <div class="text-center">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 id="availableTickets" class="text-success mb-3">
+                                        Verfügbare Tickets: 
+                                        <span id="availableCount">#{bookingBean.getAvailableTickets('standing')}</span>
+                                    </h5>
+                                    
+                                    <!-- Visual representations -->
+                                    <div class="row text-center">
+                                        <c:if test="#{bookingBean.isTicketTypeAvailable('vip')}">
+                                            <div class="col-md-4 mb-3">
+                                                <div class="ticket-area-card p-3 border border-warning rounded">
+                                                    <i class="bi bi-star-fill text-warning h3"></i>
+                                                    <h6 class="text-muted mt-2">VIP-Bereich</h6>
+                                                    <p class="small text-muted">Exklusiver Bereich</p>
+                                                    <span class="badge bg-warning text-dark">#{bookingBean.getConcert().vipPrice}€</span>
+                                                    <span class="availability-badge badge">
+                                                        Noch #{bookingBean.getAvailableTickets('vip')} verfügbar
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                        
+                                        <c:if test="#{bookingBean.isTicketTypeAvailable('seated')}">
+                                            <div class="col-md-4 mb-3">
+                                                <div class="ticket-area-card p-3 border border-primary rounded">
+                                                    <i class="bi bi-person-check text-primary h3"></i>
+                                                    <h6 class="text-muted mt-2">Sitzplätze</h6>
+                                                    <p class="small text-muted">Komfortable Sicht</p>
+                                                    <span class="badge bg-primary">#{bookingBean.getConcert().price}€</span>
+                                                    <span class="availability-badge badge">
+                                                        Noch #{bookingBean.getAvailableTickets('seated')} verfügbar
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                        
+                                        <c:if test="#{bookingBean.isTicketTypeAvailable('standing')}">
+                                            <div class="col-md-4 mb-3">
+                                                <div class="ticket-area-card p-3 border border-success rounded">
+                                                    <i class="bi bi-people-fill text-success h3"></i>
+                                                    <h6 class="text-muted mt-2">Stehplätze</h6>
+                                                    <p class="small text-muted">Nah am Geschehen</p>
+                                                    <span class="badge bg-success">#{bookingBean.getConcert().price}€</span>
+                                                    <span class="availability-badge badge">
+                                                        Noch #{bookingBean.getAvailableTickets('standing')} verfügbar
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden fields -->
                     <input type="hidden" id="venueStandingCapacity" value="#{bookingBean.getConcert().venue.standingArea}" />
                     <input type="hidden" id="venueSeatingCapacity" value="#{bookingBean.getConcert().venue.seatingArea}" />
                     <input type="hidden" id="venueVipCapacity" value="#{bookingBean.getConcert().venue.vipArea}" />
                     <input type="hidden" id="standingSold" value="#{bookingBean.getConcert().standingSeatsSold}" />
                     <input type="hidden" id="seatingSold" value="#{bookingBean.getConcert().seatingSeatsSold}" />
                     <input type="hidden" id="vipSold" value="#{bookingBean.getConcert().vipSeatsSold}" />
+                    <input type="hidden" id="availableStanding" value="#{bookingBean.getAvailableTickets('standing')}" />
+                    <input type="hidden" id="availableSeated" value="#{bookingBean.getAvailableTickets('seated')}" />
+                    <input type="hidden" id="availableVip" value="#{bookingBean.getAvailableTickets('vip')}" />
                 </div>
             </div>
 
-            <!-- Right Column - Concert Info and Booking Summary -->
-            <div class="col-12 col-lg-4 mt-4 mt-lg-0">
-                <div class="booking-summary">
-                    <h3>Buchungsübersicht</h3>
-                    <div class="concert-info-booking">
-                        <img id="concertImage" src="#{bookingBean.getBand().cover}" alt="Concert Poster" class="img-fluid rounded mb-3 img-size" />
-                        <h4 id="concertTitle">#{bookingBean.getBand().bandName}</h4>
+            <!-- Right Column - Booking Summary -->
+            <div class="col-12 col-lg-5 mt-4 mt-lg-0">
+                <div class="booking-summary position-sticky" style="top: 2rem;">
+                    <div class="card">
+                        <div class="card-header booking-header text-white">
+                            <h4 class="mb-0"><i class="bi bi-cart3"></i> Buchungsübersicht</h4>
+                        </div>
+                        <div class="card-body">
+                            <!-- Concert Info -->
+                            <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                                <img src="#{bookingBean.getBand().cover}" alt="Concert" class="rounded me-3" style="width: 80px; height: 80px; object-fit: cover;" />
+                                <div>
+                                    <h5 class="text-white mb-1">#{bookingBean.getBand().bandName}</h5>
+                                    <small class="text-muted d-block">#{bookingBean.getConcert().concertDate}</small>
+                                    <small class="text-muted">#{bookingBean.getConcert().venue.name}</small>
+                                </div>
+                            </div>
 
-                        <p id="concertDetails" style="color: #cccccc">#{bookingBean.getBand().shortDesc}</p>
-                        <div id="selectedTicketsList">
-                            <div class="concert-info">
-                            <ui:repeat var="genre" value="#{concertBean.getGenres(bookingBean.getConcert())}">
-                                <span class="badge bg-danger">#{genre}</span>
-                            </ui:repeat>
-                            <div class="mt-2">
-                                <small class="d-block"><i class="bi bi-calendar-event"></i> #{bookingBean.getConcert().concertDate}</small>
-                                <small class="d-block"><i class="bi bi-clock"></i> #{bookingBean.getConcert().concertTime} Uhr</small>
-                                <small class="d-block"><i class="bi bi-geo-alt"></i> #{bookingBean.getConcert().venue.name}</small>
+                            <!-- Selected Tickets Info -->
+                            <div class="selected-tickets-info mb-4">
+                                <h6 class="text-white">Ausgewählte Tickets</h6>
+                                <div id="selectedTicketsList">
+                                    <div class="selected-ticket-item d-flex justify-content-between align-items-center p-2">
+                                        <span>
+                                            <span id="selectedQuantity">1</span>x 
+                                            <span id="selectedType">Stehplatz</span>
+                                        </span>
+                                        <span class="fw-bold text-white" id="lineTotal">#{bookingBean.getConcert().price}€</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Price Summary -->
+                            <div class="price-summary">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-white">Preis pro Ticket:</span>
+                                    <span id="pricePerTicket" class="text-white">#{bookingBean.getConcert().price} €</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2 text-muted small">
+                                    <span>Servicegebühr:</span>
+                                    <span>0.00 €</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <strong class="text-white">Gesamtpreis:</strong>
+                                    <strong id="totalPrice" class="price-highlight">#{bookingBean.getConcert().price} €</strong>
+                                </div>
                             </div>
                         </div>
-                        </div>
-                        
-                    </div>
-                    
-                    <div class="selected-tickets-info mt-4">
-                        <h5>Ausgewählte Tickets</h5>
-                    </div>
-
-                    <div class="price-summary mt-4">
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Preis pro Ticket:</span>
-                            <span id="pricePerTicket">#{bookingBean.getConcert().price} €</span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2 total-price">
-                            <strong>Gesamtpreis:</strong>
-                            <strong id="totalPrice">0.00 €</strong>
+                        <div class="card-footer">
+                            <button id="bookButton" class="btn btn-success w-100 btn-lg">
+                                <i class="bi bi-credit-card"></i> Jetzt Buchen
+                            </button>
                         </div>
                     </div>
 
-                    <button id="bookButton" class="btn btn-primary w-100 mt-4" >
-                        Jetzt Buchen
-                    </button>
+                    <!-- Info Card -->
+                    <div class="card mt-4">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0"><i class="bi bi-info-circle"></i> Wichtige Informationen</h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0 small">
+                                <li class="mb-2 text-muted"><i class="bi bi-clock text-primary"></i> Einlass: 1 Stunde vor Konzertbeginn</li>
+                                <li class="mb-2 text-muted"><i class="bi bi-person-check text-success"></i> Ausweis erforderlich</li>
+                                <li class="mb-2 text-muted"><i class="bi bi-phone text-info"></i> Mobile Tickets verfügbar</li>
+                                <li class="mb-2 text-muted"><i class="bi bi-arrow-clockwise text-warning"></i> Kostenlose Stornierung bis 24h vorher</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -130,5 +378,88 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/booking.js"></script>
+    
+    <script>
+        // Update available tickets display based on selected ticket type
+        function updateAvailableTickets() {
+            const ticketType = document.getElementById('ticketType').value;
+            const availableCount = document.getElementById('availableCount');
+            
+            // Get capacity and sold data
+            const standingCapacity = parseInt(document.getElementById('venueStandingCapacity').value);
+            const seatingCapacity = parseInt(document.getElementById('venueSeatingCapacity').value);
+            const vipCapacity = parseInt(document.getElementById('venueVipCapacity').value);
+            const standingSold = parseInt(document.getElementById('standingSold').value);
+            const seatingSold = parseInt(document.getElementById('seatingSold').value);
+            const vipSold = parseInt(document.getElementById('vipSold').value);
+            
+            let available = 0;
+            switch(ticketType) {
+                case 'standing':
+                    available = standingCapacity - standingSold;
+                    break;
+                case 'seated':
+                    available = seatingCapacity - seatingSold;
+                    break;
+                case 'vip':
+                    available = vipCapacity - vipSold;
+                    break;
+            }
+            
+            availableCount.textContent = available;
+        }
+
+        // Update price and summary when ticket type or quantity changes
+        function updateSummary() {
+            const ticketType = document.getElementById('ticketType');
+            const quantity = parseInt(document.getElementById('ticketQuantity').textContent);
+            const selectedOption = ticketType.options[ticketType.selectedIndex];
+            const price = parseFloat(selectedOption.dataset.price);
+            const typeText = selectedOption.text.split(' - ')[0];
+            
+            // Update summary display
+            document.getElementById('selectedQuantity').textContent = quantity;
+            document.getElementById('selectedType').textContent = typeText;
+            document.getElementById('pricePerTicket').textContent = price + ' €';
+            document.getElementById('lineTotal').textContent = (price * quantity).toFixed(2) + '€';
+            document.getElementById('totalPrice').textContent = (price * quantity).toFixed(2) + ' €';
+            
+            updateAvailableTickets();
+        }
+
+        // Quantity controls
+        document.getElementById('increaseTickets').addEventListener('click', function() {
+            const quantityElement = document.getElementById('ticketQuantity');
+            let quantity = parseInt(quantityElement.textContent);
+            const maxTickets = parseInt(document.getElementById('availableCount').textContent);
+            
+            if (quantity &lt; maxTickets &amp;&amp; quantity &lt; 10) {
+                quantityElement.textContent = quantity + 1;
+                updateSummary();
+            }
+        });
+
+        document.getElementById('decreaseTickets').addEventListener('click', function() {
+            const quantityElement = document.getElementById('ticketQuantity');
+            let quantity = parseInt(quantityElement.textContent);
+            
+            if (quantity &gt; 1) {
+                quantityElement.textContent = quantity - 1;
+                updateSummary();
+            }
+        });
+
+        // Ticket type change
+        document.getElementById('ticketType').addEventListener('change', function() {
+            // Reset quantity to 1 when changing ticket type
+            document.getElementById('ticketQuantity').textContent = '1';
+            updateSummary();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSummary();
+        });
+    </script>
 </body>
 </html>
