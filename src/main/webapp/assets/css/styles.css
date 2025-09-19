@@ -84,7 +84,7 @@ body {
     margin-right: 0.3rem;
 }
 
-.movie-info {
+.concert-info {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;

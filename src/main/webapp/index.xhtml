@@ -23,140 +23,280 @@
     </nav>
 
     <div class="container mt-4 mt-lg-5">
-        <h1 class="text-center mb-3 mb-lg-4">🎸 Kommende Konzerte 🎤</h1>
+        <div class="text-center mb-4">
+            <h1 class="display-4 mb-2">🎸 Kommende Konzerte 🎤</h1>
+            <p class="lead text-muted">Entdecke die besten Live-Acts in ganz Deutschland</p>
+        </div>
         
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3 g-lg-4">
-            <ui:repeat var="concert" value="#{concertBean.getAllConcerts()}">
-                <div class="col">
-                    <div class="card h-100 concert-card">
-                        <img src="#{concert.band.cover}" class="card-img-top" alt="#{concert.band.bandName}" />
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">#{concert.band.bandName}</h5>
-                            <p class="card-text flex-grow-1">#{concert.band.shortDesc}</p>
-                            <div class="movie-info">
-                                <ui:repeat var="genre" value="#{concertBean.getGenres(concert)}">
-                                    <span class="badge bg-danger">#{genre}</span>
-                                </ui:repeat>
-                                <div class="concert-details mt-2">
-                                    <small class="d-block"><i class="bi bi-calendar-event"></i> #{concert.concertDate}</small>
-                                    <small class="d-block"><i class="bi bi-clock"></i> #{concert.concertTime} Uhr</small>
-                                    <small class="d-block"><i class="bi bi-geo-alt"></i> #{concert.venue.name}</small>
-                                    <span class="badge bg-success mt-1">ab #{concert.price}€</span>
+        <!-- Horizontale Scrollable Liste für Featured Concerts -->
+        <div class="mb-5">
+            <h3 class="mb-3"><i class="bi bi-star-fill text-warning"></i> Featured Events</h3>
+            <div class="row flex-nowrap overflow-auto pb-3" style="scroll-snap-type: x mandatory;">
+                <ui:repeat var="concert" value="#{concertBean.getAllConcerts()}" begin="0" end="2">
+                    <div class="col-10 col-md-6 col-lg-4 flex-shrink-0" style="scroll-snap-align: start;">
+                        <div class="card concert-card border-warning">
+                            <div class="position-relative">
+                                <img src="#{concert.band.cover}" class="card-img-top" alt="#{concert.band.bandName}" style="height: 200px; object-fit: cover;" />
+                                <div class="position-absolute top-0 end-0 m-2">
+                                    <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i> Featured</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-footer d-flex flex-wrap gap-2 justify-content-between">
-                            <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#concertModal#{concert.concertId}">
-                                <i class="bi bi-info-circle"></i> Details
-                            </button>
-                            <button class="btn btn-primary" onclick="window.location.href='booking.xhtml?concertId=#{concert.concertId}'">
-                                <i class="bi bi-ticket-perforated"></i> Tickets
-                            </button>
+                            <div class="card-body">
+                                <h6 class="card-title fw-bold">#{concert.band.bandName}</h6>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="text-muted">
+                                        <small class="d-block">
+                                            <i class="bi bi-calendar-event"></i> #{concert.concertDate}
+                                        </small>
+                                        <small class="d-block">
+                                            <i class="bi bi-geo-alt"></i> #{concert.venue.name}
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-success">ab #{concert.price}€</span>
+                                </div>
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-outline-primary w-100" onclick="window.location.href='booking.xhtml?concertId=#{concert.concertId}'">
+                                        <i class="bi bi-ticket-perforated"></i> Quick Buy
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <!-- Modal -->
-                    <div class="modal fade" id="concertModal#{concert.concertId}" tabindex="-1" aria-labelledby="concertModalLabel#{concert.concertId}" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header bg-dark text-light">
-                                    <h4 class="modal-title" id="concertModalLabel#{concert.concertId}">
-                                        <i class="bi bi-music-note-beamed"></i> #{concert.band.bandName}
-                                    </h4>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <!-- Bild Section -->
-                                        <div class="col-md-5">
-                                            <img src="#{concert.band.cover}" class="img-fluid rounded shadow mb-3" alt="#{concert.band.bandName}" style="height: 250px; width: 100%; object-fit: cover;" />
-                                            
-                                            <div class="concert-details-card p-3 bg-light rounded">
-                                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                                    <strong><i class="bi bi-calendar-event"></i> Datum:</strong>
-                                                    <span class="badge bg-primary">#{concert.concertDate}</span>
-                                                </div>
-                                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                                    <strong><i class="bi bi-clock"></i> Uhrzeit:</strong>
-                                                    <span class="badge bg-secondary">#{concert.concertTime} Uhr</span>
-                                                </div>
-                                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                                    <strong><i class="bi bi-geo-alt"></i> Ort:</strong>
-                                                    <span class="text-end">#{concert.venue.name}</span>
-                                                </div>
-                                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                                    <strong><i class="bi bi-tag"></i> Preise ab:</strong>
-                                                    <span class="badge bg-success">#{concert.price}€</span>
-                                                </div>
-                                                <c:if test="#{concert.vipPrice > 0}">
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <strong><i class="bi bi-star"></i> VIP ab:</strong>
-                                                    <span class="badge bg-warning text-dark">#{concert.vipPrice}€</span>
-                                                </div>
-                                                </c:if>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Info Section -->
-                                        <div class="col-md-7">
-                                            <h5 class=" mb-3">🎤 Über das Konzert</h5>
-                                            <p class="text-muted lh-base">#{concert.band.description}</p>
-                                            
-                                            <h5 class=" mt-4 mb-3">🎵 Musikrichtungen</h5>
-                                            <div class="d-flex flex-wrap gap-2 mb-4">
-                                                <ui:repeat var="genre" value="#{concertBean.getGenres(concert)}">
-                                                    <span class="badge bg-danger fs-6">#{genre}</span>
-                                                </ui:repeat>
-                                            </div>
-                                            
-                                            <!-- Highlights anzeigen -->
-                                            <h5 class=" mt-4 mb-3">⭐ Besondere Highlights</h5>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="bg-light p-3 rounded">
-                                                        <ui:repeat var="highlight" value="#{concertBean.getHighlightsList(concert)}">
-                                                            <span class="badge bg-info text-dark me-1 mb-1">#{highlight}</span>
-                                                        </ui:repeat>
-                                                    </div>
-                                                </div>
-                                            </div>
+                </ui:repeat>
+            </div>
+        </div>
 
-                                            <!-- Ladebalken für Ticketverfügbarkeit -->
-                                            <h5 class=" mt-4 mb-3">📊 Ticketverfügbarkeit</h5>
-                                            <c:set var="soldPercentage" value="#{concertBean.getSoldPercentage(concert)}" />
-                                            <div class="mb-2">
-                                                <strong>Verkauft: #{soldPercentage}%</strong>
-                                                <br/>
-                                                <div class="progress mb-2" style="height: 20px;">
-                                                    <div class="progress-bar #{soldPercentage >= 80 ? 'bg-danger' : (soldPercentage >= 60 ? 'bg-warning' : 'bg-success')}"
-                                                        style="width: #{soldPercentage}%;">
-
-                                                        #{soldPercentage}% verkauft
-                                                    </div>
-                                                </div>
-                                                                                                <small class="text-muted">
-                                                    <i class="bi bi-info-circle"></i> 
-                                                    #{concertBean.getAvailabilityText(soldPercentage)}
-                                                </small>
-                                            </div>
-                                        </div>
-                                    </div>
+        <!-- Hauptbereich mit Seitlicher Navigation -->
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <!-- Upcoming This Month -->
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h6 class="mb-0"><i class="bi bi-clock"></i> Diesen Monat</h6>
+                    </div>
+                    <div class="card-body p-2">
+                        <ui:repeat var="concert" value="#{concertBean.getConcertsThisMonth()}">
+                            <div class="d-flex align-items-center mb-2 p-2 rounded hover-bg-light">
+                                <img src="#{concert.band.cover}" class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;" alt="#{concert.band.bandName}" />
+                                <div class="flex-grow-1">
+                                    <div class=" text-muted small fw-bold">#{concert.band.bandName}</div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">#{concert.concertDate}</div>
                                 </div>
-                                <div class="modal-footer bg-light">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        <i class="bi bi-arrow-left"></i> Zurück zur Übersicht
-                                    </button>
-                                    <button type="button" class="btn btn-primary btn-lg" 
-                                            onclick="window.location.href='booking.xhtml?concertId=#{concert.concertId}'">
-                                        <i class="bi bi-ticket-perforated"></i> Jetzt Tickets sichern
-                                    </button>
-                                </div>
+                                <span class="badge bg-success small">#{concert.price}€</span>
                             </div>
+                        </ui:repeat>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="card mt-4">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0"><i class="bi bi-graph-up"></i> Konzert-Stats</h6>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <small class="text-muted">Diesen Monat:</small>
+                            <span class="badge bg-primary">#{concertBean.getConcertsThisMonth().size()}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <small class="text-muted">Nächsten Monat:</small>
+                            <span class="badge bg-secondary">#{concertBean.getConcertsNextMonth().size()}</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted fw-bold">Gesamt verfügbar:</small>
+                            <span class="badge bg-success">#{concertBean.getAllConcerts().size()}</span>
                         </div>
                     </div>
                 </div>
-            </ui:repeat>
+            </div>
+
+            <!-- Hauptinhalt -->
+            <div class="col-lg-9">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4>Alle Konzerte</h4>
+                </div>
+
+                <!-- Masonry-ähnliches Grid -->
+                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+                    <ui:repeat var="concert" value="#{concertBean.getAllConcerts()}">
+                        <div class="col">
+                            <div class="card h-100 concert-card position-relative overflow-hidden">
+                                <!-- Ticket Verfügbarkeit Indicator -->
+                                <div class="position-absolute top-0 start-0 m-2 z-2">
+                                    <c:set var="soldPercentage" value="#{concertBean.getSoldPercentage(concert)}" />
+                                    <span class="badge #{soldPercentage >= 80 ? 'bg-danger' : (soldPercentage >= 60 ? 'bg-warning text-dark' : 'bg-success')}">
+                                        <c:choose>
+                                            <c:when test="#{soldPercentage >= 90}">Fast ausverkauft!</c:when>
+                                            <c:when test="#{soldPercentage >= 80}">Nur wenige Tickets</c:when>
+                                            <c:otherwise>Verfügbar</c:otherwise>
+                                        </c:choose>
+                                    </span>
+                                </div>
+
+                                <div class="position-relative">
+                                    <img src="#{concert.band.cover}" class="card-img-top" alt="#{concert.band.bandName}" style="height: 250px; object-fit: cover;" />
+                                    <!-- Overlay mit Genre Tags -->
+                                    <div class="position-absolute bottom-0 start-0 end-0 bg-gradient bg-dark bg-opacity-75 text-white p-2">
+                                        <ui:repeat var="genre" value="#{concertBean.getGenres(concert)}">
+                                            <span class="badge bg-danger me-1">#{genre}</span>
+                                        </ui:repeat>
+                                    </div>
+                                </div>
+
+                                <div class="card-body d-flex flex-column">
+                                    <!-- Band Name als Ribbon -->
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title mb-0">#{concert.band.bandName}</h5>
+                                        <c:if test="#{concert.vipPrice > 0}">
+                                            <span class="badge bg-warning text-dark"><i class="bi bi-star"></i> VIP</span>
+                                        </c:if>
+                                    </div>
+                                    
+                                    <p class="card-text flex-grow-1 text-muted small">#{concert.band.shortDesc}</p>
+                                    
+                                    <!-- Event Details in Timeline Style -->
+                                    <div class="border-start border-3 border-primary ps-3 mb-3">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <i class="bi bi-calendar-event text-primary me-2"></i>
+                                            <span class="text-muted ">#{concert.concertDate}</span>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-1">
+                                            <i class="bi bi-clock text-primary me-2"></i>
+                                            <span class="text-muted ">#{concert.concertTime} Uhr</span>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-geo-alt text-primary me-2"></i>
+                                            <span class="text-muted ">#{concert.venue.name}</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Preis prominent anzeigen -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div>
+                                            <span class="h5 text-success mb-0">#{concert.price}€</span>
+                                            <small class="text-muted d-block">Standardticket</small>
+                                        </div>
+                                        <c:if test="#{concert.vipPrice > 0}">
+                                            <div class="text-end">
+                                                <span class="fw-bold text-warning">#{concert.vipPrice}€</span>
+                                                <small class="text-muted d-block">VIP-Ticket</small>
+                                            </div>
+                                        </c:if>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="card-footer bg-transparent border-0 pt-0">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-primary" onclick="window.location.href='booking.xhtml?concertId=#{concert.concertId}'">
+                                            <i class="bi bi-ticket-perforated"></i> Tickets kaufen
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#concertModal#{concert.concertId}">
+                                            <i class="bi bi-info-circle"></i> Mehr Details
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Modal bleibt unverändert -->
+                            <div class="modal fade" id="concertModal#{concert.concertId}" tabindex="-1" aria-labelledby="concertModalLabel#{concert.concertId}" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-dark text-light">
+                                            <h4 class="modal-title" id="concertModalLabel#{concert.concertId}">
+                                                <i class="bi bi-music-note-beamed"></i> #{concert.band.bandName}
+                                            </h4>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <img src="#{concert.band.cover}" class="img-fluid rounded shadow mb-3" alt="#{concert.band.bandName}" style="height: 250px; width: 100%; object-fit: cover;" />
+                                                    
+                                                    <div class="concert-details-card p-3 bg-light rounded">
+                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                            <strong><i class="bi bi-calendar-event"></i> Datum:</strong>
+                                                            <span class="badge bg-primary">#{concert.concertDate}</span>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                            <strong><i class="bi bi-clock"></i> Uhrzeit:</strong>
+                                                            <span class="badge bg-secondary">#{concert.concertTime} Uhr</span>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                            <strong><i class="bi bi-geo-alt"></i> Ort:</strong>
+                                                            <span class="text-end">#{concert.venue.name}</span>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                            <strong><i class="bi bi-tag"></i> Preise ab:</strong>
+                                                            <span class="badge bg-success">#{concert.price}€</span>
+                                                        </div>
+                                                        <c:if test="#{concert.vipPrice > 0}">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <strong><i class="bi bi-star"></i> VIP ab:</strong>
+                                                            <span class="badge bg-warning text-dark">#{concert.vipPrice}€</span>
+                                                        </div>
+                                                        </c:if>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-7">
+                                                    <h5 class="mb-3">🎤 Über das Konzert</h5>
+                                                    <p class="text-muted lh-base">#{concert.band.description}</p>
+                                                    
+                                                    <h5 class="mt-4 mb-3">🎵 Musikrichtungen</h5>
+                                                    <div class="d-flex flex-wrap gap-2 mb-4">
+                                                        <ui:repeat var="genre" value="#{concertBean.getGenres(concert)}">
+                                                            <span class="badge bg-danger fs-6">#{genre}</span>
+                                                        </ui:repeat>
+                                                    </div>
+                                                    
+                                                    <h5 class="mt-4 mb-3">⭐ Besondere Highlights</h5>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="bg-light p-3 rounded">
+                                                                <ui:repeat var="highlight" value="#{concertBean.getHighlightsList(concert)}">
+                                                                    <span class="badge bg-info text-dark me-1 mb-1">#{highlight}</span>
+                                                                </ui:repeat>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <h5 class="mt-4 mb-3">📊 Ticketverfügbarkeit</h5>
+                                                    <c:set var="soldPercentage" value="#{concertBean.getSoldPercentage(concert)}" />
+                                                    <div class="mb-2">
+                                                        <strong>Verkauft: #{soldPercentage}%</strong>
+                                                        <br/>
+                                                        <div class="progress mb-2" style="height: 20px;">
+                                                            <div class="progress-bar #{soldPercentage >= 80 ? 'bg-danger' : (soldPercentage >= 60 ? 'bg-warning' : 'bg-success')}"
+                                                                style="width: #{soldPercentage}%;">
+                                                                #{soldPercentage}% verkauft
+                                                            </div>
+                                                        </div>
+                                                        <small class="text-muted">
+                                                            <i class="bi bi-info-circle"></i> 
+                                                            #{concertBean.getAvailabilityText(soldPercentage)}
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer bg-light">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                <i class="bi bi-arrow-left"></i> Zurück zur Übersicht
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-lg" 
+                                                    onclick="window.location.href='booking.xhtml?concertId=#{concert.concertId}'">
+                                                <i class="bi bi-ticket-perforated"></i> Jetzt Tickets sichern
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ui:repeat>
+                </div>
+            </div>
         </div>
     </div>
 

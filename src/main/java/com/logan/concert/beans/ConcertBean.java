@@ -13,8 +13,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Date;
+
 
 @ManagedBean
 @RequestScoped
@@ -33,6 +36,48 @@ public class ConcertBean {
             session.close();
         }
     }
+
+
+public List<Concert> getConcertsThisMonth() {
+    Session session = HibernateUtil.getSessionFactory().openSession();
+    try {
+        LocalDate now = LocalDate.now();
+        LocalDate startOfMonth = now.withDayOfMonth(1);
+        LocalDate endOfMonth = now.withDayOfMonth(now.lengthOfMonth());
+        
+        String hql = "FROM Concert c WHERE c.concertDate BETWEEN :startDate AND :endDate ORDER BY c.concertDate ASC";
+        Query query = session.createQuery(hql);
+        query.setParameter("startDate", Date.valueOf(startOfMonth));
+        query.setParameter("endDate", Date.valueOf(endOfMonth));
+        
+        @SuppressWarnings("unchecked")
+        List<Concert> concerts = query.list();
+        return concerts;
+    } finally {
+        session.close();
+    }
+}
+
+public List<Concert> getConcertsNextMonth() {
+    Session session = HibernateUtil.getSessionFactory().openSession();
+    try {
+        LocalDate now = LocalDate.now();
+        LocalDate nextMonth = now.plusMonths(1);
+        LocalDate startOfNextMonth = nextMonth.withDayOfMonth(1);
+        LocalDate endOfNextMonth = nextMonth.withDayOfMonth(nextMonth.lengthOfMonth());
+        
+        String hql = "FROM Concert c WHERE c.concertDate BETWEEN :startDate AND :endDate ORDER BY c.concertDate ASC";
+        Query query = session.createQuery(hql);
+        query.setParameter("startDate", Date.valueOf(startOfNextMonth));
+        query.setParameter("endDate", Date.valueOf(endOfNextMonth));
+        
+        @SuppressWarnings("unchecked")
+        List<Concert> concerts = query.list();
+        return concerts;
+    } finally {
+        session.close();
+    }
+}
 
     // Get band name for a concert
     public String getBandName(Concert concert) {
