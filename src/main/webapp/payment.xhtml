@@ -63,7 +63,7 @@
                         <!-- Billing Address Form -->
                         <br></br>
                         <h:form id="billingForm" class="mb-4">
-                            <h3 class="mb-3">Rechnungsadresse</h3>
+                            <h3 class="mb-3">Nutzerdaten</h3>
                             <div class="row g-3">
                                 <div class="col-12 col-sm-6">
                                     <label for="billingForm:firstName" class="form-label">Vorname</label>
@@ -106,46 +106,15 @@
 
                             <!-- Payment Method Selection -->
                             <br></br>
-                            <h3 class="mb-3 mt-4">Zahlungsmethode</h3>
+                            <h3 class="mb-3 mt-4">Zahlungsart</h3>
                             <div class="payment-methods">
                                 <div class="form-check mb-3">
                                     <h:selectOneRadio id="paymentMethod" value="#{paymentBean.paymentMethod}" layout="pageDirection" styleClass="payment-method-radio">
-                                        <f:selectItem itemValue="paypal" itemLabel="PayPal" />
-                                        <f:selectItem itemValue="sepa" itemLabel="SEPA-Lastschrift" />
                                         <f:selectItem itemValue="creditCard" itemLabel="Kreditkarte" />
+                                        <f:selectItem itemValue="payPal" itemLabel="Pay-Pal" />
+                                        <f:selectItem itemValue="rechnung" itemLabel="Rechnung" />
+
                                     </h:selectOneRadio>
-                                </div>
-                            </div>
-
-                            <!-- SEPA Fields -->
-                            <div id="sepaFields" class="mt-3" style="display: none;">
-                                <h4>SEPA-Informationen</h4>
-                                <div class="mb-3">
-                                    <label for="billingForm:iban" class="form-label">IBAN</label>
-                                    <h:inputText id="iban" value="#{paymentBean.iban}" styleClass="form-control" />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="billingForm:bic" class="form-label">BIC</label>
-                                    <h:inputText id="bic" value="#{paymentBean.bic}" styleClass="form-control" />
-                                </div>
-                            </div>
-
-                            <!-- Credit Card Fields -->
-                            <div id="creditCardFields" class="mt-3" style="display: none;">
-                                <h4>Kreditkarteninformationen</h4>
-                                <div class="mb-3">
-                                    <label for="billingForm:cardNumber" class="form-label">Kartennummer</label>
-                                    <h:inputText id="cardNumber" value="#{paymentBean.cardNumber}" styleClass="form-control" />
-                                </div>
-                                <div class="row g-3">
-                                    <div class="col-6">
-                                        <label for="billingForm:expiryDate" class="form-label">Ablaufdatum</label>
-                                        <h:inputText id="expiryDate" value="#{paymentBean.expiryDate}" styleClass="form-control" />
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="billingForm:cvv" class="form-label">CVV</label>
-                                        <h:inputText id="cvv" value="#{paymentBean.cvv}" styleClass="form-control" />
-                                    </div>
                                 </div>
                             </div>
 
