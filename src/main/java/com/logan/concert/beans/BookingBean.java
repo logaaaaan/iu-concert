@@ -16,9 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import org.hibernate.Transaction;  
+import javax.faces.bean.SessionScoped;
+
 
 @ManagedBean
-@RequestScoped
+@SessionScoped
 public class BookingBean implements Serializable {
     private int concertId;
     private Concert concert;

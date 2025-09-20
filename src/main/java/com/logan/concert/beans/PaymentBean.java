@@ -16,9 +16,11 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import javax.faces.bean.SessionScoped;
+
 
 @ManagedBean
-@RequestScoped
+@SessionScoped
 public class PaymentBean {
     // Billing information
     private int concertId;
