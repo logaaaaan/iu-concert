@@ -48,9 +48,10 @@ CREATE TABLE concert (
     FOREIGN KEY (venueId) REFERENCES venue(venueId) ON DELETE CASCADE
 );
 
--- Create table for billing
+-- Create table for billing (jetzt mit Bezug auf concert)
 CREATE TABLE billing (
     billingId INT AUTO_INCREMENT PRIMARY KEY,
+    concertId INT NOT NULL,
     firstName VARCHAR(100) NOT NULL,
     lastName VARCHAR(100) NOT NULL,
     street VARCHAR(255) NOT NULL,
@@ -58,5 +59,7 @@ CREATE TABLE billing (
     houseNumber VARCHAR(10) NOT NULL,
     city VARCHAR(100) NOT NULL,
     paymentInfo VARCHAR(50) NOT NULL,
-    transactionDetails JSON
+    transactionDetails JSON,
+    
+    FOREIGN KEY (concertId) REFERENCES concert(concertId) ON DELETE CASCADE
 );

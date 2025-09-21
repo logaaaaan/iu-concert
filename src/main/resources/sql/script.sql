@@ -54,9 +54,10 @@ CREATE TABLE concert (
     FOREIGN KEY (venueId) REFERENCES venue(venueId) ON DELETE CASCADE
 );
 
--- Create table for billing
+-- Create table for billing (jetzt mit Bezug auf concert)
 CREATE TABLE billing (
     billingId INT AUTO_INCREMENT PRIMARY KEY,
+    concertId INT NOT NULL,
     firstName VARCHAR(100) NOT NULL,
     lastName VARCHAR(100) NOT NULL,
     street VARCHAR(255) NOT NULL,
@@ -64,7 +65,9 @@ CREATE TABLE billing (
     houseNumber VARCHAR(10) NOT NULL,
     city VARCHAR(100) NOT NULL,
     paymentInfo VARCHAR(50) NOT NULL,
-    transactionDetails JSON
+    transactionDetails JSON,
+    
+    FOREIGN KEY (concertId) REFERENCES concert(concertId) ON DELETE CASCADE
 );
 
 -- SQL script for inserting test data into the concert database
@@ -88,16 +91,16 @@ VALUES
 -- Insert sample data into concerts (Termine)
 INSERT INTO concert (bandId, venueId, duration, concertDate, concertTime, price, vipPrice, standingSeatsSold, seatingSeatsSold, vipSeatsSold, highlights)
 VALUES
-    (1, 1, '02:30:00', '2025-10-15', '19:30:00', 89.99, 249.99, 6112, 5344, 191,  '["Pyrotechnische Spezialeffekte", "Extended Drum-Solo", "Guest Appearances", "Meet & Greet"]'),  -- Metallica in Arena Hauptstadt
-    (2, 3, '03:15:00', '2025-11-20', '18:00:00', 149.99, 399.99, 18750, 2210, 488, '["Open-Air Event", "Sommernachtsspecial", "Picknick-Bereich", "Feuerwerk", "Bühnenoutfit-Wechsel"]'), -- Taylor Swift in Open Air Bühne
-    (3, 3, '02:00:00', '2025-09-05', '20:00:00', 99.99, 299.99, 63, 120, 22, '["Feuer-Show", "Bühnen-Akrobatik", "Deutsche Lyrik-Performance", "Special Effects", "Pyrotechnik"]'),  -- Rammstein in Open Air Bühne
-    (4, 2, '02:15:00', '2025-12-10', '19:00:00', 79.99, 189.99, 0, 1530, 96, '["Akustische Unpacked Session", "Loop-Station Performance", "Intime Atmosphäre", "Akustik-optimierte Halle"]');  -- Ed Sheeran in Konzerthaus Berlin
+    (1, 1, '02:30:00', '2025-10-15', '19:30:00', 89.99, 249.99, 6112, 5344, 191,  '["Pyrotechnische Spezialeffekte", "Extended Drum-Solo", "Guest Appearances", "Meet & Greet"]'),
+    (2, 3, '03:15:00', '2025-11-20', '18:00:00', 149.99, 399.99, 18750, 2210, 488, '["Open-Air Event", "Sommernachtsspecial", "Picknick-Bereich", "Feuerwerk", "Bühnenoutfit-Wechsel"]'),
+    (3, 3, '02:00:00', '2025-09-05', '20:00:00', 99.99, 299.99, 63, 120, 22, '["Feuer-Show", "Bühnen-Akrobatik", "Deutsche Lyrik-Performance", "Special Effects", "Pyrotechnik"]'),
+    (4, 2, '02:15:00', '2025-12-10', '19:00:00', 79.99, 189.99, 0, 1530, 96, '["Akustische Unpacked Session", "Loop-Station Performance", "Intime Atmosphäre", "Akustik-optimierte Halle"]');
 
--- Insert sample data into billing
-INSERT INTO billing (firstName, lastName, street, zip, houseNumber, city, paymentInfo, transactionDetails)
+-- Insert sample data into billing (jetzt mit concertId)
+INSERT INTO billing (concertId, firstName, lastName, street, zip, houseNumber, city, paymentInfo, transactionDetails)
 VALUES
-    ('John', 'Doe', 'Main Street', '12345', '10', 'Berlin', 'paypal', '{}'),
-    ('Jane', 'Smith', 'Elm Street', '54321', '5', 'Hamburg', 'creditcard', '{"last4": "1234", "expiry": "12/25"}'),
-    ('Alice', 'Johnson', 'Oak Avenue', '67890', '15', 'München', 'banktransfer', '{"iban": "DE89370400440532013000"}');
+    (1, 'John', 'Doe', 'Main Street', '12345', '10', 'Berlin', 'paypal', '{}'),
+    (2, 'Jane', 'Smith', 'Elm Street', '54321', '5', 'Hamburg', 'creditcard', '{"last4": "1234", "expiry": "12/25"}'),
+    (3, 'Alice', 'Johnson', 'Oak Avenue', '67890', '15', 'München', 'banktransfer', '{"iban": "DE89370400440532013000"}');
 
 SET FOREIGN_KEY_CHECKS = 1; -- Re-enable foreign key checks
