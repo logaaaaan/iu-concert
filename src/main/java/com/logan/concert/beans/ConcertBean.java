@@ -38,66 +38,62 @@ public class ConcertBean {
     }
 
 
-public List<Concert> getConcertsThisMonth() {
-    Session session = HibernateUtil.getSessionFactory().openSession();
-    try {
-        LocalDate now = LocalDate.now();
-        LocalDate startOfMonth = now.withDayOfMonth(1);
-        LocalDate endOfMonth = now.withDayOfMonth(now.lengthOfMonth());
-        
-        String hql = "FROM Concert c WHERE c.concertDate BETWEEN :startDate AND :endDate ORDER BY c.concertDate ASC";
-        Query query = session.createQuery(hql);
-        query.setParameter("startDate", Date.valueOf(startOfMonth));
-        query.setParameter("endDate", Date.valueOf(endOfMonth));
-        
-        @SuppressWarnings("unchecked")
-        List<Concert> concerts = query.list();
-        return concerts;
-    } finally {
-        session.close();
+    public List<Concert> getConcertsThisMonth() {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            LocalDate now = LocalDate.now();
+            LocalDate startOfMonth = now.withDayOfMonth(1);
+            LocalDate endOfMonth = now.withDayOfMonth(now.lengthOfMonth());
+            
+            String hql = "FROM Concert c WHERE c.concertDate BETWEEN :startDate AND :endDate ORDER BY c.concertDate ASC";
+            Query query = session.createQuery(hql);
+            query.setParameter("startDate", Date.valueOf(startOfMonth));
+            query.setParameter("endDate", Date.valueOf(endOfMonth));
+            
+            @SuppressWarnings("unchecked")
+            List<Concert> concerts = query.list();
+            return concerts;
+        } finally {
+            session.close();
+        }
     }
-}
 
-public List<Concert> getConcertsNextMonth() {
-    Session session = HibernateUtil.getSessionFactory().openSession();
-    try {
-        LocalDate now = LocalDate.now();
-        LocalDate nextMonth = now.plusMonths(1);
-        LocalDate startOfNextMonth = nextMonth.withDayOfMonth(1);
-        LocalDate endOfNextMonth = nextMonth.withDayOfMonth(nextMonth.lengthOfMonth());
-        
-        String hql = "FROM Concert c WHERE c.concertDate BETWEEN :startDate AND :endDate ORDER BY c.concertDate ASC";
-        Query query = session.createQuery(hql);
-        query.setParameter("startDate", Date.valueOf(startOfNextMonth));
-        query.setParameter("endDate", Date.valueOf(endOfNextMonth));
-        
-        @SuppressWarnings("unchecked")
-        List<Concert> concerts = query.list();
-        return concerts;
-    } finally {
-        session.close();
+    public List<Concert> getConcertsNextMonth() {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            LocalDate now = LocalDate.now();
+            LocalDate nextMonth = now.plusMonths(1);
+            LocalDate startOfNextMonth = nextMonth.withDayOfMonth(1);
+            LocalDate endOfNextMonth = nextMonth.withDayOfMonth(nextMonth.lengthOfMonth());
+            
+            String hql = "FROM Concert c WHERE c.concertDate BETWEEN :startDate AND :endDate ORDER BY c.concertDate ASC";
+            Query query = session.createQuery(hql);
+            query.setParameter("startDate", Date.valueOf(startOfNextMonth));
+            query.setParameter("endDate", Date.valueOf(endOfNextMonth));
+            
+            @SuppressWarnings("unchecked")
+            List<Concert> concerts = query.list();
+            return concerts;
+        } finally {
+            session.close();
+        }
     }
-}
 
-    // Get band name for a concert
     public String getBandName(Concert concert) {
         return concert != null && concert.getBand() != null ? 
                concert.getBand().getBandName() : "Unbekannte Band";
     }
     
-    // Get venue name for a concert
     public String getVenueName(Concert concert) {
         return concert != null && concert.getVenue() != null ? 
                concert.getVenue().getName() : "Unbekannter Ort";
     }
 
-    // In ConcertBean.java
     public List<String> getGenres(Concert concert) {
         if (concert == null || concert.getBand() == null) {
             return new ArrayList<>();
         }
         Band band = concert.getBand();
-        // Verwende die gleiche Logik wie in BandBean
         if (band.getGenre() == null || band.getGenre().isEmpty()) {
             return new ArrayList<>();
         }

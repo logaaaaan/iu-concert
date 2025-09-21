@@ -33,7 +33,7 @@ public class BandBean {
     public List<String> getGenres(Band band) {
         // Null-Prüfung für das `band`-Objekt und `band.getGenre()`
         if (band == null || band.getGenre() == null || band.getGenre().isEmpty()) {
-            return new ArrayList<>(); // Leere Liste zurückgeben
+            return new ArrayList<>(); // Leere Liste
         }
 
         ObjectMapper mapper = new ObjectMapper();
@@ -42,7 +42,7 @@ public class BandBean {
             return mapper.readValue(band.getGenre(), new TypeReference<List<String>>() {});
         } catch (IOException e) {
             e.printStackTrace();
-            return new ArrayList<>(); // Leere Liste bei Fehler zurückgeben
+            return new ArrayList<>(); // Leere Liste bei Fehler
         }
     }
     

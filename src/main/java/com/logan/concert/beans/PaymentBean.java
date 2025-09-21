@@ -31,20 +31,13 @@ public class PaymentBean {
     private String city;
     private String paymentMethod = "paypal"; // Default payment method
     
-    // Payment method specific fields
-    private String iban;
-    private String bic;
-    private String cardNumber;
-    private String expiryDate;
-    private String cvv;
-    
     // Ticket information from booking
     private int ticketQuantity;
     private String ticketType;
     private String ticketTypeName;
     private float pricePerTicket;
     private float total;
-    private String ticketHoldersData; // JSON string from form
+    private String ticketHoldersData; // JSON string from ..
     
     // Booking data cache
     private String bookingDataJson;
@@ -98,7 +91,6 @@ public class PaymentBean {
         }
     }
     
-    // Getter für die Booking-Daten zur Anzeige in der UI
     public String getBookingDataJson() {
         return bookingDataJson;
     }
@@ -108,7 +100,6 @@ public class PaymentBean {
         parseBookingData();
     }
 
-    // Alle anderen Getters und Setters bleiben gleich...
     public int getConcertId() {
         return concertId;
     }
@@ -181,46 +172,6 @@ public class PaymentBean {
         this.paymentMethod = paymentMethod;
     }
     
-    public String getIban() {
-        return iban;
-    }
-    
-    public void setIban(String iban) {
-        this.iban = iban;
-    }
-    
-    public String getBic() {
-        return bic;
-    }
-    
-    public void setBic(String bic) {
-        this.bic = bic;
-    }
-    
-    public String getCardNumber() {
-        return cardNumber;
-    }
-    
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-    
-    public String getExpiryDate() {
-        return expiryDate;
-    }
-    
-    public void setExpiryDate(String expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-    
-    public String getCvv() {
-        return cvv;
-    }
-    
-    public void setCvv(String cvv) {
-        this.cvv = cvv;
-    }
-    
     public int getTicketQuantity() {
         return ticketQuantity;
     }
@@ -262,7 +213,7 @@ public class PaymentBean {
     }
     
     public float getTotalPrice() {
-        return total; // Verwende den bereits berechneten Wert
+        return total;
     }
     
     public String getTicketHoldersData() {

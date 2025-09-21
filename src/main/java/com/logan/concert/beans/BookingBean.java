@@ -32,7 +32,6 @@ public class BookingBean implements Serializable {
         if (concertIdParam != null && !concertIdParam.isEmpty()) {
             try {
                 int newConcertId = Integer.parseInt(concertIdParam);
-                // Nur wenn sich die concertId geändert hat, das Concert-Objekt zurücksetzen
                 if (this.concertId != newConcertId) {
                     this.concertId = newConcertId;
                     this.concert = null; // Cache zurücksetzen
@@ -182,7 +181,6 @@ public class BookingBean implements Serializable {
                 return;
             }
             
-            // Je nach Tickettyp die entsprechende Sold-Zahl erhöhen
             switch(ticketType) {
                 case "standing":
                     concert.setStandingSeatsSold(concert.getStandingSeatsSold() + quantity);
