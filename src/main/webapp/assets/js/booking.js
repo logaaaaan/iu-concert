@@ -2,7 +2,7 @@
 const MAX_TICKETS = 10;
 const MIN_TICKETS = 1;
 
-// Global variables
+// Global variable
 let currentQuantity = MIN_TICKETS;
 
 // Calculate available tickets based on venue capacity and sold tickets
@@ -63,7 +63,6 @@ function updateAvailableTickets() {
         increaseBtn.disabled = currentQuantity >= availableTickets || currentQuantity >= MAX_TICKETS;
     }
     
-    // Deaktiviere den Book-Button wenn keine Tickets verfügbar sind
     const bookButton = document.getElementById('bookButton');
     if (bookButton) {
         bookButton.disabled = availableTickets <= 0;
