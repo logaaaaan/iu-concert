@@ -4,9 +4,9 @@ SET FOREIGN_KEY_CHECKS = 0; -- Temporarily disable foreign key checks
 -- Insert sample data into venues (angepasst an die neue Struktur)
 INSERT INTO venue (name, totalCapacity, standingArea, seatingArea, vipArea)
 VALUES
-    ('Arena Hauptstadt', 15000, 8000, 7000, 500),
+    ('Arena München', 15000, 8000, 7000, 500),
     ('Konzerthaus Berlin', 2000, 0, 2000, 100),
-    ('Open Air Bühne', 25000, 20000, 5000, 500);
+    ('Elbphilharmonie Hamburg', 25000, 20000, 5000, 500);
 
 -- Insert sample data into bands
 INSERT INTO band (bandName, cover, short_desc, description, genre)
