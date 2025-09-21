@@ -125,13 +125,13 @@
                                 <!-- Ticket Verfügbarkeit Indicator -->
                                 <div class="position-absolute top-0 start-0 m-2 z-2">
                                     <c:set var="soldPercentage" value="#{concertBean.getSoldPercentage(concert)}" />
-                                    <span class="badge #{soldPercentage >= 80 ? 'bg-danger' : (soldPercentage >= 60 ? 'bg-warning text-dark' : 'bg-success')}">
-                                        <c:choose>
-                                            <c:when test="#{soldPercentage >= 90}">Fast ausverkauft!</c:when>
-                                            <c:when test="#{soldPercentage >= 80}">Nur wenige Tickets</c:when>
-                                            <c:otherwise>Verfügbar</c:otherwise>
-                                        </c:choose>
+                                    <span class="badge #{concertBean.getSoldPercentage(concert) >= 80 ? 'bg-dif' : (concertBean.getSoldPercentage(concert) >= 60 ? 'bg-warning text-dark' : 'bg-success')}">
+                                        #{concertBean.getSoldPercentage(concert) >= 90 ? 'Letzte Tickets!' : 
+                                        (concertBean.getSoldPercentage(concert) >= 80 ? 'Fast ausverkauft!' :
+                                        concertBean.getSoldPercentage(concert) >= 70 ? 'Nur wenige Tickets' :
+                                        'Verfügbar')}
                                     </span>
+
                                 </div>
 
                                 <div class="position-relative">
@@ -268,7 +268,7 @@
                                                         <strong>Verkauft: #{soldPercentage}%</strong>
                                                         <br/>
                                                         <div class="progress mb-2" style="height: 20px;">
-                                                            <div class="progress-bar #{soldPercentage >= 80 ? 'bg-danger' : (soldPercentage >= 60 ? 'bg-warning' : 'bg-success')}"
+                                                            <div class="progress-bar #{soldPercentage >= 80 ? 'bg-dif' : (soldPercentage >= 60 ? 'bg-warning' : 'bg-success')}"
                                                                 style="width: #{soldPercentage}%;">
                                                                 #{soldPercentage}% verkauft
                                                             </div>

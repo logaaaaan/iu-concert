@@ -107,6 +107,14 @@ body {
     background: linear-gradient(90deg, #ff006e, #8338ec) !important;
 }
 
+.badge.bg-dif {
+    background: #f71a3f !important;
+}
+
+.progress-bar.bg-dif {
+    background: #f71a3f !important;
+}
+
 .badge.bg-success {
     background: linear-gradient(90deg, #00c896, #00d9ff) !important;
 }
