@@ -14,20 +14,20 @@ public class PaymentCityValidator implements Validator {
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         if (value == null) {
-            FacesMessage msg = new FacesMessage("Validation failed.", "Die Stadt ist ein Pflichtfeld.");
+            FacesMessage msg = new FacesMessage("Validation failed.", "Der Ort ist ein Pflichtfeld.");
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
             throw new ValidatorException(msg);
         }
         
         String city = value.toString().trim();
         if (!city.matches(CITY_PATTERN)) {
-            FacesMessage msg = new FacesMessage("Validation failed.", "Der Stadtname darf nur Buchstaben, Leerzeichen, Punkte und Bindestriche enthalten.");
+            FacesMessage msg = new FacesMessage("Validation failed.", "Der Ortsname darf nur Buchstaben, Leerzeichen, Punkte und Bindestriche enthalten.");
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
             throw new ValidatorException(msg);
         }
         
         if (city.length() < 2 || city.length() > 50) {
-            FacesMessage msg = new FacesMessage("Validation failed.", "Der Stadtname muss zwischen 2 und 50 Zeichen lang sein.");
+            FacesMessage msg = new FacesMessage("Validation failed.", "Der Ortsname muss zwischen 2 und 50 Zeichen lang sein.");
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
             throw new ValidatorException(msg);
         }
