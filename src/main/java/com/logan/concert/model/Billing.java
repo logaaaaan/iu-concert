@@ -11,6 +11,10 @@ public class Billing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int billingId;
 
+    @ManyToOne
+    @JoinColumn(name = "concertId", nullable = false)
+    private Concert concert;
+
     @Column(nullable = false, length = 100)
     private String firstName;
 
