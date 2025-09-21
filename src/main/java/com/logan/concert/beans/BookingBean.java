@@ -7,35 +7,37 @@ import com.logan.concert.model.Band;
 import com.logan.concert.model.Concert;
 import com.logan.concert.model.Venue;
 
-import javax.enterprise.context.RequestScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.io.IOException;
 import org.hibernate.Transaction;  
-import javax.faces.bean.SessionScoped;
-
 
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class BookingBean implements Serializable {
     private int concertId;
     private Concert concert;
     
     @PostConstruct
     public void init() {
-        // Get concertId from request parameter if available
-        String concertIdParam = FacesContext.getCurrentInstance()
-            .getExternalContext()
-            .getRequestParameterMap()
-            .get("concertId");
+        // Get concertId from request parameter AND from viewParam
+        String concertIdParam = getConcertIdFromRequest();
         
         if (concertIdParam != null && !concertIdParam.isEmpty()) {
             try {
-                this.concertId = Integer.parseInt(concertIdParam);
+                int newConcertId = Integer.parseInt(concertIdParam);
+                // Nur wenn sich die concertId geändert hat, das Concert-Objekt zurücksetzen
+                if (this.concertId != newConcertId) {
+                    this.concertId = newConcertId;
+                    this.concert = null; // Cache zurücksetzen
+                    System.out.println("BookingBean initialized with new concertId: " + this.concertId);
+                }
             } catch (NumberFormatException e) {
                 System.err.println("Invalid concertId: " + concertIdParam);
                 try {
@@ -44,27 +46,56 @@ public class BookingBean implements Serializable {
                     ex.printStackTrace();
                 }
             }
-        } 
+        } else {
+            System.err.println("No concertId parameter found");
+        }
+    }
+    
+    // Helper method to get concertId from various sources
+    private String getConcertIdFromRequest() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        
+        // First try request parameter
+        String concertIdParam = context.getExternalContext()
+            .getRequestParameterMap()
+            .get("concertId");
+            
+        if (concertIdParam != null && !concertIdParam.isEmpty()) {
+            return concertIdParam;
+        }
+        
+        // Then try view parameter (for f:viewParam)
+        Map<String, Object> viewParams = context.getViewRoot().getViewMap();
+        if (viewParams.containsKey("concertId")) {
+            Object concertIdObj = viewParams.get("concertId");
+            return concertIdObj != null ? concertIdObj.toString() : null;
+        }
+        
+        return null;
+    }
+    
+    // Method to manually set concertId (called from payment page if needed)
+    public void setConcertId(int concertId) {
+        if (this.concertId != concertId) {
+            this.concertId = concertId;
+            this.concert = null; // Reset concert cache
+            System.out.println("ConcertId manually set to: " + concertId);
+        }
+    }
+    
+    public int getConcertId() {
+        return concertId;
     }
     
     public String getConcertTime() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-
-        System.out.println("concertId: " + concertId);
-
-        Concert concert = (Concert) session.get(Concert.class, concertId);
-        if (concert == null) {
-            return "";
-        }
-
-        return concert.getConcertTime() != null ? concert.getConcertTime().toString() : "";
+        Concert concert = getConcert();
+        return (concert != null && concert.getConcertTime() != null) ? 
+               concert.getConcertTime().toString() : "";
     }
 
     public String getConcertName() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Concert concert = (Concert) session.get(Concert.class, concertId);
-
-        return concert != null && concert.getBand() != null ? 
+        Concert concert = getConcert();
+        return (concert != null && concert.getBand() != null) ? 
                concert.getBand().getBandName() : "Band nicht gefunden";
     }
 
@@ -73,8 +104,20 @@ public class BookingBean implements Serializable {
             return this.concert;
         }
 
+        if (concertId <= 0) {
+            System.err.println("Invalid concertId: " + concertId);
+            return null;
+        }
+
         Session session = HibernateUtil.getSessionFactory().openSession();
-        this.concert = (Concert) session.get(Concert.class, concertId);
+        try {
+            this.concert = (Concert) session.get(Concert.class, concertId);
+            if (this.concert == null) {
+                System.err.println("Concert not found for ID: " + concertId);
+            }
+        } finally {
+            session.close();
+        }
 
         return this.concert;
     }
@@ -155,6 +198,9 @@ public class BookingBean implements Serializable {
             session.update(concert);
             transaction.commit();
             
+            // Local cache aktualisieren
+            this.concert = concert;
+            
             System.out.println("Successfully updated sold tickets: " + quantity + " x " + ticketType);
             System.out.println("New standing sold: " + concert.getStandingSeatsSold());
             System.out.println("New seating sold: " + concert.getSeatingSeatsSold());
@@ -169,13 +215,7 @@ public class BookingBean implements Serializable {
         }
     }
 
-    public void setConcertId(int concertId) {
-        this.concertId = concertId;
-        this.concert = null; // Reset concert cache
-    }
-
     public boolean isTicketTypeAvailable(String ticketType) {
         return getAvailableTickets(ticketType) > 0;
-
     }
 }

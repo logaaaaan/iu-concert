@@ -16,7 +16,9 @@
 
         <f:metadata>
             <f:viewParam name="concertId" value="#{paymentBean.concertId}" />
+            <f:viewParam name="bookingData" value="#{paymentBean.bookingDataJson}" />
         </f:metadata>
+
         
         <style>
             .error-message {
@@ -154,13 +156,13 @@
                             <!-- Hidden form fields for concert ID and total -->
                             <h:inputHidden id="concertId" value="#{paymentBean.concertId}" />
                             <h:inputHidden id="total" value="#{paymentBean.total}" />
-                            <h:inputHidden id="bookingData" value="#{paymentBean.ticketHoldersData}" />
+                            <h:inputHidden id="bookingData" value="#{paymentBean.bookingDataJson}" />
+
 
                             <!-- Submit button -->
                             <h:commandButton id="submitButton" value="Jetzt Bezahlen" 
                                 action="#{paymentBean.submit}" 
-                                styleClass="btn btn-primary w-100 mt-4"
-                                onclick="return validateForm()" />
+                                styleClass="btn btn-primary w-100 mt-4" />
                         </div>
                     </div>
 

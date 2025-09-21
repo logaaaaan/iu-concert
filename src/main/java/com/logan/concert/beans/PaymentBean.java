@@ -10,17 +10,15 @@ import org.hibernate.Transaction;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.SessionScoped;
-
 
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class PaymentBean {
     // Billing information
     private int concertId;
@@ -48,9 +46,12 @@ public class PaymentBean {
     private float total;
     private String ticketHoldersData; // JSON string from form
     
+    // Booking data cache
+    private String bookingDataJson;
+    
     @PostConstruct
     public void init() {
-        // First try to get concertId from request parameter
+        // Get concertId from request parameter
         String concertIdParam = FacesContext.getCurrentInstance()
             .getExternalContext()
             .getRequestParameterMap()
@@ -59,13 +60,55 @@ public class PaymentBean {
         if (concertIdParam != null) {
             try {
                 this.concertId = Integer.parseInt(concertIdParam);
+                System.out.println("PaymentBean initialized with concertId: " + this.concertId);
             } catch (NumberFormatException e) {
                 System.err.println("Invalid concertId: " + concertIdParam);
             }
         }
+        
+        // Get booking data from request parameter and store it
+        String bookingDataParam = FacesContext.getCurrentInstance()
+            .getExternalContext()
+            .getRequestParameterMap()
+            .get("bookingData");
+            
+        if (bookingDataParam != null && !bookingDataParam.isEmpty()) {
+            this.bookingDataJson = bookingDataParam;
+            parseBookingData();
+        }
+    }
+    
+    private void parseBookingData() {
+        if (bookingDataJson != null && !bookingDataJson.isEmpty()) {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode bookingData = mapper.readTree(bookingDataJson);
+                
+                this.ticketQuantity = bookingData.get("quantity").asInt();
+                this.ticketType = bookingData.get("ticketType").asText();
+                this.ticketTypeName = bookingData.get("ticketTypeName").asText();
+                this.pricePerTicket = (float) bookingData.get("pricePerTicket").asDouble();
+                this.total = (float) bookingData.get("totalPrice").asDouble();
+                
+                System.out.println("Parsed booking data: " + ticketQuantity + " x " + ticketTypeName);
+            } catch (Exception e) {
+                System.err.println("Error parsing booking data: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    // Getter für die Booking-Daten zur Anzeige in der UI
+    public String getBookingDataJson() {
+        return bookingDataJson;
+    }
+    
+    public void setBookingDataJson(String bookingDataJson) {
+        this.bookingDataJson = bookingDataJson;
+        parseBookingData();
     }
 
-    // Getters and setters for all fields
+    // Alle anderen Getters und Setters bleiben gleich...
     public int getConcertId() {
         return concertId;
     }
@@ -219,7 +262,7 @@ public class PaymentBean {
     }
     
     public float getTotalPrice() {
-        return ticketQuantity * pricePerTicket;
+        return total; // Verwende den bereits berechneten Wert
     }
     
     public String getTicketHoldersData() {
@@ -233,26 +276,16 @@ public class PaymentBean {
     public String submit() {
         try {
             System.out.println("=== PAYMENT BEAN SUBMIT CALLED ===");
-            
-            // Booking data aus localStorage lesen (von JavaScript)
-            String bookingDataJson = FacesContext.getCurrentInstance()
-                .getExternalContext()
-                .getRequestParameterMap()
-                .get("bookingData");
+            System.out.println("ConcertId: " + concertId);
+            System.out.println("Booking Data: " + bookingDataJson);
             
             if (bookingDataJson != null && !bookingDataJson.isEmpty()) {
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode bookingData = mapper.readTree(bookingDataJson);
-                
-                int quantity = bookingData.get("quantity").asInt();
-                String ticketType = bookingData.get("ticketType").asText();
-                
                 // Sold tickets updaten
                 BookingBean bookingBean = new BookingBean();
-                bookingBean.setConcertId(concertId); // ConcertId setzen
-                bookingBean.updateSoldTickets(ticketType, quantity);
+                bookingBean.setConcertId(concertId);
+                bookingBean.updateSoldTickets(ticketType, ticketQuantity);
                 
-                System.out.println("Updated sold tickets: " + quantity + " x " + ticketType);
+                System.out.println("Updated sold tickets: " + ticketQuantity + " x " + ticketType);
             }
             
             // Weiterleitung zur Bestätigungsseite
@@ -265,5 +298,4 @@ public class PaymentBean {
             return null;
         }
     }
-
 }
