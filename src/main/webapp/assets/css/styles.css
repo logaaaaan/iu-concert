@@ -1,4 +1,4 @@
-/* Basis-Styles */
+/* Basic-Styles */
 body {
     background: linear-gradient(135deg, #1e0033 0%, #110011 50%, #220022 100%);
     color: #ffffff;
@@ -26,7 +26,6 @@ body {
     background: linear-gradient(90deg, #ff006e, #8338ec);
 }
 
-/* Card Styles */
 .card {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     background: linear-gradient(145deg, #2a1a3e, #1a0e2e);
@@ -191,7 +190,6 @@ body {
     color: #ff006e;
 }
 
-/* Text Styles */
 .card-title {
     color: #ffffff;
     font-size: 1.4rem;
@@ -204,7 +202,6 @@ body {
     line-height: 1.6;
 }
 
-/* Modal Styles */
 .modal-content {
     background: linear-gradient(145deg, #2a1a3e, #1a0e2e);
     color: #ffffff;
@@ -268,7 +265,6 @@ body {
     border-top: 1px solid #ff006e !important;
 }
 
-/* Concert Details Card in Modal */
 .concert-details-card {
     background: linear-gradient(145deg, #2a1a3e, #1a0e2e) !important;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -319,7 +315,6 @@ body {
     background: linear-gradient(90deg, #ffbe0b, #ff9e00) !important;
 }
 
-/* Progress Bar Styles */
 .progress {
     background: rgba(0, 0, 0, 0.3) !important;
     border-radius: 10px;
@@ -347,7 +342,6 @@ body {
     background: linear-gradient(90deg, #00c896, #00d9ff) !important;
 }
 
-/* Text and Highlight Styles */
 .text-muted {
     color: rgba(255, 255, 255, 0.7) !important;
 }
@@ -364,7 +358,6 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Concert Card Animation */
 @keyframes pulse-glow {
     0% {
         box-shadow: 0 0 5px rgba(255, 0, 110, 0.5);

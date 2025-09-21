@@ -1,5 +1,5 @@
         .confirmation-container {
-            min-height: calc(100vh - 76px); /* Berücksichtigt die Navbar-Höhe */
+            min-height: calc(100vh - 76px);
             display: flex;
             flex-direction: column;
             justify-content: center;

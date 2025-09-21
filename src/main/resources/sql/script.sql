@@ -70,7 +70,7 @@ CREATE TABLE billing (
 -- SQL script for inserting test data into the concert database
 SET FOREIGN_KEY_CHECKS = 0; -- Temporarily disable foreign key checks
 
--- Insert sample data into venues (angepasst an die neue Struktur)
+-- Insert sample data into venues
 INSERT INTO venue (name, totalCapacity, standingArea, seatingArea, vipArea)
 VALUES
     ('Arena Hauptstadt', 15000, 8000, 7000, 500),
